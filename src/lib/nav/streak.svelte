@@ -37,7 +37,7 @@
 			You're on a <span class="text-orange-500 font-bold">{streak} day streak</span>! Keep it up!
 		</p>
 		<button
-			class="bg-sky-500 text-white px-4 mt-4 h-8 rounded-lg text-xs border-b-2 border-sky-600 active:border-b-0"
+			class="bg-sky-500 text-white px-4 mt-4 h-8 rounded-lg text-xs border-b-2 border-sky-600 active:border-b-0 active:top-px relative"
 			on:click={() => (open = !open)}
 		>
 			Close

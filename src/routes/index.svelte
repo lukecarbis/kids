@@ -1,2 +1,3 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="flex justify-center">
+    <a href="/lior" class="border border-b-2 rounded-lg active:border-b px-4 py-2 active:mt-px">Lior</a>
+</div>

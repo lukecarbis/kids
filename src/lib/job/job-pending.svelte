@@ -12,10 +12,10 @@
 		{job.title}
 	</h2>
 	{#if job.skipped}
-		<button class="border border-b-2 group active:border-b rounded-lg px-4 py-1">
+		<button class="border border-b-2 active:mt-px active:border-b rounded-lg px-4 py-1">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				class="h-4 w-4 stroke-sky-400 group-active:mt-px"
+				class="h-4 w-4 stroke-sky-400"
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke="currentColor"
