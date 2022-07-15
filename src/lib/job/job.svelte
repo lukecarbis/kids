@@ -6,10 +6,11 @@
 	export let job;
 	export let active;
 	export let index;
+	export let remaining;
 </script>
 
 {#if active}
-	<JobActive {job} on:skip on:done />
+	<JobActive {job} {remaining} on:skip on:done />
 {:else if job.done}
 	<JobDone {job} {index} on:revert />
 {:else}

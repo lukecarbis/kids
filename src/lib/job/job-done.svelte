@@ -26,7 +26,7 @@
 
 		if (pressTimer === null) {
 			pressTimer = setTimeout(() => {
-				dispatch('revert', {index});
+				dispatch('revert', { index });
 				container.classList.remove('-rotate-2');
 			}, 1500);
 		}

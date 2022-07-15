@@ -1,27 +1,53 @@
-<script context="module">
+<script>
+	import Nav from '$lib/nav/nav.svelte';
+	import Job from '$lib/job/job.svelte';
+	export let name;
+	export let jobs;
+
 	const getActiveJobIndex = (jobs) => {
 		for (const [index, job] of jobs.entries()) {
 			if (!job.skipped && !job.done) {
 				return index;
 			}
 		}
+		return -1;
 	};
-</script>
 
-<script>
-	import Nav from '$lib/nav/nav.svelte';
-	import Job from '$lib/job/job.svelte';
-	export let name;
-	export let jobs;
-	const nickname = name[0].toUpperCase() + name.substring(1);
-	$: activeJobIndex = getActiveJobIndex(jobs);
+	const jobsRemaining = (jobs) => {
+		let remaining = 0;
+		for (const job of jobs) {
+			if (!job.done) {
+				remaining++;
+			}
+		}
+		return remaining;
+	};
 
 	const skip = () => {
 		jobs[activeJobIndex].skipped = true;
 	};
 
 	const done = () => {
-		jobs[activeJobIndex].done = true;
+		const updatedJobs = [...jobs];
+
+		updatedJobs[activeJobIndex].done = true;
+
+		if (-1 === getActiveJobIndex(updatedJobs)) {
+			for (let index = 0; index < updatedJobs.length; index++) {
+				updatedJobs[index].skipped = false;
+			}
+		}
+
+		if ( ! jobsRemaining( updatedJobs ) ) {
+			const container = document.querySelector('#wrap');
+			container.scrollTo({
+				left: 0,
+				top: container.scrollHeight,
+				behavior: 'smooth'
+			});
+		}
+
+		jobs = updatedJobs;
 	};
 
 	const select = (event) => {
@@ -36,6 +62,10 @@
 		const index = event.detail.index;
 		jobs[index].done = false;
 	};
+
+	const nickname = name[0].toUpperCase() + name.substring(1);
+	$: activeJobIndex = getActiveJobIndex(jobs);
+	$: remaining = jobsRemaining(jobs);
 </script>
 
 <Nav name={nickname} streak="31" />
@@ -53,6 +83,7 @@
 			{job}
 			{index}
 			active={index === activeJobIndex}
+			remaining={remaining}
 			on:skip={skip}
 			on:done={done}
 			on:select={select}
