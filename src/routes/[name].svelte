@@ -38,7 +38,7 @@
 			}
 		}
 
-		if ( ! jobsRemaining( updatedJobs ) ) {
+		if (!jobsRemaining(updatedJobs)) {
 			const container = document.querySelector('#wrap');
 			container.scrollTo({
 				left: 0,
@@ -83,22 +83,26 @@
 			{job}
 			{index}
 			active={index === activeJobIndex}
-			remaining={remaining}
+			{remaining}
 			on:skip={skip}
 			on:done={done}
 			on:select={select}
 			on:revert={revert}
 		/>
 
-		<span
-			class="border-l-2 w-0 h-6 block m-auto text-center normal"
-			class:border-slate-200={!job.done}
-			class:border-emerald-400={job.done && index + 1 < jobs.length && jobs[index + 1].done}
-		/>
+		{#if index !== jobs.length - 1 || !remaining}
+			<span
+				class="border-l-2 w-0 h-6 block m-auto text-center normal"
+				class:border-slate-200={!job.done}
+				class:border-emerald-400={job.done && index + 1 < jobs.length && jobs[index + 1].done}
+			/>
+		{/if}
 	{/each}
 
-	<div class="text-center text-emerald-500 font-bold z-0 snap-normal">
-		<p class="bg-white pt-3 text-lg">That's all for now!</p>
-		<p class="bg-white py-2">Check back later for more.</p>
-	</div>
+	{#if !remaining}
+		<div class="text-center text-emerald-500 font-bold z-0 snap-normal">
+			<p class="bg-white pt-3 text-lg">That's all for now!</p>
+			<p class="bg-white py-2">Check back later for more.</p>
+		</div>
+	{/if}
 </main>
