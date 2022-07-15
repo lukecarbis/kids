@@ -13,7 +13,7 @@
 		}
 
 		const container = event.target.closest('div');
-		container.classList.remove('-rotate-2');
+		container.classList.remove('-rotate-1');
 	};
 
 	const start = function (event) {
@@ -22,12 +22,12 @@
 		}
 
 		const container = event.target.closest('div');
-		container.classList.add('-rotate-2');
+		container.classList.add('-rotate-1');
 
 		if (pressTimer === null) {
 			pressTimer = setTimeout(() => {
 				dispatch('revert', { index });
-				container.classList.remove('-rotate-2');
+				container.classList.remove('-rotate-1');
 			}, 1500);
 		}
 
