@@ -5,12 +5,13 @@
 
 	export let job;
 	export let active;
+	export let index;
 </script>
 
 {#if active}
-	<JobActive {job} />
+	<JobActive {job} on:skip on:done />
 {:else if job.done}
 	<JobDone {job} />
 {:else}
-	<JobPending {job} />
+	<JobPending {job} {index} on:select />
 {/if}

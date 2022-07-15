@@ -1,6 +1,12 @@
+<script>
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+</script>
+
 <div class="bg-white rounded-b-lg border-2 border-t-0 flex">
 	<button
 		class="py-4 px-8 h-16 border-r border-b active:border-b-transparent active:pt-5 leading-4 text-sky-500 align-bottom"
+		on:click={() => dispatch('skip')}
 	>
 		Skip
 		<svg
@@ -16,6 +22,7 @@
 	</button>
 	<button
 		class="flex-auto border-l border-b active:pt-5 active:border-b-transparent py-4 px-8 h-16 leading-4 text-emerald-500"
+		on:click={() => dispatch('done')}
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

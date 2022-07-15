@@ -28,4 +28,4 @@
 	<p class="w-full py-2 text-center">{job.description}</p>
 </div>
 
-<Buttons />
+<Buttons on:skip on:done />

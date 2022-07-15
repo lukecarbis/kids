@@ -1,5 +1,8 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
 	export let job;
+	export let index;
+	const dispatch = createEventDispatcher();
 </script>
 
 <div
@@ -12,7 +15,10 @@
 		{job.title}
 	</h2>
 	{#if job.skipped}
-		<button class="border border-b-2 active:mt-px active:border-b rounded-lg px-4 py-1">
+		<button
+			class="border border-b-2 active:mt-px active:border-b rounded-lg px-4 py-1"
+			on:click={() => dispatch('select', { index })}
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				class="h-4 w-4 stroke-sky-400"

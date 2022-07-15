@@ -14,7 +14,23 @@
 	export let name;
 	export let jobs;
 	const nickname = name[0].toUpperCase() + name.substring(1);
-	const activeJobIndex = getActiveJobIndex(jobs);
+	$: activeJobIndex = getActiveJobIndex(jobs);
+
+	const skip = () => {
+		jobs[activeJobIndex].skipped = true;
+	};
+
+	const done = () => {
+		jobs[activeJobIndex].done = true;
+	};
+
+	const select = (event) => {
+		const updatedJobs = [...jobs];
+		for (let index = event.detail.index; index < activeJobIndex; index++) {
+			updatedJobs[index].skipped = false;
+		}
+		jobs = updatedJobs;
+	};
 </script>
 
 <Nav name={nickname} streak="31" />
@@ -28,7 +44,14 @@
 			<span class="border-l-2 w-0 h-6 block m-auto text-center snap-normal" />
 		{/if}
 
-		<Job {job} active={index === activeJobIndex} />
+		<Job
+			{job}
+			{index}
+			active={index === activeJobIndex}
+			on:skip={skip}
+			on:done={done}
+			on:select={select}
+		/>
 
 		<span
 			class="border-l-2 w-0 h-6 block m-auto text-center normal"
@@ -37,7 +60,7 @@
 		/>
 	{/each}
 
-	<div class="text-center text-emerald-500 font-bold z-0 snap-always snap-start scroll-mt-6">
+	<div class="text-center text-emerald-500 font-bold z-0 snap-normal">
 		<p class="bg-white pt-3 text-lg">That's all for now!</p>
 		<p class="bg-white py-2">Check back later for more.</p>
 	</div>

@@ -10,7 +10,7 @@ export async function get({ params }) {
 					description: '"… al netilat yadayim."',
 					emoji: '🙌',
 					hour: 5,
-					done: true,
+					done: false,
 					skipped: false
 				},
 				{
@@ -18,7 +18,7 @@ export async function get({ params }) {
 					description: 'Nice and clean, ready for the day.',
 					emoji: '🚿',
 					hour: 5,
-					done: true,
+					done: false,
 					skipped: false
 				},
 				{
@@ -26,7 +26,7 @@ export async function get({ params }) {
 					description: 'Time for morning brachot and the Shema.',
 					emoji: '🙏',
 					hour: 5,
-					done: true,
+					done: false,
 					skipped: false
 				},
 				{
@@ -35,15 +35,15 @@ export async function get({ params }) {
 					emoji: '💲',
 					hour: 5,
 					done: false,
-					skipped: true
+					skipped: false
 				},
 				{
 					title: 'Get Dressed',
 					description: 'Put some weather appropriate clothes on.',
 					emoji: '👕',
 					hour: 5,
-					done: true,
-					skipped: true
+					done: false,
+					skipped: false
 				},
 				{
 					title: 'Eat Breakfast',
