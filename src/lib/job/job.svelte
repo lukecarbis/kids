@@ -11,7 +11,7 @@
 {#if active}
 	<JobActive {job} on:skip on:done />
 {:else if job.done}
-	<JobDone {job} />
+	<JobDone {job} {index} on:revert />
 {:else}
 	<JobPending {job} {index} on:select />
 {/if}

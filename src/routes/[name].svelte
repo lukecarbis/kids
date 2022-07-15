@@ -31,6 +31,11 @@
 		}
 		jobs = updatedJobs;
 	};
+
+	const revert = (event) => {
+		const index = event.detail.index;
+		jobs[index].done = false;
+	};
 </script>
 
 <Nav name={nickname} streak="31" />
@@ -51,6 +56,7 @@
 			on:skip={skip}
 			on:done={done}
 			on:select={select}
+			on:revert={revert}
 		/>
 
 		<span

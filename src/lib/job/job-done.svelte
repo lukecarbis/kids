@@ -1,9 +1,51 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
+
 	export let job;
+	export let index;
+	let pressTimer = null;
+
+	const cancel = function (event) {
+		if (pressTimer !== null) {
+			clearTimeout(pressTimer);
+			pressTimer = null;
+		}
+
+		const container = event.target.closest('div');
+		container.classList.remove('-rotate-2');
+	};
+
+	const start = function (event) {
+		if (event.type === 'click' && event.button !== 0) {
+			return;
+		}
+
+		const container = event.target.closest('div');
+		container.classList.add('-rotate-2');
+
+		if (pressTimer === null) {
+			pressTimer = setTimeout(() => {
+				dispatch('revert', {index});
+				container.classList.remove('-rotate-2');
+			}, 1500);
+		}
+
+		return false;
+	};
 </script>
 
+<span class="bg-gradient-to-r from-emerald-300 to-emerald-100 long-press" />
+
 <div
-	class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg snap-always snap-start scroll-mt-6"
+	class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg snap-always snap-start scroll-mt-6 transition-transform"
+	on:mousedown={start}
+	on:mouseout={cancel}
+	on:click={cancel}
+	on:touchstart={start}
+	on:touchend={cancel}
+	on:touchleave={cancel}
+	on:touchcancel={cancel}
 >
 	<span class="mr-4 text-center w-6">
 		{job.emoji}
