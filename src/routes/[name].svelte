@@ -55,11 +55,4 @@
 			{/if}
 		{/each}
 	{/each}
-
-	{#if !$jobQueue.remaining}
-		<div class="text-center text-emerald-500 font-bold z-0 snap-normal">
-			<p class="bg-white pt-3 text-lg">That's all for now!</p>
-			<p class="bg-white py-2">Check back later for more.</p>
-		</div>
-	{/if}
 </main>
