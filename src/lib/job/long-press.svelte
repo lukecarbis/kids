@@ -1,15 +1,14 @@
 <script>
 	export let cb;
-	let pressTimer;
+	export let timeout
 
-	const cancel = function (event) {
+	let pressTimer = null;
+
+	const cancel = function () {
 		if (pressTimer !== null) {
 			clearTimeout(pressTimer);
 			pressTimer = null;
 		}
-
-		const container = event.target.closest('div');
-		container.classList.remove('-rotate-1');
 	};
 
 	const start = function (event) {
@@ -17,14 +16,10 @@
 			return;
 		}
 
-		const container = event.target.closest('div');
-		container.classList.add('-rotate-1');
-
 		if (pressTimer === null) {
 			pressTimer = setTimeout(() => {
 				cb();
-				container.classList.remove('-rotate-1');
-			}, 1500);
+			}, timeout);
 		}
 
 		return false;
@@ -40,6 +35,25 @@
 	on:touchend={cancel}
 	on:touchleave={cancel}
 	on:touchcancel={cancel}
+	class:active={pressTimer !== null}
 >
 	<slot />
 </div>
+
+<style>
+	.active {
+		animation: shake 0.25s infinite;
+	}
+
+	@keyframes shake {
+		0% {
+			transform: rotate(-1deg);
+		}
+		50% {
+			transform: rotate(-2deg);
+		}
+		100% {
+			transform: rotate(-1deg);
+		}
+	}
+</style>

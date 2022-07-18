@@ -14,7 +14,7 @@
 	};
 </script>
 
-<LongPress cb={revert}>
+<LongPress cb={revert} timeout="1200">
 	<div
 		class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg snap-always snap-start scroll-mt-6 transition-transform"
 		in:fade
