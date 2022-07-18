@@ -1,3 +1,4 @@
+import { hour } from '$lib/stores/time.js';
 import { get, writable } from 'svelte/store';
 
 export const jobQueue = writable({
@@ -8,9 +9,8 @@ export const jobQueue = writable({
 });
 
 export const getNextJob = (jobs, checkpoints) => {
-	const hour = 9;
 	for (const checkpoint of checkpoints) {
-		if ( hour < checkpoint.hour ) {
+		if ( get(hour) < checkpoint.hour ) {
 			continue;
 		}
 		for (const [index, job] of jobs.entries()) {
@@ -25,11 +25,10 @@ export const getNextJob = (jobs, checkpoints) => {
 };
 
 export const getJobsRemaining = (jobs, checkpoints) => {
-	const hour = 9;
 	let remaining = 0;
 
 	for (const checkpoint of checkpoints) {
-		if ( hour < checkpoint.hour ) {
+		if ( get(hour) < checkpoint.hour ) {
 			continue;
 		}
 		for (const [index, job] of jobs.entries()) {

@@ -1,36 +1,41 @@
 <script>
 	import { jobQueue } from '$lib/stores/job-queue.js';
+	import { hour } from '$lib/stores/time.js';
 	import Connector from '$lib/job/connector.svelte';
 	export let checkpoint;
 
-	let hour = checkpoint.hour + ' AM';
+	const getHourString = ( hour ) => {
+		let hourString = hour + ' AM';
 
-	if (checkpoint.hour === 12) {
-		hour = checkpoint.hour + ' PM';
-	} else if (checkpoint.hour - 12 > 0) {
-		hour = checkpoint.hour - 12 + ' PM';
+		if (hour === 12) {
+			hourString = hour + ' PM';
+		} else if (hour - 12 > 0) {
+			hourString = hour - 12 + ' PM';
+		}
+
+		return hourString
 	}
 
-	let isFirstDisabledCheckpoint = false;
-	for (const c of $jobQueue.checkpoints) {
-		if (9 >= c.hour) {
-			continue;
+	const getFirstDisabledCheckpoint = () => {
+		for (const checkpoint of $jobQueue.checkpoints) {
+			if ($hour >= checkpoint.hour) {
+				continue;
+			}
+			return checkpoint
 		}
-		if (checkpoint === c) {
-			isFirstDisabledCheckpoint = true;
-		}
-		break;
 	}
+
+	let isFirstDisabledCheckpoint = getFirstDisabledCheckpoint() === checkpoint;
 </script>
 
 <div
-	class="checkpoint my-6 text-center z-0 snap-always snap-start scroll-mt-6"
+	class="checkpoint locked mt-6 mb-2 text-center z-0 snap-always snap-start scroll-mt-6"
 	class:up-next={isFirstDisabledCheckpoint}
 >
 	{#if !$jobQueue.remaining && isFirstDisabledCheckpoint}
 		<p class="bg-white leading-8 text-emerald-500 font-bold">That's all for now!</p>
 		<p class="bg-white pb-4 leading-8 text-slate-500">
-			Check back at <span class="font-bold">{hour}</span> for more!
+			Check back at <span class="font-bold">{getHourString(checkpoint.hour)}</span> for more!
 		</p>
 	{/if}
 	<svg

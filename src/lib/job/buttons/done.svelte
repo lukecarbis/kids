@@ -12,9 +12,17 @@
 
 		if (!getJobsRemaining(jobs, $jobQueue.checkpoints)) {
 			const container = document.querySelector('#wrap');
+			const checkpoint = document.querySelector('.checkpoint.locked');
+
+			let top = container.scrollHeight
+
+			if ( checkpoint ) {
+				top = checkpoint.offsetTop
+			}
+
 			container.scrollTo({
 				left: 0,
-				top: container.scrollHeight,
+				top: top,
 				behavior: 'smooth'
 			});
 		}
