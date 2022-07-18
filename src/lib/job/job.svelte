@@ -9,10 +9,12 @@
 	export let remaining;
 </script>
 
-{#if active}
-	<JobActive {job} {remaining} on:skip on:done />
-{:else if job.done}
-	<JobDone {job} {index} on:revert />
-{:else}
-	<JobPending {job} {index} on:select />
-{/if}
+<div>
+	{#if active}
+		<JobActive {job} {remaining} on:skip on:done />
+	{:else if job.done}
+		<JobDone {job} {index} on:revert />
+	{:else}
+		<JobPending {job} {index} on:select />
+	{/if}
+</div>

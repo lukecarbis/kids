@@ -74,7 +74,7 @@
 <main class="max-w-screen-sm mx-auto p-6 relative">
 	{#each jobs as job, index}
 		{#if index === activeJobIndex}
-			<div class="text-center text-sky-500 font-bold z-0 snap-always snap-start scroll-mt-6">
+			<div class="up-next text-center text-sky-500 font-bold z-0 snap-always snap-start scroll-mt-6">
 				<p class="bg-white py-2">Up next:</p>
 			</div>
 			<span class="border-l-2 w-0 h-6 block m-auto text-center snap-normal" />

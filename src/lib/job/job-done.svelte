@@ -1,5 +1,6 @@
 <script>
 	import { emojiCode } from '$lib/helpers/emoji-code.js';
+	import { fade } from 'svelte/transition';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -46,6 +47,7 @@
 	on:touchend={cancel}
 	on:touchleave={cancel}
 	on:touchcancel={cancel}
+	in:fade
 >
 	<span class="mr-4 text-center w-6">
 		<img src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
