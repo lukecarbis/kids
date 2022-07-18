@@ -47,9 +47,9 @@
 					<JobPending {job} {index} />
 				{/if}
 
-				{#if index !== $jobQueue.jobs.length - 1}
+				{#if index !== checkpoint.toIndex}
 					<Connector
-						done={job.done && (!$jobQueue.jobs[index + 1] || $jobQueue.jobs[index + 1].done)}
+						done={job.done && index !== checkpoint.toIndex}
 					/>
 				{/if}
 			{/if}
