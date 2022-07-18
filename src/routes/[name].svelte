@@ -1,6 +1,7 @@
 <script>
 	import Nav from '$lib/nav/nav.svelte';
 	import Job from '$lib/job/job.svelte';
+
 	export let name;
 	export let jobs;
 

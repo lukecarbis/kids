@@ -2,7 +2,7 @@
 	import '../app.css';
 </script>
 
-<div class="max-h-screen max-w-screen">
+<div class="absolute h-full w-full">
 	<div
 		id="wrap"
 		class="h-calc mt-16 pb-72 font-mono select-none overflow-y-scroll snap-y snap-mandatory"

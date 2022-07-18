@@ -36,8 +36,6 @@
 	};
 </script>
 
-<span class="bg-gradient-to-r from-emerald-300 to-emerald-100 long-press" />
-
 <div
 	class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg snap-always snap-start scroll-mt-6 transition-transform"
 	on:mousedown={start}
