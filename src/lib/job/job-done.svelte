@@ -1,4 +1,5 @@
 <script>
+	import { emojiCode } from '$lib/helpers/emoji-code.js';
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
@@ -41,6 +42,7 @@
 	class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg snap-always snap-start scroll-mt-6 transition-transform"
 	on:mousedown={start}
 	on:mouseout={cancel}
+	on:blur={cancel}
 	on:click={cancel}
 	on:touchstart={start}
 	on:touchend={cancel}
@@ -48,7 +50,7 @@
 	on:touchcancel={cancel}
 >
 	<span class="mr-4 text-center w-6">
-		{job.emoji}
+		<img src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
 	</span>
 	<h2 class="flex-auto text-center">
 		{job.title}

@@ -11,6 +11,7 @@
 </script>
 
 <script>
+	import { emojiCode } from '$lib/helpers/emoji-code.js';
 	import Buttons from '$lib/job/buttons.svelte';
 	import { onMount } from 'svelte';
 	export let job;
@@ -20,8 +21,8 @@
 </script>
 
 <div class="active-job p-4 border-2 flex flex-wrap bg-sky-100 border-sky-300 rounded-t-lg">
-	<span class="mr-4 text-center w-full h-10 text-4xl">
-		{job.emoji}
+	<span class="text-center w-full h-10 max-h-full text-4xl">
+		<img class="max-h-full" src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
 	</span>
 	<h2 class="flex-auto text-center pt-2 text-2xl leading-10">
 		{job.title}
