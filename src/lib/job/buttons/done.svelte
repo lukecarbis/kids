@@ -6,11 +6,11 @@
 
 		jobs[$jobQueue.active].done = true;
 
-		if (-1 === getNextJob(jobs)) {
+		if (-1 === getNextJob(jobs, $jobQueue.checkpoints)) {
 			jobs = resetSkippedJobs(jobs);
 		}
 
-		if (!getJobsRemaining(jobs)) {
+		if (!getJobsRemaining(jobs, $jobQueue.checkpoints)) {
 			const container = document.querySelector('#wrap');
 			container.scrollTo({
 				left: 0,

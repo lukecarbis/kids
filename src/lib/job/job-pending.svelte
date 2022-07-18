@@ -13,9 +13,9 @@
 	<span class="mr-4 text-center w-6 h-10 py-2">
 		<img src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
 	</span>
-	<h2 class="flex-auto text-center mr-10 leading-10">
+	<h3 class="flex-auto text-center mr-10 leading-10">
 		{job.title}
-	</h2>
+	</h3>
 	{#if job.skipped}
 		<Select {index} />
 	{/if}

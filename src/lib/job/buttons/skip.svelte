@@ -6,7 +6,7 @@
 
 		jobs[$jobQueue.active].skipped = true;
 
-		if (-1 === getNextJob(jobs)) {
+		if (-1 === getNextJob(jobs, $jobQueue.checkpoints)) {
 			jobs = resetSkippedJobs(jobs);
 		}
 

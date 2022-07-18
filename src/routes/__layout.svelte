@@ -5,7 +5,7 @@
 <div class="absolute h-full w-full">
 	<div
 		id="wrap"
-		class="h-calc mt-16 pb-72 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
+		class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 	>
 		<slot />
 	</div>
