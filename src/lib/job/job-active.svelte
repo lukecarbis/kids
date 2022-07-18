@@ -4,7 +4,6 @@
 	import Buttons from '$lib/job/buttons.svelte';
 	import { onMount } from 'svelte';
 	export let job;
-	export let remaining;
 
 	const scrollToActiveJob = () => {
 		const container = document.querySelector('#wrap');
@@ -29,4 +28,4 @@
 	<p class="w-full py-2 text-center">{job.description}</p>
 </div>
 
-<Buttons {remaining} on:skip on:done />
+<Buttons />

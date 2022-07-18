@@ -1,121 +1,44 @@
 <script>
+	import { jobQueue, setJobQueue } from '$lib/stores/job-queue.js';
+	import Connector from '$lib/job/connector.svelte';
+	import JobActive from '$lib/job/job-active.svelte';
+	import JobDone from '$lib/job/job-done.svelte';
+	import JobPending from '$lib/job/job-pending.svelte';
 	import Nav from '$lib/nav/nav.svelte';
-	import Job from '$lib/job/job.svelte';
+	import UpNext from '$lib/job/up-next.svelte';
 
 	export let name;
 	export let jobs;
 
-	const getNextJob = (jobs) => {
-		for (const [index, job] of jobs.entries()) {
-			if (!job.skipped && !job.done) {
-				return index;
-			}
-		}
-		return -1;
-	};
-
-	const getJobsRemaining = (jobs) => {
-		let remaining = 0;
-		for (const job of jobs) {
-			if (!job.done) {
-				remaining++;
-			}
-		}
-		return remaining;
-	};
-
-	const resetJobs = (jobs) => {
-		for (let index = 0; index < jobs.length; index++) {
-			jobs[index].skipped = false;
-		}
-		return jobs;
-	};
-
-	const skip = () => {
-		const updatedJobs = [...jobs];
-
-		updatedJobs[activeJobIndex].skipped = true;
-
-		if (-1 === getNextJob(updatedJobs)) {
-			resetJobs(updatedJobs);
-		}
-
-		jobs = updatedJobs;
-	};
-
-	const done = () => {
-		const updatedJobs = [...jobs];
-
-		updatedJobs[activeJobIndex].done = true;
-
-		if (-1 === getNextJob(updatedJobs)) {
-			resetJobs(updatedJobs);
-		}
-
-		if (!getJobsRemaining(updatedJobs)) {
-			const container = document.querySelector('#wrap');
-			container.scrollTo({
-				left: 0,
-				top: container.scrollHeight,
-				behavior: 'smooth'
-			});
-		}
-
-		jobs = updatedJobs;
-	};
-
-	const select = (event) => {
-		const updatedJobs = [...jobs];
-		for (let index = event.detail.index; index < activeJobIndex; index++) {
-			updatedJobs[index].skipped = false;
-		}
-		jobs = updatedJobs;
-	};
-
-	const revert = (event) => {
-		const index = event.detail.index;
-		jobs[index].done = false;
-	};
+	setJobQueue(jobs);
 
 	const nickname = name[0].toUpperCase() + name.substring(1);
-	$: activeJobIndex = getNextJob(jobs);
-	$: remaining = getJobsRemaining(jobs);
 </script>
 
 <Nav name={nickname} streak="31" />
 
 <main class="max-w-screen-sm mx-auto p-6 relative">
-	{#each jobs as job, index}
-		{#if index === activeJobIndex}
-			<div
-				class="up-next text-center text-sky-500 font-bold z-0 snap-always snap-start scroll-mt-6"
-			>
-				<p class="bg-white py-2">Up next:</p>
-			</div>
-			<span class="border-l-2 w-0 h-6 block m-auto text-center snap-normal" />
+	{#each $jobQueue.jobs as job, index}
+		{#if index === $jobQueue.active}
+			<UpNext />
 		{/if}
 
-		<Job
-			{job}
-			{index}
-			active={index === activeJobIndex}
-			{remaining}
-			on:skip={skip}
-			on:done={done}
-			on:select={select}
-			on:revert={revert}
-		/>
+		{#if index === $jobQueue.active}
+			<JobActive {job} />
+		{:else if job.done}
+			<JobDone {job} {index} />
+		{:else}
+			<JobPending {job} {index} />
+		{/if}
 
-		{#if index !== jobs.length - 1 || !remaining}
-			<span
-				class="border-l-2 w-0 h-6 block m-auto text-center normal"
-				class:border-slate-200={!job.done}
-				class:border-emerald-400={job.done && index + 1 < jobs.length && jobs[index + 1].done}
+		{#if index !== $jobQueue.jobs.length - 1 || !$jobQueue.remaining}
+			<Connector
+				done={job.done && (!$jobQueue.jobs[index + 1] || $jobQueue.jobs[index + 1].done)}
 			/>
 		{/if}
 	{/each}
 
-	{#if !remaining}
+	{#if !$jobQueue.remaining}
 		<div class="text-center text-emerald-500 font-bold z-0 snap-normal">
 			<p class="bg-white pt-3 text-lg">That's all for now!</p>
 			<p class="bg-white py-2">Check back later for more.</p>
