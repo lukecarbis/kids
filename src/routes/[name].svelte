@@ -5,7 +5,7 @@
 	export let name;
 	export let jobs;
 
-	const getActiveJobIndex = (jobs) => {
+	const getNextJob = (jobs) => {
 		for (const [index, job] of jobs.entries()) {
 			if (!job.skipped && !job.done) {
 				return index;
@@ -14,7 +14,7 @@
 		return -1;
 	};
 
-	const jobsRemaining = (jobs) => {
+	const getJobsRemaining = (jobs) => {
 		let remaining = 0;
 		for (const job of jobs) {
 			if (!job.done) {
@@ -24,8 +24,23 @@
 		return remaining;
 	};
 
+	const resetJobs = (jobs) => {
+		for (let index = 0; index < jobs.length; index++) {
+			jobs[index].skipped = false;
+		}
+		return jobs;
+	};
+
 	const skip = () => {
-		jobs[activeJobIndex].skipped = true;
+		const updatedJobs = [...jobs];
+
+		updatedJobs[activeJobIndex].skipped = true;
+
+		if (-1 === getNextJob(updatedJobs)) {
+			resetJobs(updatedJobs);
+		}
+
+		jobs = updatedJobs;
 	};
 
 	const done = () => {
@@ -33,13 +48,11 @@
 
 		updatedJobs[activeJobIndex].done = true;
 
-		if (-1 === getActiveJobIndex(updatedJobs)) {
-			for (let index = 0; index < updatedJobs.length; index++) {
-				updatedJobs[index].skipped = false;
-			}
+		if (-1 === getNextJob(updatedJobs)) {
+			resetJobs(updatedJobs);
 		}
 
-		if (!jobsRemaining(updatedJobs)) {
+		if (!getJobsRemaining(updatedJobs)) {
 			const container = document.querySelector('#wrap');
 			container.scrollTo({
 				left: 0,
@@ -65,8 +78,8 @@
 	};
 
 	const nickname = name[0].toUpperCase() + name.substring(1);
-	$: activeJobIndex = getActiveJobIndex(jobs);
-	$: remaining = jobsRemaining(jobs);
+	$: activeJobIndex = getNextJob(jobs);
+	$: remaining = getJobsRemaining(jobs);
 </script>
 
 <Nav name={nickname} streak="31" />
@@ -74,7 +87,9 @@
 <main class="max-w-screen-sm mx-auto p-6 relative">
 	{#each jobs as job, index}
 		{#if index === activeJobIndex}
-			<div class="up-next text-center text-sky-500 font-bold z-0 snap-always snap-start scroll-mt-6">
+			<div
+				class="up-next text-center text-sky-500 font-bold z-0 snap-always snap-start scroll-mt-6"
+			>
 				<p class="bg-white py-2">Up next:</p>
 			</div>
 			<span class="border-l-2 w-0 h-6 block m-auto text-center snap-normal" />
