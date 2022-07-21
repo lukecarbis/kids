@@ -13,6 +13,6 @@
 
 <style>
 	.h-calc {
-		height: calc(100vh - 4rem);
+		height: calc(100vh - 8rem);
 	}
 </style>

@@ -9,6 +9,7 @@
 	import JobInactive from '$lib/job/job-inactive.svelte';
 	import JobPending from '$lib/job/job-pending.svelte';
 	import Nav from '$lib/nav/nav.svelte';
+	import Progress from '$lib/progress/progress.svelte';
 	import UpNext from '$lib/job/up-next.svelte';
 
 	export let name;
@@ -24,7 +25,6 @@
 
 <main class="max-w-screen-sm mx-auto px-6 relative">
 	{#each $jobQueue.checkpoints as checkpoint}
-
 		{#if $hour >= checkpoint.hour}
 			<CheckpointActive {checkpoint} />
 		{:else}
@@ -48,11 +48,11 @@
 				{/if}
 
 				{#if index !== checkpoint.toIndex}
-					<Connector
-						done={job.done && index !== checkpoint.toIndex}
-					/>
+					<Connector done={job.done && index !== checkpoint.toIndex} />
 				{/if}
 			{/if}
 		{/each}
 	{/each}
 </main>
+
+<Progress />

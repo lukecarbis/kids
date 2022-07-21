@@ -20,23 +20,23 @@ export async function get({ params }) {
 					emoji: '📚',
 					hour: 8,
 					fromIndex: 9,
-					toIndex: 10
+					toIndex: 11
 				},
 				{
-					title: 'Afternoon Chores',
+					title: 'Afternoon Activities',
 					description: 'Doing your part to keep our home a safe place for everyone.',
 					emoji: '🏡',
 					hour: 15,
-					fromIndex: 11,
-					toIndex: 12
+					fromIndex: 12,
+					toIndex: 13
 				},
 				{
 					title: 'Good night!',
 					description: 'Time to get ready for bed.',
 					emoji: '🌜',
 					hour: 19,
-					fromIndex: 13,
-					toIndex: 14
+					fromIndex: 14,
+					toIndex: 15
 				}
 			],
 			jobs: [
@@ -114,6 +114,13 @@ export async function get({ params }) {
 					title: 'Clarinet',
 					description: 'A little practice every day.',
 					emoji: '🎶',
+					done: false,
+					skipped: false
+				},
+				{
+					title: 'Hebrew Practice',
+					description: 'A second language sharpens the mind.',
+					emoji: '🇮🇱',
 					done: false,
 					skipped: false
 				},
