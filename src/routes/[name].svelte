@@ -11,6 +11,7 @@
 	import Nav from '$lib/nav/nav.svelte';
 	import Progress from '$lib/progress/progress.svelte';
 	import UpNext from '$lib/job/up-next.svelte';
+	import { slide } from 'svelte/transition';
 
 	export let name;
 	export let checkpoints;
@@ -23,7 +24,7 @@
 
 <Nav name={nickname} streak="31" />
 
-<main class="max-w-screen-sm mx-auto px-6 relative">
+<main class="max-w-screen-sm mx-auto px-6 relative" out:slide>
 	{#each $jobQueue.checkpoints as checkpoint}
 		{#if $hour >= checkpoint.hour}
 			<CheckpointActive {checkpoint} />

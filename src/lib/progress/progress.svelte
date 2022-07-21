@@ -1,6 +1,9 @@
 <script>
 	import { jobQueue, getNextJob } from '$lib/stores/job-queue.js';
+	import { slide } from 'svelte/transition';
+
 	$: percentDone = 100 - ($jobQueue.totalRemaining / $jobQueue.jobs.length) * 100;
+
 	const flagPositions = [];
 	for (const checkpoint of $jobQueue.checkpoints) {
 		const position = ((checkpoint.toIndex + 1) / $jobQueue.jobs.length) * 100;
@@ -11,6 +14,7 @@
 
 <footer
 	class="px-6 pt-7 pb-5 w-full bottom-0 z-10 flex items-stretch justify-between border-t-2 border-b-slate-200 bg-white fixed"
+	out:slide
 >
 	<div class="bg-slate-200 h-4 w-full rounded-full relative">
 		<div

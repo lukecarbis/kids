@@ -1,6 +1,6 @@
 <script>
 	export let cb;
-	export let timeout
+	export let timeout;
 
 	let pressTimer = null;
 
