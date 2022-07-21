@@ -16,7 +16,7 @@
 		}, 800);
 	};
 
-	onMount(async () => scrollToActiveJob());
+	// onMount(async () => scrollToActiveJob());
 </script>
 
 <div class="active p-4 border-2 flex flex-wrap bg-sky-100 border-sky-300 rounded-t-lg">
