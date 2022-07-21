@@ -2,7 +2,6 @@
 	import { emojiCode } from '$lib/helpers/emoji-code.js';
 	import { jobQueue, setJobQueue } from '$lib/stores/job-queue.js';
 	import LongPress from '$lib/job/long-press.svelte';
-	import { fade } from 'svelte/transition';
 
 	export let job;
 	export let index;
@@ -17,7 +16,6 @@
 <LongPress cb={revert} timeout="1200">
 	<div
 		class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg snap-always snap-start scroll-mt-6 transition-transform"
-		in:fade
 	>
 		<span class="mr-4 text-center w-6">
 			<img src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
