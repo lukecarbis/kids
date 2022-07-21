@@ -1,6 +1,5 @@
 <script>
-	import { jobQueue, setJobQueue } from '$lib/stores/job-queue.js';
-	import { hour } from '$lib/stores/time.js';
+	import { jobQueue, setJobQueue, isCheckpointOpen } from '$lib/stores/job-queue.js';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
 	import Connector from '$lib/job/connector.svelte';
@@ -26,7 +25,7 @@
 
 <main class="max-w-screen-sm mx-auto px-6 relative" out:slide>
 	{#each $jobQueue.checkpoints as checkpoint}
-		{#if $hour >= checkpoint.hour}
+		{#if isCheckpointOpen(checkpoint)}
 			<CheckpointActive {checkpoint} />
 		{:else}
 			<CheckpointLocked {checkpoint} />
@@ -38,7 +37,7 @@
 					<UpNext />
 				{/if}
 
-				{#if $hour < checkpoint.hour}
+				{#if !isCheckpointOpen(checkpoint)}
 					<JobInactive {job} />
 				{:else if index === $jobQueue.active}
 					<JobActive {job} />

@@ -11,7 +11,7 @@ export const jobQueue = writable({
 
 export const getNextJob = (jobs, checkpoints) => {
 	for (const checkpoint of checkpoints) {
-		if (get(hour) < checkpoint.hour) {
+		if (!isCheckpointOpen(checkpoint)) {
 			continue;
 		}
 		for (const [index, job] of jobs.entries()) {
@@ -29,7 +29,7 @@ export const getJobsRemaining = (jobs, checkpoints) => {
 	let remaining = 0;
 
 	for (const checkpoint of checkpoints) {
-		if (get(hour) < checkpoint.hour) {
+		if (!isCheckpointOpen(checkpoint)) {
 			continue;
 		}
 		for (const [index, job] of jobs.entries()) {
@@ -78,4 +78,13 @@ export const setJobQueue = (jobs, checkpoints = false) => {
 		remaining: getJobsRemaining(jobs, checkpoints),
 		totalRemaining: getTotalJobsRemaining(jobs, checkpoints)
 	});
+};
+
+export const isCheckpointOpen = (checkpoint) => {
+	const jobs = get(jobQueue).jobs.slice(0, checkpoint.toIndex - 1);
+	const doneJobs = jobs.filter((job) => {
+		return job.done;
+	});
+
+	return get(hour) >= checkpoint.hour && doneJobs.length >= checkpoint.fromIndex;
 };
