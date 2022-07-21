@@ -1,6 +1,7 @@
 <script>
 	import { emojiCode } from '$lib/helpers/emoji-code.js';
 	import Buttons from '$lib/job/buttons/buttons.svelte';
+	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	export let job;
 
@@ -19,7 +20,10 @@
 	// onMount(async () => scrollToActiveJob());
 </script>
 
-<div class="active p-4 border-2 flex flex-wrap bg-sky-100 border-sky-300 rounded-t-lg">
+<div
+	class="active p-4 border-2 flex flex-wrap bg-sky-100 border-sky-300 rounded-t-lg"
+	transition:slide
+>
 	<span class="text-center w-full h-10 max-h-full text-4xl">
 		<img class="max-h-full" src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
 	</span>
