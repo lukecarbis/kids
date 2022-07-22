@@ -4,6 +4,7 @@ export async function get({ params }) {
 		headers: {},
 		body: {
 			name: params.name,
+			streak: 42,
 			checkpoints: [
 				{
 					title: 'Good Morning!',

@@ -82,6 +82,7 @@ export const setJobQueue = (jobs, checkpoints = false) => {
 
 export const isCheckpointOpen = (checkpoint) => {
 	const jobs = get(jobQueue).jobs.slice(0, checkpoint.toIndex - 1);
+
 	const doneJobs = jobs.filter((job) => {
 		return job.done;
 	});

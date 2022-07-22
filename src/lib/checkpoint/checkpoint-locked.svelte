@@ -25,7 +25,7 @@
 		}
 	};
 
-	let isFirstDisabledCheckpoint = getFirstDisabledCheckpoint() === checkpoint;
+	$: isFirstDisabledCheckpoint = getFirstDisabledCheckpoint() === checkpoint;
 </script>
 
 <div

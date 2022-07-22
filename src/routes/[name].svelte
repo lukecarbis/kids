@@ -13,6 +13,7 @@
 	import { slide } from 'svelte/transition';
 
 	export let name;
+	export let streak;
 	export let checkpoints;
 	export let jobs;
 
@@ -21,7 +22,7 @@
 	const nickname = name[0].toUpperCase() + name.substring(1);
 </script>
 
-<Nav name={nickname} streak="31" />
+<Nav name={nickname} {streak} />
 
 <main class="max-w-screen-sm mx-auto px-6 relative" out:slide>
 	{#each $jobQueue.checkpoints as checkpoint}
