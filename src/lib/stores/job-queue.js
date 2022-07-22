@@ -1,4 +1,4 @@
-import { hour } from '$lib/stores/time.js';
+import { hour } from '$lib/stores/time';
 import { get, writable } from 'svelte/store';
 
 export const jobQueue = writable({
