@@ -1,5 +1,6 @@
 <script>
-	import { createUser, signUserIn } from '$lib/firebase';
+	import { signUserIn } from '$lib/firebase';
+	import Error from '$lib/auth/error.svelte';
 
 	let username = '';
 	let password = '';
@@ -8,13 +9,11 @@
 	const signIn = async () => {
 		result = signUserIn(username, password);
 	};
-
-	const signUp = async () => {
-		result = createUser(username, password);
-	};
 </script>
 
-<section class="font-mono max-w-screen-sm flex items-center justify-center h-screen mx-auto px-6">
+<section
+	class="font-mono max-w-screen-sm flex items-top justify-center h-screen mx-auto px-6 mt-10 pt-12"
+>
 	<form on:submit|preventDefault={signIn} class="w-64">
 		<h2 class="mb-6 text-center font-bold">Sign In</h2>
 		<input
@@ -34,21 +33,7 @@
 				<p class="text-emerald-500 text-sm mb-6 text-center">Welcome!</p>
 			{/if}
 		{:catch error}
-			{#if error.code === 'auth/invalid-email'}
-				<p class="text-rose-500 text-sm mb-6 text-center">Invalid email.</p>
-			{:else if error.code === 'auth/user-disabled'}
-				<p class="text-rose-500 text-sm mb-6 text-center">This account is disable.</p>
-			{:else if error.code === 'auth/email-already-in-use'}
-				<p class="text-rose-500 text-sm mb-6 text-center">Email already in use.</p>
-			{:else if error.code === 'auth/weak-password'}
-				<p class="text-rose-500 text-sm mb-6 text-center">Your password sucks.</p>
-			{:else if error.code === 'auth/too-many-requests'}
-				<p class="text-rose-500 text-sm mb-6 text-center">Too many attempts. Try later.</p>
-			{:else if error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password'}
-				<p class="text-rose-500 text-sm mb-6 text-center">Wrong password. Try again?</p>
-			{:else}
-				<p class="text-rose-500 text-sm mb-6 text-center">Unable to sign in.</p>
-			{/if}
+			<Error errorCode={error.code} />
 		{/await}
 		<button
 			type="submit"
@@ -82,24 +67,6 @@
 			{:catch error}
 				Sign In
 			{/await}
-		</button>
-
-		<div class="relative">
-			<hr class="border-b-2 border-t-0 mb-10 py-2" />
-
-			<span
-				class="absolute w-12 uppercase -ml-6 top-0 top-2 left-1/2 text-center bg-white text-sm text-slate-800"
-			>
-				Or
-			</span>
-		</div>
-
-		<button
-			on:click|preventDefault={signUp}
-			class:pointer-events-none={username === '' || password === ''}
-			class="select-none w-full h-10 leading-4 mb-6 border border-b-2 rounded-lg active:border-b px-4 py-2 active:mt-px"
-		>
-			Sign Up
 		</button>
 	</form>
 </section>
