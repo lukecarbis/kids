@@ -1,5 +1,4 @@
 <script>
-	import SignOut from '$lib/auth/sign-out-button.svelte';
 	import { session } from '$app/stores';
 </script>
 
@@ -9,7 +8,7 @@
 	<a href="/" class="text-sky-500">Home</a>
 	<div>
 		{#if $session.loggedIn}
-			<SignOut />
+			<a href="/sign-out" class="text-sky-500 pl-6">Sign Out</a>
 		{:else}
 			<a href="/sign-up" class="text-amber-500 pl-6">Sign Up</a>
 			<a href="/sign-in" class="text-sky-500 pl-6">Sign In</a>
