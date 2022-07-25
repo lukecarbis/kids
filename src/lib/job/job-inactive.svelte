@@ -1,5 +1,5 @@
 <script>
-	import { emojiCode } from '$lib/helpers/emoji-code.js';
+	import { emojiCode } from '$lib/helpers/emoji-code';
 	export let job;
 </script>
 

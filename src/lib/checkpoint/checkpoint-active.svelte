@@ -1,5 +1,5 @@
 <script>
-	import { queue } from '$lib/stores/queue.js';
+	import { queue } from '$lib/stores/queue';
 	import Connector from '$lib/job/connector.svelte';
 	import { slide } from 'svelte/transition';
 	export let checkpoint;

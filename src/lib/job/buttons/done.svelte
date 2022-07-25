@@ -5,7 +5,7 @@
 		getJobsRemaining,
 		resetSkippedJobs,
 		setQueue
-	} from '$lib/stores/queue.js';
+	} from '$lib/stores/queue';
 
 	const done = () => {
 		let jobs = [...$queue.jobs];

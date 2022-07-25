@@ -1,5 +1,5 @@
 <script>
-	import { queue, getNextJob, resetSkippedJobs, setQueue } from '$lib/stores/queue.js';
+	import { queue, getNextJob, resetSkippedJobs, setQueue } from '$lib/stores/queue';
 
 	const skip = () => {
 		let jobs = [...$queue.jobs];

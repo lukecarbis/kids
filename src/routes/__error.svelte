@@ -1,8 +1,7 @@
 <script context="module">
-	export function load({ error, status }) {
+	export function load({ status }) {
 		return {
 			props: {
-				message: error.message,
 				status
 			}
 		};
@@ -10,10 +9,9 @@
 </script>
 
 <script>
-	import { emojiCode } from '$lib/helpers/emoji-code.js';
+	import { emojiCode } from '$lib/helpers/emoji-code';
 	import Nav from '$lib/header/nav-main.svelte';
 	export let status; // The error code. For example "500" or "404".
-	export let message; // The error message. For example "Not found."
 </script>
 
 <Nav />

@@ -1,5 +1,5 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queue.js';
+	import { queue, setQueue } from '$lib/stores/queue';
 
 	export let index;
 

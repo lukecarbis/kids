@@ -1,5 +1,5 @@
 <script>
-	import { queue, getNextJob } from '$lib/stores/queue.js';
+	import { queue, getNextJob } from '$lib/stores/queue';
 	import { slide } from 'svelte/transition';
 
 	$: percentDone = 100 - ($queue.totalRemaining / $queue.jobs.length) * 100;

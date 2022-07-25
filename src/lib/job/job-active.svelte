@@ -1,5 +1,5 @@
 <script>
-	import { emojiCode } from '$lib/helpers/emoji-code.js';
+	import { emojiCode } from '$lib/helpers/emoji-code';
 	import Buttons from '$lib/job/buttons/buttons.svelte';
 	import { slide } from 'svelte/transition';
 	import { onMount } from 'svelte';

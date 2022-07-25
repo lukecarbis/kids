@@ -1,5 +1,5 @@
 <script>
-	import { queue } from '$lib/stores/queue.js';
+	import { queue } from '$lib/stores/queue';
 	import Skip from '$lib/job/buttons/skip.svelte';
 	import Done from '$lib/job/buttons/done.svelte';
 	import { slide } from 'svelte/transition';

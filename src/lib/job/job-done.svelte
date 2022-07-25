@@ -1,6 +1,6 @@
 <script>
-	import { emojiCode } from '$lib/helpers/emoji-code.js';
-	import { queue, setQueue } from '$lib/stores/queue.js';
+	import { emojiCode } from '$lib/helpers/emoji-code';
+	import { queue, setQueue } from '$lib/stores/queue';
 	import LongPress from '$lib/job/long-press.svelte';
 
 	export let job;

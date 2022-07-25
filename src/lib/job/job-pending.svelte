@@ -1,5 +1,5 @@
 <script>
-	import { emojiCode } from '$lib/helpers/emoji-code.js';
+	import { emojiCode } from '$lib/helpers/emoji-code';
 	import Select from '$lib/job/buttons/select.svelte';
 	export let job;
 	export let index;
