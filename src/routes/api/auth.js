@@ -2,6 +2,7 @@ import { serialize } from 'cookie-esm';
 import { auth } from '$lib/firebase';
 import {
 	createUserWithEmailAndPassword,
+	sendEmailVerification,
 	signInWithEmailAndPassword,
 	signOut,
 	updateProfile
@@ -15,6 +16,7 @@ export async function post({ request }) {
 		if (signUp) {
 			// await createUserWithEmailAndPassword(auth, email, password);
 			// await updateProfile(auth.currentUser, { displayName: name });
+			// await sendEmailVerification(auth.currentUser)
 		} else {
 			await signInWithEmailAndPassword(auth, email, password);
 		}
@@ -34,7 +36,7 @@ export async function post({ request }) {
 	} catch (error) {
 		return {
 			status: 400,
-			body: { message: error.code }
+			body: { message: error }
 		};
 	}
 }
