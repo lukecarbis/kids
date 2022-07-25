@@ -14,7 +14,7 @@ export async function post({ request }) {
 	try {
 		if (signUp) {
 			await createUserWithEmailAndPassword(auth, email, password);
-			await updateProfile(auth.currentUser, { displayName: name });
+			// await updateProfile(auth.currentUser, { displayName: name });
 		} else {
 			await signInWithEmailAndPassword(auth, email, password);
 		}
