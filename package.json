@@ -37,6 +37,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"cookie-esm": "^1.0.1",
 		"firebase": "^9.9.0"
 	}
 }

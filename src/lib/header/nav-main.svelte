@@ -1,11 +1,6 @@
 <script>
-	import { auth, signUserOut } from '$lib/firebase';
-
-	let user = auth.currentUser;
-
-	auth.onAuthStateChanged(() => {
-		user = auth.currentUser;
-	});
+	import SignOut from '$lib/auth/sign-out-button.svelte';
+	import { session } from '$app/stores';
 </script>
 
 <header
@@ -13,11 +8,11 @@
 >
 	<a href="/" class="text-sky-500">Home</a>
 	<div>
-		{#if user}
-			<button on:click={signUserOut} class="text-sky-500">Sign Out</button>
+		{#if $session.loggedIn}
+			<SignOut />
 		{:else}
-			<a href="/signup" class="text-amber-500 pl-6">Sign Up</a>
-			<a href="/signin" class="text-sky-500 pl-6">Sign In</a>
+			<a href="/sign-up" class="text-amber-500 pl-6">Sign Up</a>
+			<a href="/sign-in" class="text-sky-500 pl-6">Sign In</a>
 		{/if}
 	</div>
 </header>

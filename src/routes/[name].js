@@ -1,4 +1,7 @@
-export async function get({ params }) {
+export async function get({ locals, params }) {
+	if (!locals.loggedIn) {
+		return { status: 404 };
+	}
 	return {
 		status: 200,
 		headers: {},

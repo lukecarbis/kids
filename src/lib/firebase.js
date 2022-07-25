@@ -23,7 +23,7 @@ initializeApp(firebaseConfig);
 export const auth = getAuth();
 setPersistence(auth, browserSessionPersistence);
 
-export const createUser = (email, password) => {
+export const createUser = (name, email, password) => {
 	return createUserWithEmailAndPassword(auth, email, password);
 };
 

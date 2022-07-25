@@ -1,13 +1,7 @@
 <script>
 	import List from '$lib/list/list.svelte';
 	import Nav from '$lib/header/nav-main.svelte';
-	import { auth } from '$lib/firebase';
-
-	let user = auth.currentUser;
-
-	auth.onAuthStateChanged(() => {
-		user = auth.currentUser;
-	});
+	import { session } from '$app/stores';
 </script>
 
 <Nav />
@@ -17,7 +11,7 @@
 	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 >
 	<main class="max-w-screen-sm mx-auto px-6 my-20 text-center">
-		{#if user}
+		{#if $session.loggedIn}
 			<List />
 		{:else}
 			Marketing copy goes here.
