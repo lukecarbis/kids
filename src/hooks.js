@@ -3,6 +3,7 @@ import { auth } from '$lib/firebase';
 
 export const handle = async ({ event, resolve }) => {
 	const cookies = parse(event.request.headers.get('cookie') || '');
+	event.request.headers.set('Access-Control-Allow-Origin', '*');
 
 	if (
 		!cookies.sessionId ||
