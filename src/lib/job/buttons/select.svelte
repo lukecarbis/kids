@@ -1,14 +1,14 @@
 <script>
-	import { jobQueue, setJobQueue } from '$lib/stores/job-queue.js';
+	import { queue, setQueue } from '$lib/stores/queue.js';
 
 	export let index;
 
 	const select = () => {
-		const jobs = [...$jobQueue.jobs];
-		for (let i = index; i < $jobQueue.active; i++) {
+		const jobs = [...$queue.jobs];
+		for (let i = index; i < $queue.active; i++) {
 			jobs[i].skipped = false;
 		}
-		setJobQueue(jobs);
+		setQueue(jobs);
 	};
 </script>
 

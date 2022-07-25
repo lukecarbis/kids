@@ -1,16 +1,16 @@
 <script>
-	import { jobQueue, getNextJob, resetSkippedJobs, setJobQueue } from '$lib/stores/job-queue.js';
+	import { queue, getNextJob, resetSkippedJobs, setQueue } from '$lib/stores/queue.js';
 
 	const skip = () => {
-		let jobs = [...$jobQueue.jobs];
+		let jobs = [...$queue.jobs];
 
-		jobs[$jobQueue.active].skipped = true;
+		jobs[$queue.active].skipped = true;
 
-		if (-1 === getNextJob(jobs, $jobQueue.checkpoints)) {
+		if (-1 === getNextJob(jobs, $queue.checkpoints)) {
 			jobs = resetSkippedJobs(jobs);
 		}
 
-		setJobQueue(jobs);
+		setQueue(jobs);
 	};
 </script>
 

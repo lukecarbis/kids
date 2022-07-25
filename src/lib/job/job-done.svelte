@@ -1,15 +1,15 @@
 <script>
 	import { emojiCode } from '$lib/helpers/emoji-code.js';
-	import { jobQueue, setJobQueue } from '$lib/stores/job-queue.js';
+	import { queue, setQueue } from '$lib/stores/queue.js';
 	import LongPress from '$lib/job/long-press.svelte';
 
 	export let job;
 	export let index;
 
 	const revert = () => {
-		const jobs = [...$jobQueue.jobs];
+		const jobs = [...$queue.jobs];
 		jobs[index].done = false;
-		setJobQueue(jobs);
+		setQueue(jobs);
 	};
 </script>
 

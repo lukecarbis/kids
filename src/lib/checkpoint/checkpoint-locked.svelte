@@ -1,5 +1,5 @@
 <script>
-	import { jobQueue, isCheckpointOpen } from '$lib/stores/job-queue.js';
+	import { queue, isCheckpointOpen } from '$lib/stores/queue.js';
 	import Connector from '$lib/job/connector.svelte';
 	import { slide } from 'svelte/transition';
 	export let checkpoint;
@@ -17,7 +17,7 @@
 	};
 
 	const getFirstDisabledCheckpoint = () => {
-		for (const checkpoint of $jobQueue.checkpoints) {
+		for (const checkpoint of $queue.checkpoints) {
 			if (isCheckpointOpen(checkpoint)) {
 				continue;
 			}
@@ -33,7 +33,7 @@
 	class:up-next={isFirstDisabledCheckpoint}
 	transition:slide
 >
-	{#if !$jobQueue.remaining && isFirstDisabledCheckpoint}
+	{#if !$queue.remaining && isFirstDisabledCheckpoint}
 		<p class="bg-white leading-8 text-emerald-500 font-bold">That's all for now!</p>
 		<p class="bg-white pb-4 leading-8 text-slate-500">
 			Check back at <span class="font-bold">{getHourString(checkpoint.hour)}</span> for more!

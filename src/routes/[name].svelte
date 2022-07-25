@@ -1,5 +1,5 @@
 <script>
-	import { jobQueue, setJobQueue, isCheckpointOpen } from '$lib/stores/job-queue';
+	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
 	import Connector from '$lib/job/connector.svelte';
@@ -17,7 +17,7 @@
 	export let checkpoints;
 	export let jobs;
 
-	setJobQueue(jobs, checkpoints);
+	setQueue(jobs, checkpoints);
 
 	const nickname = name[0].toUpperCase() + name.substring(1);
 </script>
@@ -29,22 +29,22 @@
 	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 >
 	<main class="max-w-screen-sm mx-auto px-6 relative" out:slide>
-		{#each $jobQueue.checkpoints as checkpoint}
+		{#each $queue.checkpoints as checkpoint}
 			{#if isCheckpointOpen(checkpoint)}
 				<CheckpointActive {checkpoint} />
 			{:else}
 				<CheckpointLocked {checkpoint} />
 			{/if}
 
-			{#each $jobQueue.jobs as job, index}
+			{#each $queue.jobs as job, index}
 				{#if index >= checkpoint.fromIndex && index <= checkpoint.toIndex}
-					{#if index === $jobQueue.active && index !== checkpoint.fromIndex}
+					{#if index === $queue.active && index !== checkpoint.fromIndex}
 						<UpNext />
 					{/if}
 
 					{#if !isCheckpointOpen(checkpoint)}
 						<JobInactive {job} />
-					{:else if index === $jobQueue.active}
+					{:else if index === $queue.active}
 						<JobActive {job} />
 					{:else if job.done}
 						<JobDone {job} {index} />

@@ -1,5 +1,5 @@
 <script>
-	import { jobQueue } from '$lib/stores/job-queue.js';
+	import { queue } from '$lib/stores/queue.js';
 	import Connector from '$lib/job/connector.svelte';
 	import { slide } from 'svelte/transition';
 	export let checkpoint;
@@ -7,7 +7,7 @@
 
 <div
 	class="checkpoint mt-6 mb-2 text-center z-0 snap-always snap-start scroll-mt-6"
-	class:up-next={$jobQueue.active === checkpoint.fromIndex}
+	class:up-next={$queue.active === checkpoint.fromIndex}
 	transition:slide
 >
 	<p class="bg-white text-sky-500 font-bold text-xl py-2">{checkpoint.title}</p>

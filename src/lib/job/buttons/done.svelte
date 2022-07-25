@@ -1,23 +1,29 @@
 <script>
-	import { jobQueue, getNextJob, getJobsRemaining, resetSkippedJobs, setJobQueue } from '$lib/stores/job-queue.js';
+	import {
+		queue,
+		getNextJob,
+		getJobsRemaining,
+		resetSkippedJobs,
+		setQueue
+	} from '$lib/stores/queue.js';
 
 	const done = () => {
-		let jobs = [...$jobQueue.jobs];
+		let jobs = [...$queue.jobs];
 
-		jobs[$jobQueue.active].done = true;
+		jobs[$queue.active].done = true;
 
-		if (-1 === getNextJob(jobs, $jobQueue.checkpoints)) {
+		if (-1 === getNextJob(jobs, $queue.checkpoints)) {
 			jobs = resetSkippedJobs(jobs);
 		}
 
-		if (!getJobsRemaining(jobs, $jobQueue.checkpoints)) {
+		if (!getJobsRemaining(jobs, $queue.checkpoints)) {
 			const container = document.querySelector('#wrap');
 			const checkpoint = document.querySelector('.checkpoint.locked');
 
-			let top = container.scrollHeight
+			let top = container.scrollHeight;
 
-			if ( checkpoint ) {
-				top = checkpoint.offsetTop
+			if (checkpoint) {
+				top = checkpoint.offsetTop;
 			}
 
 			container.scrollTo({
@@ -27,7 +33,7 @@
 			});
 		}
 
-		setJobQueue(jobs);
+		setQueue(jobs);
 	};
 </script>
 

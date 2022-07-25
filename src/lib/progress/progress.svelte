@@ -1,12 +1,12 @@
 <script>
-	import { jobQueue, getNextJob } from '$lib/stores/job-queue.js';
+	import { queue, getNextJob } from '$lib/stores/queue.js';
 	import { slide } from 'svelte/transition';
 
-	$: percentDone = 100 - ($jobQueue.totalRemaining / $jobQueue.jobs.length) * 100;
+	$: percentDone = 100 - ($queue.totalRemaining / $queue.jobs.length) * 100;
 
 	const flagPositions = [];
-	for (const checkpoint of $jobQueue.checkpoints) {
-		const position = ((checkpoint.toIndex + 1) / $jobQueue.jobs.length) * 100;
+	for (const checkpoint of $queue.checkpoints) {
+		const position = ((checkpoint.toIndex + 1) / $queue.jobs.length) * 100;
 		flagPositions.push(position);
 	}
 	flagPositions.pop();
@@ -20,13 +20,13 @@
 		<div
 			style="width:{percentDone}%;"
 			class="bg-sky-500 h-4 rounded-full px-3 pt-1 transition-all box-border"
-			class:bg-sky-500={-1 !== getNextJob($jobQueue.jobs, $jobQueue.checkpoints)}
-			class:bg-emerald-400={-1 === getNextJob($jobQueue.jobs, $jobQueue.checkpoints)}
+			class:bg-sky-500={-1 !== getNextJob($queue.jobs, $queue.checkpoints)}
+			class:bg-emerald-400={-1 === getNextJob($queue.jobs, $queue.checkpoints)}
 		>
 			<div
 				class="h-1 w-full rounded-full transform-all"
-				class:bg-sky-400={-1 !== getNextJob($jobQueue.jobs, $jobQueue.checkpoints)}
-				class:bg-emerald-300={-1 === getNextJob($jobQueue.jobs, $jobQueue.checkpoints)}
+				class:bg-sky-400={-1 !== getNextJob($queue.jobs, $queue.checkpoints)}
+				class:bg-emerald-300={-1 === getNextJob($queue.jobs, $queue.checkpoints)}
 			>
 				{#each flagPositions as flagPosition}
 					<svg
