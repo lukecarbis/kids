@@ -3,6 +3,7 @@ import {
 	browserSessionPersistence,
 	createUserWithEmailAndPassword,
 	getAuth,
+	updateProfile,
 	setPersistence,
 	signInWithEmailAndPassword,
 	signOut
@@ -23,8 +24,12 @@ initializeApp(firebaseConfig);
 export const auth = getAuth();
 setPersistence(auth, browserSessionPersistence);
 
-export const createUser = (name, email, password) => {
+export const createUser = (email, password) => {
 	return createUserWithEmailAndPassword(auth, email, password);
+};
+
+export const updateUserDisplayName = (name) => {
+	return updateProfile(auth.currentUser, { displayName: name });
 };
 
 export const signUserIn = (email, password) => {

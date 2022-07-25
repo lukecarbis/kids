@@ -1,5 +1,5 @@
 import { serialize } from 'cookie-esm';
-import { auth, createUser, signUserIn } from '$lib/firebase';
+import { auth, createUser, updateUserDisplayName, signUserIn } from '$lib/firebase';
 
 export async function post({ request }) {
 	const body = await request.json();
@@ -7,7 +7,8 @@ export async function post({ request }) {
 
 	try {
 		if (signUp) {
-			await createUser(name, email, password);
+			await createUser(email, password);
+			await updateUserDisplayName(name);
 		} else {
 			await signUserIn(email, password);
 		}
