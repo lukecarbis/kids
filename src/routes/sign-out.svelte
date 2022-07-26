@@ -1,7 +1,6 @@
 <script context="module">
-	import { auth } from '$lib/firebase/client';
+	import { auth } from '$lib/firebase';
 	import { signOut } from 'firebase/auth';
-	import { goto } from '$app/navigation';
 
 	export async function load({ fetch }) {
 		await signOut(auth);
@@ -10,16 +9,9 @@
 			headers: { 'Content-Type': 'application/json' }
 		});
 
-		return {};
+		return {
+			status: 302,
+			redirect: '/'
+		};
 	}
-</script>
-
-<script>
-	import { session } from '$app/stores';
-	if ($session) {
-		session.set({
-			loggedIn: false
-		});
-	}
-	goto('/');
 </script>

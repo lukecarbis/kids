@@ -1,6 +1,12 @@
 <script>
-	import { session } from '$app/stores';
+	import { auth } from '$lib/firebase';
 	import { goto } from '$app/navigation';
+	import {
+		createUserWithEmailAndPassword,
+		updateProfile,
+		sendEmailVerification,
+		signInWithEmailAndPassword
+	} from 'firebase/auth';
 	import Error from '$lib/auth/error.svelte';
 
 	let name = '';
@@ -19,26 +25,31 @@
 	const submit = async () => {
 		loading = true;
 
-		const result = await fetch('/api/auth', {
-			method: 'POST',
-			body: JSON.stringify({ signUp, name, email, password }),
-			headers: { 'Content-Type': 'application/json' }
-		});
+		try {
+			if (signUp) {
+				await createUserWithEmailAndPassword(auth, email, password);
+				await updateProfile(auth.currentUser, { displayName: name });
+				await sendEmailVerification(auth.currentUser);
+			} else {
+				await signInWithEmailAndPassword(auth, email, password);
+			}
 
-		const body = await result.json();
-		loading = false;
-
-		if (result.ok) {
-			session.set({
-				loggedIn: true,
-				uid: body.user.uid,
-				name: body.user.name,
-				email: body.user.email
+			await fetch('/api/auth', {
+				method: 'POST',
+				body: JSON.stringify({
+					loggedIn: true,
+					name: auth.currentUser.displayName,
+					email: auth.currentUser.email
+				}),
+				headers: { 'Content-Type': 'application/json' }
 			});
-			await goto('/');
-		} else {
-			errorCode = body.message;
+
+			goto('/');
+		} catch (error) {
+			errorCode = error.code;
 		}
+
+		loading = false;
 	};
 </script>
 

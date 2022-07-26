@@ -2,17 +2,17 @@
 	export let errorCode;
 </script>
 
-{#if errorCode === 'INVALID_EMAIL'}
+{#if errorCode === 'auth/invalid-email'}
 	<p class="text-rose-500 text-sm mb-6 text-center">Invalid email.</p>
-{:else if errorCode === 'USER_DISABLED'}
+{:else if errorCode === 'auth/user-disabled'}
 	<p class="text-rose-500 text-sm mb-6 text-center">This account is disable.</p>
-{:else if errorCode === 'EMAIL_EXISTS'}
+{:else if errorCode === 'auth/email-already-in-use'}
 	<p class="text-rose-500 text-sm mb-6 text-center">Email already in use.</p>
-{:else if errorCode === 'WEAK_PASSWORD'}
+{:else if errorCode === 'auth/weak-password'}
 	<p class="text-rose-500 text-sm mb-6 text-center">Your password sucks.</p>
-{:else if errorCode === 'TOO_MANY_ATTEMPTS_TRY_LATER'}
+{:else if errorCode === 'auth/too-many-requests'}
 	<p class="text-rose-500 text-sm mb-6 text-center">Too many attempts. Try later.</p>
-{:else if errorCode === 'USER_NOT_FOUND' || errorCode === 'INVALID_PASSWORD'}
+{:else if errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password'}
 	<p class="text-rose-500 text-sm mb-6 text-center">Wrong password. Try again?</p>
 {:else}
 	<p class="text-rose-500 text-sm mb-6 text-center">Unable to sign in.</p>

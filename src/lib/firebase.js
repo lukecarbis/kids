@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { browserSessionPersistence, getAuth, setPersistence } from 'firebase/auth';
+import { browserLocalPersistence, getAuth, setPersistence } from 'firebase/auth';
 // import 'firebase/firestore';
 
 const firebaseConfig = {
@@ -11,9 +11,9 @@ const firebaseConfig = {
 	appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig, 'CLIENT');
+const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-setPersistence(auth, browserSessionPersistence);
+setPersistence(auth, browserLocalPersistence);
 
 // export const db = firebase.firestore();
