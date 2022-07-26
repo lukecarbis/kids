@@ -9,9 +9,17 @@
 			headers: { 'Content-Type': 'application/json' }
 		});
 
-		return {
-			status: 302,
-			redirect: '/'
-		};
+		return {};
+	}
+</script>
+
+<script>
+	import { browser } from '$app/env';
+	import { session } from '$app/stores';
+	import { goto } from '$app/navigation';
+
+	if (browser) {
+		session.set({ loggedIn: false });
+		goto('/');
 	}
 </script>
