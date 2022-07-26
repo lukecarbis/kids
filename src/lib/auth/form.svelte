@@ -34,12 +34,16 @@
 				await signInWithEmailAndPassword(auth, email, password);
 			}
 
+			const idToken = await auth.currentUser.getIdToken();
+
 			await fetch('/api/auth', {
 				method: 'POST',
 				body: JSON.stringify({
 					loggedIn: true,
+					uid: auth.currentUser.uid,
 					name: auth.currentUser.displayName,
-					email: auth.currentUser.email
+					email: auth.currentUser.email,
+					idToken: idToken
 				}),
 				headers: { 'Content-Type': 'application/json' }
 			});
