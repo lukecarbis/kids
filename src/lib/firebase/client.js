@@ -11,9 +11,9 @@ const firebaseConfig = {
 	appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig, 'CLIENT');
 
-export const auth = getAuth();
+export const auth = getAuth(app);
 setPersistence(auth, browserSessionPersistence);
 
 // export const db = firebase.firestore();

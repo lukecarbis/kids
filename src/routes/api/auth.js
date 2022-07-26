@@ -1,53 +1,97 @@
 import { serialize } from 'cookie-esm';
-import { auth } from '$lib/firebase';
-import {
-	createUserWithEmailAndPassword,
-	sendEmailVerification,
-	signInWithEmailAndPassword,
-	signOut,
-	updateProfile
-} from 'firebase/auth';
+import { auth } from '$lib/firebase/admin';
+import { dev } from '$app/env';
+
+const key = import.meta.env.VITE_FIREBASE_API_KEY;
+const apiUrl = 'https://identitytoolkit.googleapis.com/v1';
 
 export async function post({ request }) {
-	const body = await request.json();
-	const { signUp, name, email, password } = body;
+	const { signUp, name, email, password } = await request.json();
 
-	try {
-		if (signUp) {
-			await createUserWithEmailAndPassword(auth, email, password);
-			await updateProfile(auth.currentUser, { displayName: name });
-			await sendEmailVerification(auth.currentUser);
-		} else {
-			await signInWithEmailAndPassword(auth, email, password);
-		}
+	let endpoint = 'accounts:signInWithPassword';
+	if (signUp) {
+		endpoint = 'accounts:signUp';
+	}
 
-		return {
-			status: 200,
-			headers: { 'Set-Cookie': authCookie() },
-			body: {
-				message: 'success',
-				user: {
-					uid: auth.currentUser.uid,
-					name: auth.currentUser.displayName,
-					email: auth.currentUser.email
-				}
-			}
-		};
-	} catch (error) {
+	const identityRequest = await fetch(`${apiUrl}/${endpoint}?key=${key}`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ email, password, returnSecureToken: true })
+	});
+
+	const id = await identityRequest.json();
+
+	const { error, idToken, refreshToken } = id;
+
+	if (!identityRequest.ok) {
 		return {
 			status: 400,
-			body: { message: error.code }
+			body: error
 		};
 	}
+
+	if (signUp) {
+		await fetch(`${apiUrl}/accounts:update?key=${key}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ idToken, displayName: name })
+		});
+		await fetch(`${apiUrl}/accounts:update?sendOobCode=${key}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ idToken, requestType: 'VERIFY_EMAIL' })
+		});
+	}
+
+	const customToken = await auth().createCustomToken(id.localId);
+
+	return {
+		status: 200,
+		headers: {
+			'Set-Cookie': [
+				serialize('refreshToken', refreshToken, {
+					httpOnly: true,
+					maxAge: 60 * 60 * 24 * 30,
+					sameSite: 'lax',
+					path: '/',
+					secure: !dev
+				}),
+				serialize('customToken', customToken, {
+					httpOnly: true,
+					maxAge: 60 * 55,
+					sameSite: 'lax',
+					path: '/',
+					secure: !dev
+				})
+			]
+		},
+		body: {
+			message: 'success',
+			user: {
+				uid: id.localId,
+				name: id.displayName,
+				email: id.email
+			}
+		}
+	};
 }
 
 export async function del() {
 	try {
-		await signOut(auth);
-
 		return {
 			status: 200,
-			headers: { 'Set-Cookie': deAuthCookie() },
+			headers: {
+				'Set-Cookie': [
+					serialize('refreshToken', '', {
+						expires: new Date(0),
+						path: '/'
+					}),
+					serialize('customToken', '', {
+						expires: new Date(0),
+						path: '/'
+					})
+				]
+			},
 			body: { message: 'success' }
 		};
 	} catch (error) {
@@ -57,19 +101,3 @@ export async function del() {
 		};
 	}
 }
-
-const authCookie = () => {
-	return serialize('sessionId', auth.currentUser.stsTokenManager.accessToken, {
-		httpOnly: true,
-		maxAge: 60 * 60 * 24 * 30,
-		sameSite: 'lax',
-		path: '/'
-	});
-};
-
-const deAuthCookie = () => {
-	return serialize('sessionId', '', {
-		expires: new Date(0),
-		path: '/'
-	});
-};

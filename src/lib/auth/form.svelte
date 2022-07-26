@@ -2,12 +2,6 @@
 	import { session } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import Error from '$lib/auth/error.svelte';
-	import {
-		createUserWithEmailAndPassword,
-		sendEmailVerification,
-		updateProfile
-	} from 'firebase/auth';
-	import { auth } from '$lib/firebase';
 
 	let name = '';
 	let email = '';
@@ -25,41 +19,25 @@
 	const submit = async () => {
 		loading = true;
 
-		if (!signUp) {
-			const result = await fetch('/api/auth', {
-				method: 'POST',
-				body: JSON.stringify({ signUp, name, email, password }),
-				headers: { 'Content-Type': 'application/json' }
-			});
+		const result = await fetch('/api/auth', {
+			method: 'POST',
+			body: JSON.stringify({ signUp, name, email, password }),
+			headers: { 'Content-Type': 'application/json' }
+		});
 
-			const body = await result.json();
+		const body = await result.json();
+		loading = false;
 
-			loading = false;
-
-			if (result.ok) {
-				session.set({
-					loggedIn: true,
-					uid: body.user.uid,
-					name: body.user.name,
-					email: body.user.email
-				});
-				await goto('/');
-			} else {
-				errorCode = body.message;
-			}
-		}
-
-		if (signUp) {
-			await createUserWithEmailAndPassword(auth, email, password);
-			await updateProfile(auth.currentUser, { displayName: name });
-			await sendEmailVerification(auth.currentUser);
+		if (result.ok) {
 			session.set({
 				loggedIn: true,
-				uid: auth.currentUser.uid,
-				name: auth.currentUser.name,
-				email: auth.currentUser.email
+				uid: body.user.uid,
+				name: body.user.name,
+				email: body.user.email
 			});
 			await goto('/');
+		} else {
+			errorCode = body.message;
 		}
 	};
 </script>
