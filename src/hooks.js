@@ -11,7 +11,6 @@ export const handle = async ({ event, resolve }) => {
 };
 
 export const getSession = ({ locals }) => {
-	console.log(locals);
 	return {
 		loggedIn: locals.loggedIn,
 		uid: locals.uid,

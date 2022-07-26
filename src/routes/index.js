@@ -1,18 +1,17 @@
-export async function get({ locals, params }) {
+export async function get({ locals }) {
 	if (!locals.loggedIn) {
-		return { status: 404 };
+		return { status: 200 };
 	}
 
 	const apiUrl = 'https://kids-bdcfb-default-rtdb.asia-southeast1.firebasedatabase.app';
-	const slug = params.name;
 	const uid = locals.uid;
 	const idToken = locals.idToken;
 
-	if (!slug || !uid || !idToken) {
+	if (!uid || !idToken) {
 		return { status: 500 };
 	}
 
-	const result = await fetch(`${apiUrl}/${uid}/${slug}.json?auth=${idToken}`);
+	const result = await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`);
 	const body = await result.json();
 
 	if (!body) {
@@ -22,6 +21,9 @@ export async function get({ locals, params }) {
 	return {
 		status: 200,
 		headers: {},
-		body
+		body: {
+			slugs: Object.keys(body),
+			queues: Object.values(body)
+		}
 	};
 }
