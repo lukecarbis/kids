@@ -10,4 +10,4 @@
 </script>
 
 <Nav />
-<Form signUp={true} />
+<Form action="sign-up" />

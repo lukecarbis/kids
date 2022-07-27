@@ -1,4 +1,4 @@
-export async function get({ locals }) {
+export const get = async ({ locals }) => {
 	if (!locals.loggedIn) {
 		return { status: 200 };
 	}
@@ -26,4 +26,4 @@ export async function get({ locals }) {
 			queues: Object.values(body)
 		}
 	};
-}
+};

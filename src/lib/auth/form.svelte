@@ -1,12 +1,6 @@
 <script>
-	import { auth } from '$lib/firebase';
 	import { goto } from '$app/navigation';
-	import {
-		createUserWithEmailAndPassword,
-		updateProfile,
-		sendEmailVerification,
-		signInWithEmailAndPassword
-	} from 'firebase/auth';
+	import { signUp, signIn } from '$lib/accounts';
 	import Error from '$lib/auth/error.svelte';
 
 	let name = '';
@@ -15,39 +9,23 @@
 	let loading = false;
 	let errorCode = '';
 
-	export let signUp = false;
+	export let action = 'sign-in';
 
-	let title = 'Sign In';
-	if (signUp) {
-		title = 'Sign Up';
-	}
+	const title = {
+		'sign-in': 'Sign In',
+		'sign-up': 'Sign Up'
+	}[action];
 
 	const submit = async () => {
 		loading = true;
 
 		try {
-			if (signUp) {
-				await createUserWithEmailAndPassword(auth, email, password);
-				await updateProfile(auth.currentUser, { displayName: name });
-				await sendEmailVerification(auth.currentUser);
-			} else {
-				await signInWithEmailAndPassword(auth, email, password);
+			if ('sign-in' === action) {
+				await signIn(email, password);
 			}
-
-			const idToken = await auth.currentUser.getIdToken();
-
-			await fetch('/api/auth', {
-				method: 'POST',
-				body: JSON.stringify({
-					loggedIn: true,
-					uid: auth.currentUser.uid,
-					name: auth.currentUser.displayName,
-					email: auth.currentUser.email,
-					idToken: idToken
-				}),
-				headers: { 'Content-Type': 'application/json' }
-			});
-
+			if ('sign-up' === action) {
+				await signUp(name, email, password);
+			}
 			goto('/');
 		} catch (error) {
 			errorCode = error.code;
@@ -62,7 +40,7 @@
 >
 	<form on:submit|preventDefault={submit} class="w-64">
 		<h2 class="mb-6 text-center font-bold">{title}</h2>
-		{#if signUp}
+		{#if 'sign-up' === action}
 			<input
 				bind:value={name}
 				type="text"
