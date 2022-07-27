@@ -8,7 +8,7 @@
 	import JobInactive from '$lib/job/job-inactive.svelte';
 	import JobPending from '$lib/job/job-pending.svelte';
 	import Nav from '$lib/header/nav-app.svelte';
-	import Progress from '$lib/progress/progress.svelte';
+	import Progress from '$lib/job/progress/progress.svelte';
 	import UpNext from '$lib/job/up-next.svelte';
 	import { slide } from 'svelte/transition';
 

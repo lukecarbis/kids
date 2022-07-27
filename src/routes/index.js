@@ -11,19 +11,20 @@ export const get = async ({ locals }) => {
 		return { status: 500 };
 	}
 
-	const result = await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`);
-	const body = await result.json();
+	const result = await fetch(`${apiUrl}/${uid}.json?shallow=true&auth=${idToken}`);
+	const queues = await result.json();
 
-	if (!body) {
-		return { status: 500 };
+	if (!queues) {
+		return {
+			status: 200,
+			body: { queues: [] }
+		};
 	}
 
 	return {
 		status: 200,
-		headers: {},
 		body: {
-			slugs: Object.keys(body),
-			queues: Object.values(body)
+			queues: Object.keys(queues)
 		}
 	};
 };
