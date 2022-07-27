@@ -7,7 +7,7 @@
 </script>
 
 <header
-	class="px-6 py-5 w-full top-0 z-10 flex items-stretch justify-between border-b-2 border-b-slate-200 bg-white fixed"
+	class="px-6 py-5 w-full top-0 z-10 font-mono flex items-stretch justify-between border-b-2 border-b-slate-200 bg-white fixed"
 	out:slide
 >
 	<a href="/" class="w-10">

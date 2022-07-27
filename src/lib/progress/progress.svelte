@@ -9,6 +9,7 @@
 		const position = ((checkpoint.toIndex + 1) / $queue.jobs.length) * 100;
 		flagPositions.push(position);
 	}
+
 	flagPositions.pop();
 </script>
 

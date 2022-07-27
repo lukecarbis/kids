@@ -3,8 +3,9 @@
 	import { auth } from '$lib/firebase';
 	import NavMain from '$lib/header/nav-main.svelte';
 	import Welcome from '$lib/welcome/welcome.svelte';
+	import Name from '$lib/names/name.svelte';
 
-	export let queues;
+	export let names;
 
 	auth.onAuthStateChanged((userCredentials) => {
 		if (userCredentials) {
@@ -27,14 +28,9 @@
 	<main class="max-w-screen-sm mx-auto px-6 my-8 left">
 		{#if $session.loggedIn}
 			<p class="mb-6">Hi, {$session.name}!</p>
-			{#if queues.length}
-				{#each queues as queue}
-					<a
-						href="/{queue}"
-						class="select-none block relative mx-auto leading-4 mb-6 border border-b-2 rounded-lg active:border-b px-4 py-2 active:top-px"
-					>
-						{queue}
-					</a>
+			{#if names.length}
+				{#each names as name}
+					<Name {name} />
 				{/each}
 			{:else}
 				<Welcome />
