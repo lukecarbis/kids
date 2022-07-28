@@ -2,7 +2,7 @@
 	import { emojiCode } from '$lib/helpers/emoji-code';
 	import { queue, setQueue } from '$lib/stores/queue';
 	import LongPress from '$lib/job/long-press.svelte';
-	import { updateJob } from '$lib/job';
+	import { updateJob } from '$lib/jobs';
 
 	export let job;
 	export let index;

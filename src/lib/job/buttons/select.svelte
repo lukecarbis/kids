@@ -1,6 +1,6 @@
 <script>
 	import { queue, setQueue } from '$lib/stores/queue';
-	import { updateJobs } from '$lib/job';
+	import { updateJobs } from '$lib/jobs';
 
 	export let index;
 

@@ -6,7 +6,7 @@
 		resetSkippedJobs,
 		setQueue
 	} from '$lib/stores/queue';
-	import { updateJob } from '$lib/job';
+	import { updateJob } from '$lib/jobs';
 
 	const done = () => {
 		let jobs = [...$queue.jobs];
