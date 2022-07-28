@@ -2,6 +2,7 @@ import { hour } from '$lib/stores/time';
 import { get, writable } from 'svelte/store';
 
 export const queue = writable({
+	name: '',
 	jobs: [],
 	checkpoints: [],
 	active: 0,
@@ -67,11 +68,15 @@ export const resetSkippedJobs = (jobs) => {
 	return jobs;
 };
 
-export const setQueue = (jobs, checkpoints = false) => {
+export const setQueue = (jobs, checkpoints = false, name = false) => {
 	if (!checkpoints) {
 		checkpoints = get(queue).checkpoints;
 	}
+	if (!name) {
+		name = get(queue).name;
+	}
 	queue.set({
+		name: name,
 		jobs: jobs,
 		checkpoints: checkpoints,
 		active: getNextJob(jobs, checkpoints),

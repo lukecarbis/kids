@@ -1,13 +1,17 @@
 <script>
 	import { queue, setQueue } from '$lib/stores/queue';
+	import { updateJobs } from '$lib/job';
 
 	export let index;
 
 	const select = () => {
 		const jobs = [...$queue.jobs];
+		const patch = {};
 		for (let i = index; i < $queue.active; i++) {
 			jobs[i].skipped = false;
+			patch[`${i}/skipped`] = false;
 		}
+		updateJobs(patch);
 		setQueue(jobs);
 	};
 </script>

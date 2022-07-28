@@ -1,9 +1,10 @@
+import { apiUrl } from '$lib/firebase';
+
 export async function get({ locals, params }) {
 	if (!locals.loggedIn) {
 		return { status: 404 };
 	}
 
-	const apiUrl = 'https://kids-bdcfb-default-rtdb.asia-southeast1.firebasedatabase.app';
 	const uid = locals.uid;
 	const idToken = locals.idToken;
 

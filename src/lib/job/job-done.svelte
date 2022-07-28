@@ -2,6 +2,7 @@
 	import { emojiCode } from '$lib/helpers/emoji-code';
 	import { queue, setQueue } from '$lib/stores/queue';
 	import LongPress from '$lib/job/long-press.svelte';
+	import { updateJob } from '$lib/job';
 
 	export let job;
 	export let index;
@@ -9,6 +10,7 @@
 	const revert = () => {
 		const jobs = [...$queue.jobs];
 		jobs[index].done = false;
+		updateJob(index, { skipped: false });
 		setQueue(jobs);
 	};
 </script>

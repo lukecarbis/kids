@@ -6,11 +6,13 @@
 		resetSkippedJobs,
 		setQueue
 	} from '$lib/stores/queue';
+	import { updateJob } from '$lib/job';
 
 	const done = () => {
 		let jobs = [...$queue.jobs];
 
 		jobs[$queue.active].done = true;
+		updateJob($queue.active, { done: true });
 
 		if (-1 === getNextJob(jobs, $queue.checkpoints)) {
 			jobs = resetSkippedJobs(jobs);

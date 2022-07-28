@@ -1,11 +1,10 @@
 <script>
 	import sample from '$lib/sample.json';
-	import { auth } from '$lib/firebase';
+	import { auth, apiUrl } from '$lib/firebase';
 	import { goto } from '$app/navigation';
-	console.log(sample);
+
 	let name = '';
 	let loading = false;
-	const apiUrl = 'https://kids-bdcfb-default-rtdb.asia-southeast1.firebasedatabase.app';
 
 	const setDefaults = async () => {
 		loading = true;

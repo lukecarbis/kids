@@ -17,12 +17,10 @@
 	export let checkpoints;
 	export let jobs;
 
-	setQueue(jobs, checkpoints);
-
-	const nickname = name[0].toUpperCase() + name.substring(1);
+	setQueue(jobs, checkpoints, name);
 </script>
 
-<Nav name={nickname} {streak} />
+<Nav {name} {streak} />
 
 <div
 	id="wrap"
