@@ -10,7 +10,7 @@
 	const revert = () => {
 		const jobs = [...$queue.jobs];
 		jobs[index].done = false;
-		updateJob(index, { skipped: false });
+		updateJob(index, { done: false });
 		setQueue(jobs);
 	};
 </script>
