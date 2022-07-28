@@ -1,4 +1,3 @@
-import { storeApiUrl } from '$lib/firebase';
 import { apiUrl } from '../lib/firebase.js';
 
 export const get = async ({ locals }) => {
@@ -6,27 +5,26 @@ export const get = async ({ locals }) => {
 		return { status: 200 };
 	}
 
-	const uid = locals.uid;
-	const idToken = locals.idToken;
+	const { uid, idToken } = locals;
 
 	if (!uid || !idToken) {
 		return { status: 500 };
 	}
 
 	const result = await fetch(`${apiUrl}/${uid}.json?shallow=true&auth=${idToken}`);
-	const names = await result.json();
+	const queues = await result.json();
 
-	if (!names) {
+	if (!queues) {
 		return {
 			status: 200,
-			body: { names: [] }
+			body: { queues: [] }
 		};
 	}
 
 	return {
 		status: 200,
 		body: {
-			names: Object.keys(names)
+			queues: Object.keys(queues)
 		}
 	};
 };
