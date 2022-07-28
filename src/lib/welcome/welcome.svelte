@@ -36,7 +36,7 @@
 	placeholder="Your kid's first name"
 	bind:value={name}
 />
-<p class="text-right mb-6">
+<div class="flex-grow mb-6">
 	<button
 		class="py-2 px-6 relative font-bold border-2 border-b-4 rounded-lg w-full active:border-b-2 active:mt-px active:mb-px"
 		class:bg-sky-400={name.length >= 2}
@@ -66,7 +66,7 @@
 			Next
 		{/if}
 	</button>
-</p>
+</div>
 
 <div class="p-6 border-2 border-sky-300 bg-sky-100 rounded-lg">
 	<p class="text-sm">

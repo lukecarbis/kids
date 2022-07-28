@@ -2,7 +2,7 @@
 	export let name = '';
 </script>
 
-<div class="border-2 rounded-lg p-6 text-center mb-6">
+<div class="flex-grow w-full border-2 rounded-lg p-6 text-center mb-6">
 	<h2 class="block w-full mb-4">
 		{name}
 	</h2>
