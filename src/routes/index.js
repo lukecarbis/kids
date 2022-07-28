@@ -15,16 +15,8 @@ export const get = async ({ locals }) => {
 	const queues = await result.json();
 
 	if (!queues) {
-		return {
-			status: 200,
-			body: { queues: [] }
-		};
+		return { status: 200, body: { queues: [] } };
 	}
 
-	return {
-		status: 200,
-		body: {
-			queues: Object.keys(queues)
-		}
-	};
+	return { status: 200, body: { queues: Object.keys(queues) } };
 };

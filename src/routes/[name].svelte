@@ -7,7 +7,7 @@
 	import JobDone from '$lib/job/job-done.svelte';
 	import JobInactive from '$lib/job/job-inactive.svelte';
 	import JobPending from '$lib/job/job-pending.svelte';
-	import Nav from '$lib/header/nav-app.svelte';
+	import NavApp from '$lib/header/nav-app.svelte';
 	import Progress from '$lib/progress/progress.svelte';
 	import UpNext from '$lib/job/up-next.svelte';
 	import { slide } from 'svelte/transition';
@@ -20,7 +20,7 @@
 	setQueue(jobs, checkpoints, name);
 </script>
 
-<Nav {name} {streak} />
+<NavApp {name} {streak} />
 
 <div
 	id="wrap"
