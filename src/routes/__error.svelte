@@ -10,7 +10,7 @@
 
 <script>
 	import { emojiCode } from '$lib/helpers/emoji-code';
-	import Nav from '$lib/header/nav-main.svelte';
+	import Nav from '$lib/nav/nav-main.svelte';
 	export let status; // The error code. For example "500" or "404".
 </script>
 

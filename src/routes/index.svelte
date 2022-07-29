@@ -1,7 +1,7 @@
 <script>
 	import { session } from '$app/stores';
 	import { auth } from '$lib/firebase';
-	import NavMain from '$lib/header/nav-main.svelte';
+	import Nav from '$lib/nav/nav-main.svelte';
 	import Welcome from '$lib/welcome/welcome.svelte';
 	import Edit from '$lib/queue/edit.svelte';
 	import Name from '$lib/queue/name.svelte';
@@ -20,7 +20,7 @@
 	});
 </script>
 
-<NavMain />
+<Nav />
 
 <div
 	id="wrap"

@@ -1,10 +1,10 @@
 <script>
-	import NavMain from '$lib/header/nav-main.svelte';
+	import Nav from '$lib/nav/nav-edit.svelte';
 
 	export let queues = {};
 </script>
 
-<NavMain />
+<Nav title="Edit Lists" back="/" />
 
 <div
 	id="wrap"

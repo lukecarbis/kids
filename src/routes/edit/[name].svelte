@@ -2,14 +2,14 @@
 	import Checkpoint from '$lib/checkpoint/checkpoint-edit.svelte';
 	import Connector from '$lib/job/connector.svelte';
 	import Job from '$lib/job/job-edit.svelte';
-	import Nav from '$lib/header/nav-edit.svelte';
+	import Nav from '$lib/nav/nav-edit.svelte';
 
 	export let name;
 	export let checkpoints;
 	export let jobs;
 </script>
 
-<Nav {name} />
+<Nav title={name} back="/edit" />
 
 <div id="wrap" class="mt-16 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
