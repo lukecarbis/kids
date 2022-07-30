@@ -1,4 +1,4 @@
-<div class="mr-14 mt-2">
+<div class="mr-14 mt-6">
 	<div class="flex justify-center">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

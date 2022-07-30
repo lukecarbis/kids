@@ -3,7 +3,7 @@
 
 	export let disabled = false;
 	export let index = 0;
-	let confirm = false;
+	export let confirm = false;
 
 	const handleClick = () => {
 		if (!confirm) {
@@ -18,39 +18,51 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<button
-	class="border border-b-2 w-10 h-8 flex justify-center items-center box-content active:mt-px active:border-b rounded-lg"
-	{disabled}
-	class:pointer-events-none={disabled}
-	on:click={handleClick}
->
-	{#if !confirm}
+<div tabindex="0" on:focusout={() => (confirm = false)}>
+	<button
+		class="border border-b-2 w-10 h-8 flex justify-center items-center box-content active:mt-px active:border-b rounded-lg"
+		{disabled}
+		tabIndex="0"
+		class:pointer-events-none={disabled}
+		on:click={handleClick}
+	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			class="h-5 w-5 fill-amber-500"
-			viewBox="0 0 20 20"
-			fill="currentColor"
-		>
-			<path
-				fill-rule="evenodd"
-				d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-				clip-rule="evenodd"
-			/>
-		</svg>
-	{:else}
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-5 w-5 stroke-rose-400"
-			fill="none"
+			class:stroke-amber-500={!confirm}
+			class:stroke-rose-500={confirm}
+			class:w-5={!confirm}
+			class:h-5={!confirm}
+			class:w-6={confirm}
+			class:h-6={confirm}
+			class:shake={confirm}
 			viewBox="0 0 24 24"
+			fill="none"
 			stroke="currentColor"
 			stroke-width="2"
 		>
 			<path
 				stroke-linecap="round"
 				stroke-linejoin="round"
-				d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+				d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
 			/>
 		</svg>
-	{/if}
-</button>
+	</button>
+</div>
+
+<style>
+	.shake {
+		animation: shake 0.25s infinite;
+	}
+
+	@keyframes shake {
+		0% {
+			transform: rotate(-5deg);
+		}
+		50% {
+			transform: rotate(-12deg);
+		}
+		100% {
+			transform: rotate(-5deg);
+		}
+	}
+</style>

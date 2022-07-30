@@ -35,13 +35,13 @@
 	on:touchend={cancel}
 	on:touchleave={cancel}
 	on:touchcancel={cancel}
-	class:active={pressTimer !== null}
+	class:shake={pressTimer !== null}
 >
 	<slot />
 </div>
 
 <style>
-	.active {
+	.shake {
 		animation: shake 0.25s infinite;
 	}
 
