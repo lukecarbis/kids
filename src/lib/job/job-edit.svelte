@@ -14,17 +14,19 @@
 			bind:value={job.title}
 			on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 		/>
-		<div class="flex flex-grow flex-wrap gap-2">
-			<button class="flex-1 border border-b-2 active:mt-px active:border-b rounded-lg px-2 py-1">
+		<div class="flex flex-grow flex-wrap">
+			<button
+				class="flex-grow w-8 border border-b-2 active:mt-px active:border-b rounded-lg py-1 px-2 mr-2"
+			>
 				<img src="/openmoji/{emojiCode(job.emoji)}.svg" alt={job.emoji} />
 			</button>
-			<Day letter="M" bind:enabled={days[0]} />
+			<Day letter="M" bind:enabled={days[0]} first={true} />
 			<Day letter="T" bind:enabled={days[1]} />
 			<Day letter="W" bind:enabled={days[2]} />
 			<Day letter="T" bind:enabled={days[3]} />
 			<Day letter="F" bind:enabled={days[4]} />
 			<Day letter="S" bind:enabled={days[5]} />
-			<Day letter="S" bind:enabled={days[6]} />
+			<Day letter="S" bind:enabled={days[6]} last={true} />
 		</div>
 	</div>
 </div>
