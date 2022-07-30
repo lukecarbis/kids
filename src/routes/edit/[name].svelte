@@ -9,32 +9,71 @@
 	export let name;
 	export let checkpoints;
 	export let jobs;
+
+	const moveJob = (index, direction) => {
+		const swap = index + direction;
+		[jobs[index], jobs[swap]] = [jobs[swap], jobs[index]];
+	};
+
+	const removeJob = (index) => {
+		jobs.splice(index, 1);
+		jobs = jobs;
+	};
+
+	const moveCheckpoint = (index, direction) => {
+		const clone = [...checkpoints];
+
+		clone[index].fromIndex = clone[index].fromIndex + direction;
+		clone[index - 1].toIndex = clone[index - 1].toIndex + direction;
+
+		checkpoints = clone;
+	};
+
+	const removeCheckpoint = (index) => {
+		const clone = [...checkpoints];
+		clone[index - 1].toIndex = clone[index].toIndex;
+		clone.splice(index, 1);
+		checkpoints = clone;
+	};
 </script>
 
 <Nav title={name} back="/edit" />
 
 <div id="wrap" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
-		{#each checkpoints as checkpoint}
+		{#each checkpoints as checkpoint, ci}
 			<Flag />
 			<div class="checkpoint flex gap-4 items-start">
 				<Checkpoint {checkpoint} />
 
 				<Actions
-					index={checkpoint.fromIndex}
-					up={checkpoint.fromIndex > 0}
-					down={checkpoint.fromIndex > 0 && checkpoint.fromIndex < jobs.length - 1}
+					up={checkpoint.fromIndex > 0 &&
+						checkpoints[ci - 1].toIndex >= checkpoints[ci - 1].fromIndex}
+					down={checkpoint.fromIndex > 0 &&
+						checkpoints[ci].toIndex >= checkpoints[ci].fromIndex &&
+						checkpoint.fromIndex < jobs.length}
 					remove={checkpoint.fromIndex > 0}
+					on:up={() => moveCheckpoint(ci, -1)}
+					on:down={() => moveCheckpoint(ci, 1)}
+					on:remove={() => removeCheckpoint(ci)}
 				/>
 			</div>
 
-			<Connector />
+			<Connector
+				last={checkpoint.fromIndex === jobs.length || checkpoint.toIndex < checkpoint.fromIndex}
+			/>
 
 			{#each jobs as job, index}
 				{#if index >= checkpoint.fromIndex && index <= checkpoint.toIndex}
-					<div class="job flex gap-4 items-start">
-						<Job {job} {index} total={jobs.length} />
-						<Actions {index} up={index > 0} down={index < jobs.length - 1} />
+					<div class="job flex gap-4 items-start" id={`job-${index}`}>
+						<Job {job} {index} />
+						<Actions
+							up={index > 0}
+							down={index < jobs.length - 1}
+							on:up={() => moveJob(index, -1)}
+							on:down={() => moveJob(index, 1)}
+							on:remove={() => removeJob(index)}
+						/>
 					</div>
 					<Connector last={index === checkpoint.toIndex} />
 				{/if}

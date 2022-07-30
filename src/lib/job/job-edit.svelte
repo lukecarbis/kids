@@ -8,6 +8,7 @@
 </script>
 
 <div class="border-2 rounded-lg p-4 text-center">
+	{index}
 	<div class="flex flex-grow flex-wrap gap-3">
 		<input
 			class="w-full h-10 text-center border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"

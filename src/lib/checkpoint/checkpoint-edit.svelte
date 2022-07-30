@@ -4,6 +4,7 @@
 </script>
 
 <div class="flex flex-grow flex-wrap items-start content-start gap-2 border-2 rounded-lg p-4">
+	{checkpoint.fromIndex}—{checkpoint.toIndex}
 	<input
 		type="text"
 		class="text-sky-500 flex-grow w-full h-10 block text-center border-2 bg-slate-50 rounded-lg font-bold text-xl px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
@@ -11,7 +12,7 @@
 		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 	/>
 	<input
-		class="block flex-grow w-full h-10 text-center border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+		class="block flex-grow w-full h-10 text-center text-sm border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
 		bind:value={checkpoint.description}
 		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 	/>

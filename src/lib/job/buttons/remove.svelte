@@ -2,7 +2,6 @@
 	import { createEventDispatcher } from 'svelte';
 
 	export let disabled = false;
-	export let index = 0;
 	export let confirm = false;
 
 	const handleClick = () => {
@@ -12,7 +11,7 @@
 		}
 
 		confirm = false;
-		dispatch('remove', index);
+		dispatch('remove');
 	};
 
 	const dispatch = createEventDispatcher();
