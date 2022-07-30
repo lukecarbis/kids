@@ -9,11 +9,9 @@
 	export let name;
 	export let checkpoints;
 	export let jobs;
-
-	let editMode = false;
 </script>
 
-<Nav title={name} back="/edit" on:more={() => (editMode = !editMode)} />
+<Nav title={name} back="/edit" />
 
 <div id="wrap" class="mt-12 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">

@@ -9,7 +9,7 @@
 </script>
 
 <button
-	class="border border-b-2 active:mt-px active:border-b rounded-lg px-2 py-1"
+	class="border border-b-2 w-10 h-8 flex justify-center items-center box-content active:mt-px active:border-b rounded-lg"
 	{disabled}
 	class:pointer-events-none={disabled}
 >
@@ -24,7 +24,7 @@
 	>
 		{#if 'up' === direction}
 			<path
-				on:click={() => dispatch('up')}
+				on:click={() => dispatch('up', index)}
 				stroke-linecap="round"
 				stroke-linejoin="round"
 				d="M7 11l5-5m0 0l5 5m-5-5v12"
@@ -32,7 +32,7 @@
 		{/if}
 		{#if 'down' === direction}
 			<path
-				on:click={() => dispatch('down')}
+				on:click={() => dispatch('down', index)}
 				stroke-linecap="round"
 				stroke-linejoin="round"
 				d="M17 13l-5 5m0 0l-5-5m5 5V6"
