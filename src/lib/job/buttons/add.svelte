@@ -16,7 +16,7 @@
 	};
 </script>
 
-<div tabindex="0" on:focusout={() => (active = 0)} class="flex w-full justify-center">
+<div tabindex="0" on:focusout={() => (active = 0)} class="flex justify-center">
 	{#if 2 === active}
 		<button
 			class="border border-b-2 rounded-full rounded-r-none px-3 -ml-10 -mr-px active:border-b active:mt-px"
