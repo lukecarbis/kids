@@ -12,7 +12,7 @@
 		}
 
 		confirm = false;
-		dispatch('delete', index);
+		dispatch('remove', index);
 	};
 
 	const dispatch = createEventDispatcher();
@@ -28,8 +28,9 @@
 	>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
-			class:stroke-amber-500={!confirm}
-			class:stroke-rose-500={confirm}
+			class:stroke-amber-500={!confirm && !disabled}
+			class:stroke-rose-500={confirm && !disabled}
+			class:stroke-slate-200={disabled}
 			class:w-5={!confirm}
 			class:h-5={!confirm}
 			class:w-6={confirm}

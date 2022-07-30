@@ -22,8 +22,9 @@
 
 				<Actions
 					index={checkpoint.fromIndex}
-					up={!checkpoint.fromIndex}
-					down={!checkpoint.fromIndex || checkpoint.fromIndex >= jobs.length - 1}
+					up={checkpoint.fromIndex > 0}
+					down={checkpoint.fromIndex > 0 && checkpoint.fromIndex < jobs.length - 1}
+					remove={checkpoint.fromIndex > 0}
 				/>
 			</div>
 
@@ -33,7 +34,7 @@
 				{#if index >= checkpoint.fromIndex && index <= checkpoint.toIndex}
 					<div class="job flex gap-4 items-start">
 						<Job {job} {index} total={jobs.length} />
-						<Actions {index} up={!index} down={index === jobs.length - 1} />
+						<Actions {index} up={index > 0} down={index < jobs.length - 1} />
 					</div>
 					<Connector last={index === checkpoint.toIndex} />
 				{/if}
