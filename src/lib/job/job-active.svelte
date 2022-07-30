@@ -1,23 +1,10 @@
 <script>
 	import { emojiCode } from '$lib/helpers/emoji-code';
-	import Buttons from '$lib/job/buttons/buttons.svelte';
+	import { queue } from '$lib/stores/queue';
 	import { slide } from 'svelte/transition';
-	import { onMount } from 'svelte';
+	import Skip from '$lib/job/buttons/skip.svelte';
+	import Done from '$lib/job/buttons/done.svelte';
 	export let job;
-
-	const scrollToActiveJob = () => {
-		setTimeout(() => {
-			const container = document.querySelector('#wrap');
-			const active = document.querySelector('.up-next');
-			container.scrollTo({
-				left: 0,
-				top: active.offsetTop,
-				behavior: 'smooth'
-			});
-		}, 800);
-	};
-
-	// onMount(async () => scrollToActiveJob());
 </script>
 
 <div
@@ -33,4 +20,9 @@
 	<p class="w-full py-2 text-center">{job.description}</p>
 </div>
 
-<Buttons />
+<div class="bg-white rounded-b-lg border-2 border-t-0 flex" transition:slide>
+	{#if $queue.remaining > 1}
+		<Skip />
+	{/if}
+	<Done />
+</div>

@@ -1,42 +1,35 @@
 <script>
-	import Connector from '$lib/job/connector.svelte';
-	import Move from '$lib/job/buttons/move.svelte';
 	export let checkpoint;
+	export let AM = true;
 </script>
 
-<div class="checkpoint flex">
-	<div
-		class="flex flex-wrap flex-grow justify-center gap-2 border-2 rounded-lg p-2 mr-4 text-center"
-	>
-		<svg
-			xmlns="http://www.w3.org/2000/svg"
-			class="h-6 w-6 mt-2 stroke-rose-400"
-			fill="none"
-			viewBox="0 0 24 24"
-			stroke="currentColor"
-			stroke-width="2"
+<div class="flex flex-grow flex-wrap items-center gap-2 border-2 rounded-lg p-2">
+	<input
+		type="text"
+		class="text-sky-500 flex-grow w-full block text-center border-2 bg-slate-50 rounded-lg font-bold text-xl px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+		bind:value={checkpoint.title}
+		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
+	/>
+	<input
+		class="block flex-grow w-full text-center border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+		bind:value={checkpoint.description}
+		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
+	/>
+	<div class="text-center w-full my-2">
+		<p class="text-sm mb-2">Unlocks at:</p>
+		<input
+			type="number"
+			placeholder="8"
+			min="0"
+			max="12"
+			class="text-center border-2 rounded-lg bg-slate-50 w-16 pl-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+		/>
+		<button
+			class="inline-block border border-b-2 relative active:top-px active:border-b rounded-lg px-2 py-1 w-16"
+			on:click={() => (AM = !AM)}
 		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"
-			/>
-		</svg>
-		<h3 class="flex-grow w-full font-bold">Checkpoint</h3>
-		<input
-			type="text"
-			class="text-sky-500 flex-grow w-full block text-center border bg-slate-50 rounded-lg font-bold text-xl px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
-			bind:value={checkpoint.title}
-		/>
-		<input
-			class="block flex-grow  w-full text-center border bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
-			bind:value={checkpoint.description}
-		/>
-	</div>
-	<div class="flex flex-wrap gap-2 items-center content-start">
-		<Move {checkpoint} direction="up" />
-		<Move {checkpoint} direction="down" />
+			{#if AM}AM{/if}
+			{#if !AM}PM{/if}
+		</button>
 	</div>
 </div>
-
-<Connector />

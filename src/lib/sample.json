@@ -2,7 +2,6 @@
   "checkpoints": [
     {
       "description": "Time to start the day!",
-      "emoji": "🌞",
       "fromIndex": 0,
       "hour": 0,
       "title": "Good Morning!",
@@ -10,7 +9,6 @@
     },
     {
       "description": "Packing up and winding down.",
-      "emoji": "🏡",
       "fromIndex": 5,
       "hour": 15,
       "title": "Afternoon Activities",
@@ -18,7 +16,6 @@
     },
     {
       "description": "Time to get ready for bed.",
-      "emoji": "🌜",
       "fromIndex": 8,
       "hour": 18,
       "title": "Good night!",
