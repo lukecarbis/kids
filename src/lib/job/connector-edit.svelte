@@ -7,6 +7,6 @@
 	<span class="border-l-2 w-0 h-4 block m-auto text-center normal" />
 	<Add />
 	{#if !last}
-		<span class="border-l-2 w-0 h-4 block m-auto -mt-4 text-center normal" />
+		<span class="border-l-2 w-0 h-4 block m-auto text-center normal" />
 	{/if}
 </div>
