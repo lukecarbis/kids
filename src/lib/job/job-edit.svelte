@@ -3,8 +3,7 @@
 	import Day from '$lib/job/buttons/day.svelte';
 
 	export let job;
-	export let index;
-	const days = [1, 1, 1, 1, 1, 0, 0];
+	export let days = [1, 1, 1, 1, 1, 0, 0];
 </script>
 
 <div class="border-2 rounded-lg p-4 text-center">

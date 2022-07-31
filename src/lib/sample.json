@@ -24,75 +24,66 @@
   ],
   "jobs": [
     {
+      "days":[true, true, true, true, true, false, false],
       "description": "Nice and clean, ready for the day.",
-      "done": false,
       "emoji": "🚿",
-      "skipped": false,
       "title": "Shower"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "Put some weather appropriate clothes on.",
-      "done": false,
       "emoji": "👕",
-      "skipped": false,
       "title": "Get Dressed"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "Energy for an active day.",
-      "done": false,
       "emoji": "🥞",
-      "skipped": false,
       "title": "Eat Breakfast"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "Dental care, morning and evening.",
-      "done": false,
       "emoji": "🪥",
-      "skipped": false,
       "title": "Brush Teeth"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "Dogs needs breakfast too!",
-      "done": false,
       "emoji": "🐶",
-      "skipped": false,
       "title": "Feed the dog"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "A little practice every day.",
-      "done": false,
       "emoji": "🎶",
-      "skipped": false,
       "title": "Music Practice"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "A clean room makes a clean mind.",
-      "done": false,
       "emoji": "🛏",
-      "skipped": false,
       "title": "Tidy Bedroom"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "Get everything ready for dinner.",
-      "done": false,
       "emoji": "🍽",
-      "skipped": false,
       "title": "Set Table"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "Clean those chompers.",
-      "done": false,
       "emoji": "🪥",
-      "skipped": false,
       "title": "Brush Teeth"
     },
     {
+      "days": [true, true, true, true, true, false, false],
       "description": "If only we could wear pyjamas all the time!",
-      "done": false,
       "emoji": "🥱",
-      "skipped": false,
       "title": "Pyjamas On"
     }
   ],
+  "today": [],
   "streak": 0
 }

@@ -10,6 +10,17 @@
 	export let checkpoints;
 	export let jobs;
 
+	const addJob = (index) => {
+		const emptyJob = {
+			days: [true, true, true, true, true, false, false],
+			description: '',
+			emoji: '😁',
+			title: ''
+		};
+		jobs.splice(index, 0, emptyJob);
+		jobs = jobs;
+	};
+
 	const moveJob = (index, direction) => {
 		const swap = index + direction;
 		// todo: adjust checkpoints, too.
@@ -42,6 +53,23 @@
 		return checkpoint.fromIndex < jobs.length;
 	};
 
+	const addCheckpoint = (ci, ji) => {
+		let toIndex = jobs.length - 1;
+		if (ci + 1 in checkpoints) {
+			toIndex = checkpoints[ci + 1].fromIndex - 1;
+		}
+		checkpoints[ci].toIndex = ji - 1;
+		const emptyCheckpoint = {
+			description: '',
+			fromIndex: ji,
+			hour: 0,
+			title: '',
+			toIndex: toIndex
+		};
+		checkpoints.splice(ci + 1, 0, emptyCheckpoint);
+		checkpoints = checkpoints;
+	};
+
 	const moveCheckpoint = (index, direction) => {
 		const clone = [...checkpoints];
 
@@ -61,7 +89,7 @@
 
 <Nav title={name} back="/edit" />
 
-<div id="wrap" tabindex="1" class="mt-10 pb-8 font-mono select-none">
+<div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
 		{#each checkpoints as checkpoint, ci}
 			<Flag />
@@ -80,21 +108,27 @@
 
 			<Connector
 				last={checkpoint.fromIndex === jobs.length || checkpoint.toIndex < checkpoint.fromIndex}
+				on:addCheckpoint={() => addCheckpoint(ci, checkpoint.fromIndex)}
+				on:addTask={() => addJob(checkpoint.fromIndex)}
 			/>
 
-			{#each jobs as job, index}
-				{#if index >= checkpoint.fromIndex && index <= checkpoint.toIndex}
-					<div class="job flex gap-4 items-start" id={`job-${index}`}>
-						<Job {job} {index} />
+			{#each jobs as job, ji}
+				{#if ji >= checkpoint.fromIndex && ji <= checkpoint.toIndex}
+					<div class="job flex gap-4 items-start" id={`job-${ji}`}>
+						<Job {job} {ji} bind:days={jobs[ji].days} />
 						<Actions
-							up={index > 0}
-							down={index < jobs.length - 1}
-							on:up={() => moveJob(index, -1)}
-							on:down={() => moveJob(index, 1)}
-							on:remove={() => removeJob(index)}
+							up={ji > 0}
+							down={ji < jobs.length - 1}
+							on:up={() => moveJob(ji, -1)}
+							on:down={() => moveJob(ji, 1)}
+							on:remove={() => removeJob(ji)}
 						/>
 					</div>
-					<Connector last={index === checkpoint.toIndex} />
+					<Connector
+						last={ji === checkpoint.toIndex}
+						on:addCheckpoint={() => addCheckpoint(ci, ji + 1)}
+						on:addTask={() => addJob(ji + 1)}
+					/>
 				{/if}
 			{/each}
 		{/each}

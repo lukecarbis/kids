@@ -1,17 +1,26 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
 	export let active = 0;
+
+	const dispatch = createEventDispatcher();
 
 	const handleClick = () => {
 		if (!active) {
 			active = 1;
+			return;
 		}
 
 		if (1 === active) {
-			// Add task.
+			dispatch('addTask');
+			active = 0;
+			return;
 		}
 
 		if (2 === active) {
-			// Add checkpoint.
+			dispatch('addCheckpoint');
+			active = 0;
+			return;
 		}
 	};
 </script>
