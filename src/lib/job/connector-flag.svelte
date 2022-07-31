@@ -15,5 +15,7 @@
 			/>
 		</svg>
 	</div>
-	<span class="border-l-2 border-emerald-400 w-0 h-2 block -mt-1 m-auto text-center normal" />
+	<div class="h-2 overflow-y-hidden flex -mt-1 ml-px">
+		<span class="border-2 border-slate-200 w-6 h-8 rounded-full block m-auto" />
+	</div>
 </div>

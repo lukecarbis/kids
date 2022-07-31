@@ -12,12 +12,34 @@
 
 	const moveJob = (index, direction) => {
 		const swap = index + direction;
+		// todo: adjust checkpoints, too.
 		[jobs[index], jobs[swap]] = [jobs[swap], jobs[index]];
 	};
 
 	const removeJob = (index) => {
 		jobs.splice(index, 1);
 		jobs = jobs;
+	};
+
+	const canMoveCheckpointUp = (checkpoint, index) => {
+		if (checkpoint.fromIndex === 0) {
+			return false;
+		}
+
+		const previousCheckpoint = checkpoints[index - 1];
+		return previousCheckpoint.toIndex >= previousCheckpoint.fromIndex;
+	};
+
+	const canMoveCheckpointDown = (checkpoint, index) => {
+		if (index === 0) {
+			return false;
+		}
+
+		if (checkpoint.toIndex < checkpoint.fromIndex) {
+			return false;
+		}
+
+		return checkpoint.fromIndex < jobs.length;
 	};
 
 	const moveCheckpoint = (index, direction) => {
@@ -47,12 +69,8 @@
 				<Checkpoint {checkpoint} />
 
 				<Actions
-					up={checkpoint.fromIndex > 0 &&
-						checkpoints[ci - 1].toIndex >= checkpoints[ci - 1].fromIndex}
-					down={checkpoint.fromIndex > 0 &&
-						checkpoints[ci].toIndex >= checkpoints[ci].fromIndex &&
-						checkpoint.fromIndex < jobs.length}
-					remove={checkpoint.fromIndex > 0}
+					up={canMoveCheckpointUp(checkpoint, ci)}
+					down={canMoveCheckpointDown(checkpoint, ci)}
 					on:up={() => moveCheckpoint(ci, -1)}
 					on:down={() => moveCheckpoint(ci, 1)}
 					on:remove={() => removeCheckpoint(ci)}

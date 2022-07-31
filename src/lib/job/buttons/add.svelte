@@ -16,10 +16,10 @@
 	};
 </script>
 
-<div tabindex="0" on:focusout={() => (active = 0)} class="flex justify-center">
+<div tabindex="0" on:focusout={() => (active = 0)} class="flex justify-center h-10">
 	{#if 2 === active}
 		<button
-			class="border border-b-2 rounded-full rounded-r-none px-3 -ml-10 -mr-px active:border-b active:mt-px"
+			class="border-2 border-b-4 rounded-full rounded-r-none px-3 -ml-10 -mr-px transition-all active:border-b-2 active:mt-px"
 			on:click={() => active--}
 		>
 			<svg
@@ -35,12 +35,14 @@
 		</button>
 	{/if}
 	<button
-		class="box-content border border-b-2 rounded-full h-10 text-sm flex justify-center items-center transition-all active:border-b active:mt-px"
+		class="border-2 border-b-4 rounded-full text-sm flex justify-center items-center transition-all active:border-b-2 active:mt-px"
 		on:click={handleClick}
 		class:w-10={!active}
 		class:px-4={active}
 		class:rounded-r-none={1 === active}
 		class:rounded-l-none={2 === active}
+		class:-mr-px={1 === active}
+		class:-ml-px={2 === active}
 	>
 		{#if 1 === active}
 			Add Task
@@ -61,7 +63,7 @@
 	</button>
 	{#if 1 === active}
 		<button
-			class="border border-b-2 rounded-full rounded-l-none px-3 -mr-10 -ml-px active:border-b active:mt-px"
+			class="border-2 border-b-4 rounded-full rounded-l-none px-3 -mr-10 -ml-px transition-all active:border-b-2 active:mt-px"
 			on:click={() => active++}
 		>
 			<svg
