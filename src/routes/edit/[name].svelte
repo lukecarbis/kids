@@ -61,7 +61,7 @@
 
 <Nav title={name} back="/edit" />
 
-<div id="wrap" class="mt-10 pb-8 font-mono select-none">
+<div id="wrap" tabindex="1" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
 		{#each checkpoints as checkpoint, ci}
 			<Flag />
@@ -71,6 +71,7 @@
 				<Actions
 					up={canMoveCheckpointUp(checkpoint, ci)}
 					down={canMoveCheckpointDown(checkpoint, ci)}
+					remove={0 !== ci}
 					on:up={() => moveCheckpoint(ci, -1)}
 					on:down={() => moveCheckpoint(ci, 1)}
 					on:remove={() => removeCheckpoint(ci)}
