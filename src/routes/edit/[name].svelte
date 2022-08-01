@@ -23,13 +23,61 @@
 
 	const moveJob = (index, direction) => {
 		const swap = index + direction;
-		// todo: adjust checkpoints, too.
+		let movedIntoCheckpoint = false;
+
+		checkpoints.every((checkpoint, ci) => {
+			// If moving a task down.
+			if (direction > 0 && swap === checkpoint.fromIndex) {
+				checkpoints[ci].fromIndex--;
+				checkpoints[ci - 1].toIndex--;
+				movedIntoCheckpoint = true;
+				markJobMoved(index);
+				return false;
+			}
+
+			// If moving a task up.
+			if (direction < 0 && swap === checkpoint.toIndex) {
+				checkpoints[ci].toIndex++;
+				checkpoints[ci + 1].fromIndex++;
+				movedIntoCheckpoint = true;
+				markJobMoved(index);
+				return false;
+			}
+
+			return true;
+		});
+
+		if (movedIntoCheckpoint) {
+			return;
+		}
+
 		[jobs[index], jobs[swap]] = [jobs[swap], jobs[index]];
+		markJobMoved(swap);
 	};
 
 	const removeJob = (index) => {
-		jobs.splice(index, 1);
-		jobs = jobs;
+		jobs[index].removed = true;
+		setTimeout(() => {
+			checkpoints.every((checkpoint, ci) => {
+				// If moving a task down.
+				if (checkpoint.fromIndex >= index) {
+					checkpoints[ci].toIndex--;
+					if (ci > 0) {
+						checkpoints[ci].fromIndex = checkpoints[ci - 1].toIndex + 1;
+					}
+				}
+
+				return true;
+			});
+
+			jobs.splice(index, 1);
+			jobs = jobs;
+		}, 1200);
+	};
+
+	const markJobMoved = (index) => {
+		jobs[index].updated = true;
+		setTimeout(() => (jobs[index].updated = false), 1200);
 	};
 
 	const canMoveCheckpointUp = (checkpoint, index) => {
@@ -76,14 +124,23 @@
 		clone[index].fromIndex = clone[index].fromIndex + direction;
 		clone[index - 1].toIndex = clone[index - 1].toIndex + direction;
 
+		markCheckpointMoved(index);
 		checkpoints = clone;
 	};
 
 	const removeCheckpoint = (index) => {
-		const clone = [...checkpoints];
-		clone[index - 1].toIndex = clone[index].toIndex;
-		clone.splice(index, 1);
-		checkpoints = clone;
+		checkpoints[index].removed = true;
+		setTimeout(() => {
+			const clone = [...checkpoints];
+			clone[index - 1].toIndex = clone[index].toIndex;
+			clone.splice(index, 1);
+			checkpoints = clone;
+		}, 1200);
+	};
+
+	const markCheckpointMoved = (index) => {
+		checkpoints[index].updated = true;
+		setTimeout(() => (checkpoints[index].updated = false), 1200);
 	};
 </script>
 
@@ -92,7 +149,9 @@
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
 		{#each checkpoints as checkpoint, ci}
-			<Flag />
+			<div class="transition-opacity duration-1000" class:opacity-0={checkpoint.removed}>
+				<Flag />
+			</div>
 			<div class="checkpoint flex gap-4 items-start">
 				<Checkpoint {checkpoint} />
 
@@ -115,10 +174,10 @@
 			{#each jobs as job, ji}
 				{#if ji >= checkpoint.fromIndex && ji <= checkpoint.toIndex}
 					<div class="job flex gap-4 items-start" id={`job-${ji}`}>
-						<Job {job} {ji} bind:days={jobs[ji].days} />
+						<Job {job} bind:days={jobs[ji].days} />
 						<Actions
 							up={ji > 0}
-							down={ji < jobs.length - 1}
+							down={ji < jobs.length - 1 || ci < checkpoints.length - 1}
 							on:up={() => moveJob(ji, -1)}
 							on:down={() => moveJob(ji, 1)}
 							on:remove={() => removeJob(ji)}

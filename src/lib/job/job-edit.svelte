@@ -6,7 +6,13 @@
 	export let days = [1, 1, 1, 1, 1, 0, 0];
 </script>
 
-<div class="border-2 rounded-lg p-4 text-center">
+<div
+	class="border-2 rounded-lg p-4 text-center transition-colors duration-1000"
+	class:bg-amber-100={job.updated}
+	class:transition-none={job.updated}
+	class:transition-opacity={job.removed}
+	class:opacity-0={job.removed}
+>
 	<div class="flex flex-grow flex-wrap gap-3">
 		<input
 			class="w-full h-10 text-center border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
@@ -15,7 +21,7 @@
 		/>
 		<div class="flex flex-grow flex-wrap h-10">
 			<button
-				class="flex-grow w-6 h-10 border border-b-2 active:mt-px active:border-b rounded-lg py-1 px-1 mr-3 text-center transition-all"
+				class="flex-grow bg-white w-6 h-10 border border-b-2 active:mt-px active:border-b rounded-lg py-1 px-1 mr-3 text-center transition-all"
 			>
 				<img
 					class="h-full max-h-6 inline"

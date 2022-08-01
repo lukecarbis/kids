@@ -3,7 +3,13 @@
 	export let AM = true;
 </script>
 
-<div class="flex flex-grow flex-wrap items-start content-start gap-2 border-2 rounded-lg p-4">
+<div
+	class="flex flex-grow flex-wrap items-start content-start gap-2 border-2 rounded-lg p-4 transition-colors duration-1000"
+	class:bg-amber-100={checkpoint.updated}
+	class:transition-none={checkpoint.updated}
+	class:transition-opacity={checkpoint.removed}
+	class:opacity-0={checkpoint.removed}
+>
 	<input
 		type="text"
 		class="text-sky-500 flex-grow w-full h-10 block text-center border-2 bg-slate-50 rounded-lg font-bold text-xl px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
@@ -39,7 +45,7 @@
 				class="text-center border-2 rounded-lg bg-slate-50 w-16 pl-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
 			/>
 			<button
-				class="inline-block border border-b-2 relative active:top-px active:border-b rounded-lg px-2 py-1 w-16"
+				class="inline-block border border-b-2 bg-white relative active:top-px active:border-b rounded-lg px-2 py-1 w-16"
 				on:click={() => (AM = !AM)}
 			>
 				{#if AM}AM{/if}
