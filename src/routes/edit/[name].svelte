@@ -149,20 +149,23 @@
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
 		{#each checkpoints as checkpoint, ci}
-			<div class="transition-opacity duration-1000" class:opacity-0={checkpoint.removed}>
+			<div class="transition-all duration-1000" class:opacity-0={checkpoint.removed}>
 				<Flag />
-			</div>
-			<div class="checkpoint flex gap-4 items-start">
-				<Checkpoint {checkpoint} />
+				<div
+					class="checkpoint flex gap-4 items-start"
+					class:pointer-events-none={checkpoint.removed}
+				>
+					<Checkpoint {checkpoint} />
 
-				<Actions
-					up={canMoveCheckpointUp(checkpoint, ci)}
-					down={canMoveCheckpointDown(checkpoint, ci)}
-					remove={0 !== ci}
-					on:up={() => moveCheckpoint(ci, -1)}
-					on:down={() => moveCheckpoint(ci, 1)}
-					on:remove={() => removeCheckpoint(ci)}
-				/>
+					<Actions
+						up={canMoveCheckpointUp(checkpoint, ci)}
+						down={canMoveCheckpointDown(checkpoint, ci)}
+						remove={0 !== ci}
+						on:up={() => moveCheckpoint(ci, -1)}
+						on:down={() => moveCheckpoint(ci, 1)}
+						on:remove={() => removeCheckpoint(ci)}
+					/>
+				</div>
 			</div>
 
 			<Connector
@@ -173,7 +176,13 @@
 
 			{#each jobs as job, ji}
 				{#if ji >= checkpoint.fromIndex && ji <= checkpoint.toIndex}
-					<div class="job flex gap-4 items-start" id={`job-${ji}`}>
+					<div
+						class="job flex gap-4 items-start transition-none duration-1000"
+						id={`job-${ji}`}
+						class:transition-opacity={job.removed}
+						class:opacity-0={job.removed}
+						class:pointer-events-none={job.removed}
+					>
 						<Job {job} bind:days={jobs[ji].days} />
 						<Actions
 							up={ji > 0}

@@ -9,9 +9,8 @@
 <div
 	class="border-2 rounded-lg p-4 text-center transition-colors duration-1000"
 	class:bg-amber-100={job.updated}
+	class:border-amber-300={job.updated}
 	class:transition-none={job.updated}
-	class:transition-opacity={job.removed}
-	class:opacity-0={job.removed}
 >
 	<div class="flex flex-grow flex-wrap gap-3">
 		<input
