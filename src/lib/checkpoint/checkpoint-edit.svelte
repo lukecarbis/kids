@@ -1,27 +1,28 @@
 <script>
-	export let checkpoint;
+	export let updated;
+	export let title;
+	export let description;
+	export let fromIndex;
 	export let AM = true;
 </script>
 
 <div
 	class="flex flex-grow flex-wrap items-start content-start gap-2 border-2 rounded-lg p-4 transition-colors duration-1000"
-	class:bg-amber-100={checkpoint.updated}
-	class:transition-none={checkpoint.updated}
-	class:transition-opacity={checkpoint.removed}
-	class:opacity-0={checkpoint.removed}
+	class:bg-amber-100={updated}
+	class:transition-none={updated}
 >
 	<input
 		type="text"
 		class="text-sky-500 flex-grow w-full h-10 block text-center border-2 bg-slate-50 rounded-lg font-bold text-xl px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
-		bind:value={checkpoint.title}
+		bind:value={title}
 		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 	/>
 	<input
 		class="block flex-grow w-full h-10 text-center text-sm border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
-		bind:value={checkpoint.description}
+		bind:value={description}
 		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 	/>
-	{#if checkpoint.fromIndex > 0}
+	{#if fromIndex > 0}
 		<div class="text-center w-full my-2">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

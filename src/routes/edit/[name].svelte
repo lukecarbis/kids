@@ -1,4 +1,6 @@
 <script>
+	import { browser } from '$app/env';
+	import { auth, apiUrl } from '$lib/firebase';
 	import Actions from '$lib/job/actions.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-edit.svelte';
 	import Connector from '$lib/job/connector-edit.svelte';
@@ -10,13 +12,20 @@
 	export let checkpoints;
 	export let jobs;
 
-	let unsaved = false
-	let saving = false
-	let saved = false
+	let checkpointsCompare = JSON.stringify(checkpoints);
+	let jobsCompare = JSON.stringify(jobs);
+
+	let unsaved = false;
+	let saving = false;
+	let saved = false;
+
+	$: if (jobs || checkpoints) {
+		let unsavedJobs = JSON.stringify(jobs) !== jobsCompare;
+		let unsavedCheckpoints = JSON.stringify(checkpoints) !== checkpointsCompare;
+		unsaved = unsavedJobs || unsavedCheckpoints;
+	}
 
 	const addJob = (index) => {
-		unsaved = true;
-
 		const emptyJob = {
 			days: [true, true, true, true, true, false, false],
 			description: '',
@@ -28,8 +37,6 @@
 	};
 
 	const moveJob = (index, direction) => {
-		unsaved = true;
-
 		const swap = index + direction;
 		let movedIntoCheckpoint = false;
 
@@ -67,8 +74,6 @@
 		jobs[index].removed = true;
 
 		setTimeout(() => {
-			unsaved = true;
-
 			checkpoints.every((checkpoint, ci) => {
 				// If moving a task down.
 				if (checkpoint.fromIndex >= index) {
@@ -113,8 +118,6 @@
 	};
 
 	const addCheckpoint = (ci, ji) => {
-		unsaved = true;
-
 		let toIndex = jobs.length - 1;
 		if (ci + 1 in checkpoints) {
 			toIndex = checkpoints[ci + 1].fromIndex - 1;
@@ -132,8 +135,6 @@
 	};
 
 	const moveCheckpoint = (index, direction) => {
-		unsaved = true;
-
 		const clone = [...checkpoints];
 
 		clone[index].fromIndex = clone[index].fromIndex + direction;
@@ -146,11 +147,9 @@
 	const removeCheckpoint = (index) => {
 		checkpoints[index].removed = true;
 		setTimeout(() => {
-			unsaved = true;
-			const clone = [...checkpoints];
-			clone[index - 1].toIndex = clone[index].toIndex;
-			clone.splice(index, 1);
-			checkpoints = clone;
+			checkpoints[index - 1].toIndex = checkpoints[index].toIndex;
+			checkpoints.splice(index, 1);
+			checkpoints = checkpoints;
 		}, 1200);
 	};
 
@@ -159,20 +158,35 @@
 		setTimeout(() => (checkpoints[index].updated = false), 1200);
 	};
 
-	const save = () => {
-		unsaved = false
-		saving = true
-		setTimeout( () => {
-			saving = false
-			saved = true
-			setTimeout( () => {
-				saved = false
-			}, 1800);
-		}, 1200);
+	const save = async () => {
+		saving = true;
+
+		const idToken = await auth.currentUser.getIdToken();
+		const uid = auth.currentUser.uid;
+
+		await fetch(`${apiUrl}/${uid}/${name}.json?auth=${idToken}`, {
+			method: 'PUT',
+			body: JSON.stringify({ checkpoints, jobs })
+		});
+
+		checkpointsCompare = JSON.stringify(checkpoints);
+		jobsCompare = JSON.stringify(jobs);
+		saving = false;
+		saved = true;
+
+		setTimeout(() => (saved = false), 1800);
+	};
+
+	if (browser) {
+		window.onbeforeunload = () => {
+			if (unsaved) {
+				return true;
+			}
+		};
 	}
 </script>
 
-<Nav title={name} back="/edit" bind:unsaved={unsaved} bind:saving={saving} bind:saved={saved} on:save={save} />
+<Nav title={name} back="/edit" bind:unsaved bind:saving bind:saved on:save={save} />
 
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
@@ -183,7 +197,12 @@
 					class="checkpoint flex gap-4 items-start"
 					class:pointer-events-none={checkpoint.removed}
 				>
-					<Checkpoint {checkpoint} />
+					<Checkpoint
+						bind:updated={checkpoints[ci].updated}
+						bind:title={checkpoints[ci].title}
+						bind:description={checkpoints[ci].description}
+						bind:fromIndex={checkpoints[ci].fromIndex}
+					/>
 
 					<Actions
 						up={canMoveCheckpointUp(checkpoint, ci)}
@@ -211,7 +230,12 @@
 						class:opacity-0={job.removed}
 						class:pointer-events-none={job.removed}
 					>
-						<Job {job} bind:days={jobs[ji].days} />
+						<Job
+							bind:updated={jobs[ji].updated}
+							bind:title={jobs[ji].title}
+							bind:emoji={jobs[ji].emoji}
+							bind:days={jobs[ji].days}
+						/>
 						<Actions
 							up={ji > 0}
 							down={ji < jobs.length - 1 || ci < checkpoints.length - 1}

@@ -1,89 +1,89 @@
 {
-  "checkpoints": [
-    {
-      "description": "Time to start the day!",
-      "fromIndex": 0,
-      "hour": 0,
-      "title": "Good Morning!",
-      "toIndex": 4
-    },
-    {
-      "description": "Packing up and winding down.",
-      "fromIndex": 5,
-      "hour": 15,
-      "title": "Afternoon Activities",
-      "toIndex": 7
-    },
-    {
-      "description": "Time to get ready for bed.",
-      "fromIndex": 8,
-      "hour": 18,
-      "title": "Good night!",
-      "toIndex": 9
-    }
-  ],
-  "jobs": [
-    {
-      "days":[true, true, true, true, true, false, false],
-      "description": "Nice and clean, ready for the day.",
-      "emoji": "🚿",
-      "title": "Shower"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "Put some weather appropriate clothes on.",
-      "emoji": "👕",
-      "title": "Get Dressed"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "Energy for an active day.",
-      "emoji": "🥞",
-      "title": "Eat Breakfast"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "Dental care, morning and evening.",
-      "emoji": "🪥",
-      "title": "Brush Teeth"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "Dogs needs breakfast too!",
-      "emoji": "🐶",
-      "title": "Feed the dog"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "A little practice every day.",
-      "emoji": "🎶",
-      "title": "Music Practice"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "A clean room makes a clean mind.",
-      "emoji": "🛏",
-      "title": "Tidy Bedroom"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "Get everything ready for dinner.",
-      "emoji": "🍽",
-      "title": "Set Table"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "Clean those chompers.",
-      "emoji": "🪥",
-      "title": "Brush Teeth"
-    },
-    {
-      "days": [true, true, true, true, true, false, false],
-      "description": "If only we could wear pyjamas all the time!",
-      "emoji": "🥱",
-      "title": "Pyjamas On"
-    }
-  ],
-  "today": [],
-  "streak": 0
+	"checkpoints": [
+		{
+			"description": "Time to start the day!",
+			"fromIndex": 0,
+			"hour": 0,
+			"title": "Good Morning!",
+			"toIndex": 4
+		},
+		{
+			"description": "Packing up and winding down.",
+			"fromIndex": 5,
+			"hour": 15,
+			"title": "Afternoon Activities",
+			"toIndex": 7
+		},
+		{
+			"description": "Time to get ready for bed.",
+			"fromIndex": 8,
+			"hour": 18,
+			"title": "Good night!",
+			"toIndex": 9
+		}
+	],
+	"jobs": [
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Nice and clean, ready for the day.",
+			"emoji": "🚿",
+			"title": "Shower"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Put some weather appropriate clothes on.",
+			"emoji": "👕",
+			"title": "Get Dressed"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Energy for an active day.",
+			"emoji": "🥞",
+			"title": "Eat Breakfast"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Dental care, morning and evening.",
+			"emoji": "🪥",
+			"title": "Brush Teeth"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Dogs needs breakfast too!",
+			"emoji": "🐶",
+			"title": "Feed the dog"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "A little practice every day.",
+			"emoji": "🎶",
+			"title": "Music Practice"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "A clean room makes a clean mind.",
+			"emoji": "🛏",
+			"title": "Tidy Bedroom"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Get everything ready for dinner.",
+			"emoji": "🍽",
+			"title": "Set Table"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "Clean those chompers.",
+			"emoji": "🪥",
+			"title": "Brush Teeth"
+		},
+		{
+			"days": [true, true, true, true, true, false, false],
+			"description": "If only we could wear pyjamas all the time!",
+			"emoji": "🥱",
+			"title": "Pyjamas On"
+		}
+	],
+	"today": [],
+	"streak": 0
 }
