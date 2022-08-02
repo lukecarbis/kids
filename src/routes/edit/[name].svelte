@@ -231,6 +231,7 @@
 						class:pointer-events-none={job.removed}
 					>
 						<Job
+							index={ji}
 							bind:updated={jobs[ji].updated}
 							bind:title={jobs[ji].title}
 							bind:emoji={jobs[ji].emoji}
