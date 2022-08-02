@@ -10,7 +10,13 @@
 	export let checkpoints;
 	export let jobs;
 
+	let unsaved = false
+	let saving = false
+	let saved = false
+
 	const addJob = (index) => {
+		unsaved = true;
+
 		const emptyJob = {
 			days: [true, true, true, true, true, false, false],
 			description: '',
@@ -22,6 +28,8 @@
 	};
 
 	const moveJob = (index, direction) => {
+		unsaved = true;
+
 		const swap = index + direction;
 		let movedIntoCheckpoint = false;
 
@@ -57,7 +65,10 @@
 
 	const removeJob = (index) => {
 		jobs[index].removed = true;
+
 		setTimeout(() => {
+			unsaved = true;
+
 			checkpoints.every((checkpoint, ci) => {
 				// If moving a task down.
 				if (checkpoint.fromIndex >= index) {
@@ -102,6 +113,8 @@
 	};
 
 	const addCheckpoint = (ci, ji) => {
+		unsaved = true;
+
 		let toIndex = jobs.length - 1;
 		if (ci + 1 in checkpoints) {
 			toIndex = checkpoints[ci + 1].fromIndex - 1;
@@ -119,6 +132,8 @@
 	};
 
 	const moveCheckpoint = (index, direction) => {
+		unsaved = true;
+
 		const clone = [...checkpoints];
 
 		clone[index].fromIndex = clone[index].fromIndex + direction;
@@ -131,6 +146,7 @@
 	const removeCheckpoint = (index) => {
 		checkpoints[index].removed = true;
 		setTimeout(() => {
+			unsaved = true;
 			const clone = [...checkpoints];
 			clone[index - 1].toIndex = clone[index].toIndex;
 			clone.splice(index, 1);
@@ -142,9 +158,21 @@
 		checkpoints[index].updated = true;
 		setTimeout(() => (checkpoints[index].updated = false), 1200);
 	};
+
+	const save = () => {
+		unsaved = false
+		saving = true
+		setTimeout( () => {
+			saving = false
+			saved = true
+			setTimeout( () => {
+				saved = false
+			}, 1800);
+		}, 1200);
+	}
 </script>
 
-<Nav title={name} back="/edit" />
+<Nav title={name} back="/edit" bind:unsaved={unsaved} bind:saving={saving} bind:saved={saved} on:save={save} />
 
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
