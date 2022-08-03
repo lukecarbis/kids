@@ -203,7 +203,6 @@
 						bind:description={checkpoints[ci].description}
 						bind:fromIndex={checkpoints[ci].fromIndex}
 					/>
-
 					<Actions
 						up={canMoveCheckpointUp(checkpoint, ci)}
 						down={canMoveCheckpointDown(checkpoint, ci)}

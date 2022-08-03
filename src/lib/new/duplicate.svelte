@@ -1,28 +1,25 @@
 <script>
-	import sample from '$lib/sample.json';
-	import empty from '$lib/empty.json';
 	import Name from '$lib/new/name.svelte';
 	import Next from '$lib/new/next.svelte';
-	import Sample from '$lib/new/sample.svelte';
 	import Disclaimer from '$lib/new/disclaimer.svelte';
 	import { auth, apiUrl } from '$lib/firebase';
 	import { goto } from '$app/navigation';
 
 	let name = '';
 	let loading = false;
-	let useSampleData = true;
+	export let checkpoints;
+	export let tasks;
 
 	const setDefaults = async () => {
 		loading = true;
 
 		const idToken = await auth.currentUser.getIdToken();
 		const uid = auth.currentUser.uid;
-		const data = useSampleData ? sample : empty;
 
 		await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
 			method: 'PATCH',
 			body: JSON.stringify({
-				[name]: data
+				[name]: { checkpoints, tasks }
 			})
 		});
 
@@ -33,5 +30,4 @@
 
 <Name bind:name />
 <Next on:next={setDefaults} {name} {loading} />
-<Sample bind:useSampleData />
 <Disclaimer />

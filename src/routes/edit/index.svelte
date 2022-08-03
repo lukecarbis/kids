@@ -16,7 +16,7 @@
 				<div class="max-w-screen-sm mx-auto flex items-center py-6 px-6">
 					<p class="flex-grow">{name}</p>
 					<a
-						href="#"
+						href="/new/from/{name}"
 						class="border border-b-2 bg-white rounded-lg text-sm ml-4 px-4 py-1 h-6 leading-6 box-content active:border-b active:mt-px"
 					>
 						Duplicate
