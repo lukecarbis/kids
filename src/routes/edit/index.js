@@ -12,11 +12,11 @@ export const get = async ({ locals }) => {
 	}
 
 	const result = await fetch(`${apiUrl}/${uid}.json?shallow=true&auth=${idToken}`);
-	let queues = await result.json();
+	let lists = await result.json();
 
-	if (!queues) {
-		queues = [];
+	if (!lists) {
+		lists = [];
 	}
 
-	return { status: 200, body: { queues: Object.keys(queues) } };
+	return { status: 200, body: { lists: Object.keys(lists) } };
 };

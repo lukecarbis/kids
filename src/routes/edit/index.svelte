@@ -1,7 +1,7 @@
 <script>
 	import Nav from '$lib/nav/nav-edit.svelte';
 
-	export let queues = {};
+	export let lists = {};
 </script>
 
 <Nav title="" back="/" />
@@ -10,8 +10,8 @@
 	id="wrap"
 	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 >
-	{#if queues.length}
-		{#each queues as name}
+	{#if lists.length}
+		{#each lists as name}
 			<div class="border-b even:bg-slate-50">
 				<div class="max-w-screen-sm mx-auto flex items-center py-6 px-6">
 					<p class="flex-grow">{name}</p>

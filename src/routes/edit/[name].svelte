@@ -117,15 +117,15 @@
 		return checkpoint.fromIndex < tasks.length;
 	};
 
-	const addCheckpoint = (ci, ji) => {
+	const addCheckpoint = (ci, ti) => {
 		let toIndex = tasks.length - 1;
 		if (ci + 1 in checkpoints) {
 			toIndex = checkpoints[ci + 1].fromIndex - 1;
 		}
-		checkpoints[ci].toIndex = ji - 1;
+		checkpoints[ci].toIndex = ti - 1;
 		const emptyCheckpoint = {
 			description: '',
-			fromIndex: ji,
+			fromIndex: ti,
 			hour: 0,
 			title: '',
 			toIndex: toIndex
@@ -246,9 +246,9 @@
 						/>
 					</div>
 					<Connector
-						last={ji === checkpoint.toIndex}
-						on:addCheckpoint={() => addCheckpoint(ci, ji + 1)}
-						on:addTask={() => addTask(ji + 1)}
+						last={ti === checkpoint.toIndex}
+						on:addCheckpoint={() => addCheckpoint(ci, ti + 1)}
+						on:addTask={() => addTask(ti + 1)}
 					/>
 				{/if}
 			{/each}
