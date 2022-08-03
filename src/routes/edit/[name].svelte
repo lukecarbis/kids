@@ -3,8 +3,8 @@
 	import { auth, apiUrl } from '$lib/firebase';
 	import Actions from '$lib/task/actions.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-edit.svelte';
-	import Connector from '$lib/task/connector-edit.svelte';
-	import Flag from '$lib/task/connector-flag.svelte';
+	import Connector from '$lib/connector/connector-edit.svelte';
+	import Flag from '$lib/connector/connector-flag.svelte';
 	import Task from '$lib/task/task-edit.svelte';
 	import Nav from '$lib/nav/nav-edit.svelte';
 

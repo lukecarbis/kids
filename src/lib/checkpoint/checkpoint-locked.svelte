@@ -1,6 +1,5 @@
 <script>
 	import { queue, isCheckpointOpen } from '$lib/stores/queue';
-	import Connector from '$lib/task/connector.svelte';
 	import { slide } from 'svelte/transition';
 	export let checkpoint;
 
@@ -55,5 +54,3 @@
 	</svg>
 	<p class="bg-white text-slate-300 py-2">{checkpoint.title}</p>
 </div>
-
-<Connector />

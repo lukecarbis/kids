@@ -1,5 +1,5 @@
 <script>
-	import Connector from '$lib/task/connector.svelte';
+	import Connector from '$lib/connector/connector.svelte';
 	import { slide } from 'svelte/transition';
 </script>
 

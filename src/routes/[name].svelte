@@ -2,7 +2,7 @@
 	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
-	import Connector from '$lib/task/connector.svelte';
+	import Connector from '$lib/connector/connector.svelte';
 	import TaskActive from '$lib/task/task-active.svelte';
 	import TaskDone from '$lib/task/task-done.svelte';
 	import TaskInactive from '$lib/task/task-inactive.svelte';
@@ -30,8 +30,10 @@
 		{#each $queue.checkpoints as checkpoint}
 			{#if isCheckpointOpen(checkpoint)}
 				<CheckpointActive {checkpoint} />
+				<Connector />
 			{:else}
 				<CheckpointLocked {checkpoint} />
+				<Connector />
 			{/if}
 
 			{#each $queue.tasks as task, index}
