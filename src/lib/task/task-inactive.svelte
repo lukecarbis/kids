@@ -1,6 +1,6 @@
 <script>
-	import data from '@emoji-mart/data/sets/14/twitter.json'
-	import { init } from 'emoji-mart'
+	import data from '@emoji-mart/data/sets/14/twitter.json';
+	import { init } from 'emoji-mart';
 	export let task;
 
 	init({ data });

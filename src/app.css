@@ -3,25 +3,24 @@
 @tailwind utilities;
 
 em-emoji img {
-    top: -0.1em !important;
+	top: -0.1em !important;
 }
 button em-emoji img {
-    top: 0 !important;
-    position: static !important;
-    padding: 4px 0;
-    height: 100% !important;
+	top: 0 !important;
+	position: static !important;
+	padding: 4px 0;
+	height: 100% !important;
 }
 
 em-emoji-picker {
-    --background-rgb: 255, 255, 255;
-    --border-radius: 8px;
-    --color-border: rgba(229, 231, 235);
-    --font-size: 20px;
-    --rgb-accent: 56, 189, 248;
-    --rgb-color: 30, 41, 59;
-    --rgb-input: 241, 245, 249;
-    border: 1px solid rgb(226, 232, 240);
-    border-radius: 8px;
-    z-index: 10 !important;
+	--background-rgb: 255, 255, 255;
+	--border-radius: 8px;
+	--color-border: rgba(229, 231, 235);
+	--font-size: 20px;
+	--rgb-accent: 56, 189, 248;
+	--rgb-color: 30, 41, 59;
+	--rgb-input: 241, 245, 249;
+	border: 1px solid rgb(226, 232, 240);
+	border-radius: 8px;
+	z-index: 10 !important;
 }
-

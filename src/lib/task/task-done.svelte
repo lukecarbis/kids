@@ -1,6 +1,6 @@
 <script>
-	import data from '@emoji-mart/data/sets/14/twitter.json'
-	import { init } from 'emoji-mart'
+	import data from '@emoji-mart/data/sets/14/twitter.json';
+	import { init } from 'emoji-mart';
 	import { queue, setQueue } from '$lib/stores/queue';
 	import LongPress from '$lib/task/long-press.svelte';
 	import { updateTask } from '$lib/tasks';

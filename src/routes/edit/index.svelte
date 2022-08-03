@@ -33,9 +33,10 @@
 	{/if}
 	<div class="p-6 max-w-screen-sm mx-auto">
 		<a
-			href="#"
+			href="/new"
 			class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg active:border-b-2 active:mt-px active:mb-px"
-			>Add New List
+		>
+			Add New List
 		</a>
 	</div>
 </div>

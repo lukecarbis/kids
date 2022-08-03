@@ -1,8 +1,8 @@
 <script>
 	import { queue } from '$lib/stores/queue';
 	import { slide } from 'svelte/transition';
-	import data from '@emoji-mart/data/sets/14/twitter.json'
-	import { init } from 'emoji-mart'
+	import data from '@emoji-mart/data/sets/14/twitter.json';
+	import { init } from 'emoji-mart';
 	import Skip from '$lib/task/buttons/skip.svelte';
 	import Done from '$lib/task/buttons/done.svelte';
 	export let task;

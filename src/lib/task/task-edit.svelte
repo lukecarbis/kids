@@ -1,8 +1,8 @@
 <script>
 	import { onMount } from 'svelte';
 	import Day from '$lib/task/buttons/day.svelte';
-	import data from '@emoji-mart/data/sets/14/twitter.json'
-	import { Picker, init } from 'emoji-mart'
+	import data from '@emoji-mart/data/sets/14/twitter.json';
+	import { Picker, init } from 'emoji-mart';
 
 	init({ data });
 
@@ -44,11 +44,15 @@
 		<div class="flex flex-grow flex-wrap h-10">
 			<button
 				class="flex-grow bg-white w-6 h-10 border border-b-2 active:mt-px active:border-b rounded-lg py-1 px-1 mr-3 text-center transition-all"
-				on:click={() => showEmojiPicker = !showEmojiPicker}
+				on:click={() => (showEmojiPicker = !showEmojiPicker)}
 			>
 				<em-emoji class="h-full max-h-6" set="twitter" native={emoji} />
 			</button>
-			<div id={`emoji-button-${index}`} class="emoji-picker absolute mt-12" class:invisible={!showEmojiPicker} />
+			<div
+				id={`emoji-button-${index}`}
+				class="emoji-picker absolute mt-12"
+				class:invisible={!showEmojiPicker}
+			/>
 			<Day letter="M" bind:enabled={days[0]} first={true} />
 			<Day letter="T" bind:enabled={days[1]} />
 			<Day letter="W" bind:enabled={days[2]} />
