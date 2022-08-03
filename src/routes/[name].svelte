@@ -2,22 +2,22 @@
 	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
-	import Connector from '$lib/job/connector.svelte';
-	import JobActive from '$lib/job/job-active.svelte';
-	import JobDone from '$lib/job/job-done.svelte';
-	import JobInactive from '$lib/job/job-inactive.svelte';
-	import JobPending from '$lib/job/job-pending.svelte';
+	import Connector from '$lib/task/connector.svelte';
+	import TaskActive from '$lib/task/task-active.svelte';
+	import TaskDone from '$lib/task/task-done.svelte';
+	import TaskInactive from '$lib/task/task-inactive.svelte';
+	import TaskPending from '$lib/task/task-pending.svelte';
 	import Nav from '$lib/nav/nav-app.svelte';
 	import Progress from '$lib/progress/progress.svelte';
-	import UpNext from '$lib/job/up-next.svelte';
+	import UpNext from '$lib/task/up-next.svelte';
 	import { slide } from 'svelte/transition';
 
 	export let name;
 	export let streak;
 	export let checkpoints;
-	export let jobs;
+	export let tasks;
 
-	setQueue(jobs, checkpoints, name);
+	setQueue(tasks, checkpoints, name);
 </script>
 
 <Nav {name} {streak} />
@@ -34,24 +34,24 @@
 				<CheckpointLocked {checkpoint} />
 			{/if}
 
-			{#each $queue.jobs as job, index}
+			{#each $queue.tasks as task, index}
 				{#if index >= checkpoint.fromIndex && index <= checkpoint.toIndex}
 					{#if index === $queue.active && index !== checkpoint.fromIndex}
 						<UpNext />
 					{/if}
 
 					{#if !isCheckpointOpen(checkpoint)}
-						<JobInactive {job} />
+						<TaskInactive {task} />
 					{:else if index === $queue.active}
-						<JobActive {job} />
-					{:else if job.done}
-						<JobDone {job} {index} />
+						<TaskActive {task} />
+					{:else if task.done}
+						<TaskDone {task} {index} />
 					{:else}
-						<JobPending {job} {index} />
+						<TaskPending {task} {index} />
 					{/if}
 
 					{#if index !== checkpoint.toIndex}
-						<Connector done={job.done && index !== checkpoint.toIndex} />
+						<Connector done={task.done && index !== checkpoint.toIndex} />
 					{/if}
 				{/if}
 			{/each}

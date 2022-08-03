@@ -22,7 +22,7 @@
 			"toIndex": 9
 		}
 	],
-	"jobs": [
+	"tasks": [
 		{
 			"days": [true, true, true, true, true, false, false],
 			"description": "Nice and clean, ready for the day.",

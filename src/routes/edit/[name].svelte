@@ -1,42 +1,42 @@
 <script>
 	import { browser } from '$app/env';
 	import { auth, apiUrl } from '$lib/firebase';
-	import Actions from '$lib/job/actions.svelte';
+	import Actions from '$lib/task/actions.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-edit.svelte';
-	import Connector from '$lib/job/connector-edit.svelte';
-	import Flag from '$lib/job/connector-flag.svelte';
-	import Job from '$lib/job/job-edit.svelte';
+	import Connector from '$lib/task/connector-edit.svelte';
+	import Flag from '$lib/task/connector-flag.svelte';
+	import Task from '$lib/task/task-edit.svelte';
 	import Nav from '$lib/nav/nav-edit.svelte';
 
 	export let name;
 	export let checkpoints;
-	export let jobs;
+	export let tasks;
 
 	let checkpointsCompare = JSON.stringify(checkpoints);
-	let jobsCompare = JSON.stringify(jobs);
+	let tasksCompare = JSON.stringify(tasks);
 
 	let unsaved = false;
 	let saving = false;
 	let saved = false;
 
-	$: if (jobs || checkpoints) {
-		let unsavedJobs = JSON.stringify(jobs) !== jobsCompare;
+	$: if (tasks || checkpoints) {
+		let unsavedTasks = JSON.stringify(tasks) !== tasksCompare;
 		let unsavedCheckpoints = JSON.stringify(checkpoints) !== checkpointsCompare;
-		unsaved = unsavedJobs || unsavedCheckpoints;
+		unsaved = unsavedTasks || unsavedCheckpoints;
 	}
 
-	const addJob = (index) => {
-		const emptyJob = {
+	const addTask = (index) => {
+		const emptyTask = {
 			days: [true, true, true, true, true, false, false],
 			description: '',
 			emoji: '😁',
 			title: ''
 		};
-		jobs.splice(index, 0, emptyJob);
-		jobs = jobs;
+		tasks.splice(index, 0, emptyTask);
+		tasks = tasks;
 	};
 
-	const moveJob = (index, direction) => {
+	const moveTask = (index, direction) => {
 		const swap = index + direction;
 		let movedIntoCheckpoint = false;
 
@@ -46,7 +46,7 @@
 				checkpoints[ci].fromIndex--;
 				checkpoints[ci - 1].toIndex--;
 				movedIntoCheckpoint = true;
-				markJobMoved(index);
+				markTaskMoved(index);
 				return false;
 			}
 
@@ -55,7 +55,7 @@
 				checkpoints[ci].toIndex++;
 				checkpoints[ci + 1].fromIndex++;
 				movedIntoCheckpoint = true;
-				markJobMoved(index);
+				markTaskMoved(index);
 				return false;
 			}
 
@@ -66,12 +66,12 @@
 			return;
 		}
 
-		[jobs[index], jobs[swap]] = [jobs[swap], jobs[index]];
-		markJobMoved(swap);
+		[tasks[index], tasks[swap]] = [tasks[swap], tasks[index]];
+		markTaskMoved(swap);
 	};
 
-	const removeJob = (index) => {
-		jobs[index].removed = true;
+	const removeTask = (index) => {
+		tasks[index].removed = true;
 
 		setTimeout(() => {
 			checkpoints.every((checkpoint, ci) => {
@@ -86,14 +86,14 @@
 				return true;
 			});
 
-			jobs.splice(index, 1);
-			jobs = jobs;
+			tasks.splice(index, 1);
+			tasks = tasks;
 		}, 1200);
 	};
 
-	const markJobMoved = (index) => {
-		jobs[index].updated = true;
-		setTimeout(() => (jobs[index].updated = false), 1200);
+	const markTaskMoved = (index) => {
+		tasks[index].updated = true;
+		setTimeout(() => (tasks[index].updated = false), 1200);
 	};
 
 	const canMoveCheckpointUp = (checkpoint, index) => {
@@ -114,11 +114,11 @@
 			return false;
 		}
 
-		return checkpoint.fromIndex < jobs.length;
+		return checkpoint.fromIndex < tasks.length;
 	};
 
 	const addCheckpoint = (ci, ji) => {
-		let toIndex = jobs.length - 1;
+		let toIndex = tasks.length - 1;
 		if (ci + 1 in checkpoints) {
 			toIndex = checkpoints[ci + 1].fromIndex - 1;
 		}
@@ -166,11 +166,11 @@
 
 		await fetch(`${apiUrl}/${uid}/${name}.json?auth=${idToken}`, {
 			method: 'PUT',
-			body: JSON.stringify({ checkpoints, jobs })
+			body: JSON.stringify({ checkpoints, tasks })
 		});
 
 		checkpointsCompare = JSON.stringify(checkpoints);
-		jobsCompare = JSON.stringify(jobs);
+		tasksCompare = JSON.stringify(tasks);
 		saving = false;
 		saved = true;
 
@@ -216,39 +216,39 @@
 			</div>
 
 			<Connector
-				last={checkpoint.fromIndex === jobs.length || checkpoint.toIndex < checkpoint.fromIndex}
+				last={checkpoint.fromIndex === tasks.length || checkpoint.toIndex < checkpoint.fromIndex}
 				on:addCheckpoint={() => addCheckpoint(ci, checkpoint.fromIndex)}
-				on:addTask={() => addJob(checkpoint.fromIndex)}
+				on:addTask={() => addTask(checkpoint.fromIndex)}
 			/>
 
-			{#each jobs as job, ji}
-				{#if ji >= checkpoint.fromIndex && ji <= checkpoint.toIndex}
+			{#each tasks as task, ti}
+				{#if ti >= checkpoint.fromIndex && ti <= checkpoint.toIndex}
 					<div
-						class="job flex gap-4 items-start transition-none duration-1000"
-						id={`job-${ji}`}
-						class:transition-opacity={job.removed}
-						class:opacity-0={job.removed}
-						class:pointer-events-none={job.removed}
+						class="task flex gap-4 items-start transition-none duration-1000"
+						id={`task-${ti}`}
+						class:transition-opacity={task.removed}
+						class:opacity-0={task.removed}
+						class:pointer-events-none={task.removed}
 					>
-						<Job
-							index={ji}
-							bind:updated={jobs[ji].updated}
-							bind:title={jobs[ji].title}
-							bind:emoji={jobs[ji].emoji}
-							bind:days={jobs[ji].days}
+						<Task
+							index={ti}
+							bind:updated={tasks[ti].updated}
+							bind:title={tasks[ti].title}
+							bind:emoji={tasks[ti].emoji}
+							bind:days={tasks[ti].days}
 						/>
 						<Actions
-							up={ji > 0}
-							down={ji < jobs.length - 1 || ci < checkpoints.length - 1}
-							on:up={() => moveJob(ji, -1)}
-							on:down={() => moveJob(ji, 1)}
-							on:remove={() => removeJob(ji)}
+							up={ti > 0}
+							down={ti < task.length - 1 || ci < checkpoints.length - 1}
+							on:up={() => moveTask(ti, -1)}
+							on:down={() => moveTask(ti, 1)}
+							on:remove={() => removeTask(ti)}
 						/>
 					</div>
 					<Connector
 						last={ji === checkpoint.toIndex}
 						on:addCheckpoint={() => addCheckpoint(ci, ji + 1)}
-						on:addTask={() => addJob(ji + 1)}
+						on:addTask={() => addTask(ji + 1)}
 					/>
 				{/if}
 			{/each}

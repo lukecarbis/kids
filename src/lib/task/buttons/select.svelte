@@ -1,18 +1,18 @@
 <script>
 	import { queue, setQueue } from '$lib/stores/queue';
-	import { updateJobs } from '$lib/jobs';
+	import { updateTasks } from '$lib/tasks';
 
 	export let index;
 
 	const select = () => {
-		const jobs = [...$queue.jobs];
+		const tasks = [...$queue.tasks];
 		const patch = {};
 		for (let i = index; i < $queue.active; i++) {
-			jobs[i].skipped = false;
+			tasks[i].skipped = false;
 			patch[`${i}/skipped`] = false;
 		}
-		updateJobs(patch);
-		setQueue(jobs);
+		updateTasks(patch);
+		setQueue(tasks);
 	};
 </script>
 

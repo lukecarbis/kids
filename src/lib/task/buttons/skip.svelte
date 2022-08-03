@@ -1,18 +1,18 @@
 <script>
-	import { queue, getNextJob, resetSkippedJobs, setQueue } from '$lib/stores/queue';
-	import { updateJob } from '$lib/jobs';
+	import { queue, getNextTask, resetSkippedTasks, setQueue } from '$lib/stores/queue';
+	import { updateTask } from '$lib/tasks';
 
 	const skip = () => {
-		let jobs = [...$queue.jobs];
+		let tasks = [...$queue.tasks];
 
-		jobs[$queue.active].skipped = true;
-		updateJob($queue.active, { skipped: true });
+		tasks[$queue.active].skipped = true;
+		updateTask($queue.active, { skipped: true });
 
-		if (-1 === getNextJob(jobs, $queue.checkpoints)) {
-			jobs = resetSkippedJobs(jobs);
+		if (-1 === getNextTask(tasks, $queue.checkpoints)) {
+			tasks = resetSkippedTasks(tasks);
 		}
 
-		setQueue(jobs);
+		setQueue(tasks);
 	};
 </script>
 

@@ -3,9 +3,9 @@
 	import { slide } from 'svelte/transition';
 	import data from '@emoji-mart/data/sets/14/twitter.json'
 	import { init } from 'emoji-mart'
-	import Skip from '$lib/job/buttons/skip.svelte';
-	import Done from '$lib/job/buttons/done.svelte';
-	export let job;
+	import Skip from '$lib/task/buttons/skip.svelte';
+	import Done from '$lib/task/buttons/done.svelte';
+	export let task;
 
 	init({ data });
 </script>
@@ -15,12 +15,12 @@
 	transition:slide
 >
 	<span class="text-center w-full h-10 max-h-full text-4xl mb-2">
-		<em-emoji set="twitter" size="40px" native={job.emoji} />
+		<em-emoji set="twitter" size="40px" native={task.emoji} />
 	</span>
 	<h3 class="flex-auto text-center pt-2 text-2xl leading-10">
-		{job.title}
+		{task.title}
 	</h3>
-	<p class="w-full py-2 text-center">{job.description}</p>
+	<p class="w-full py-2 text-center">{task.description}</p>
 </div>
 
 <div class="bg-white rounded-b-lg border-2 border-t-0 flex" transition:slide>

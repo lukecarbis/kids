@@ -1,6 +1,6 @@
 <script>
-	import Move from '$lib/job/buttons/move.svelte';
-	import Remove from '$lib/job/buttons/remove.svelte';
+	import Move from '$lib/task/buttons/move.svelte';
+	import Remove from '$lib/task/buttons/remove.svelte';
 	export let up = false;
 	export let down = true;
 	export let remove = true;

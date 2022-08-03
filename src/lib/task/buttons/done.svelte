@@ -1,24 +1,24 @@
 <script>
 	import {
 		queue,
-		getNextJob,
-		getJobsRemaining,
-		resetSkippedJobs,
+		getNextTask,
+		getTasksRemaining,
+		resetSkippedTasks,
 		setQueue
 	} from '$lib/stores/queue';
-	import { updateJob } from '$lib/jobs';
+	import { updateTask } from '$lib/tasks';
 
 	const done = () => {
-		let jobs = [...$queue.jobs];
+		let tasks = [...$queue.tasks];
 
-		jobs[$queue.active].done = true;
-		updateJob($queue.active, { done: true });
+		tasks[$queue.active].done = true;
+		updateTask($queue.active, { done: true });
 
-		if (-1 === getNextJob(jobs, $queue.checkpoints)) {
-			jobs = resetSkippedJobs(jobs);
+		if (-1 === getNextTask(tasks, $queue.checkpoints)) {
+			tasks = resetSkippedTasks(tasks);
 		}
 
-		if (!getJobsRemaining(jobs, $queue.checkpoints)) {
+		if (!getTasksRemaining(tasks, $queue.checkpoints)) {
 			const container = document.querySelector('#wrap');
 			const checkpoint = document.querySelector('.checkpoint.locked');
 
@@ -35,7 +35,7 @@
 			});
 		}
 
-		setQueue(jobs);
+		setQueue(tasks);
 	};
 </script>
 

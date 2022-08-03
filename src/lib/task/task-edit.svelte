@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import Day from '$lib/job/buttons/day.svelte';
+	import Day from '$lib/task/buttons/day.svelte';
 	import data from '@emoji-mart/data/sets/14/twitter.json'
 	import { Picker, init } from 'emoji-mart'
 

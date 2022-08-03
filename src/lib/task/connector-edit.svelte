@@ -1,5 +1,5 @@
 <script>
-	import Add from '$lib/job/buttons/add.svelte';
+	import Add from '$lib/task/buttons/add.svelte';
 	export let last = false;
 </script>
 

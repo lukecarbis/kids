@@ -1,6 +1,6 @@
 <script>
 	import { queue } from '$lib/stores/queue';
-	import Connector from '$lib/job/connector.svelte';
+	import Connector from '$lib/task/connector.svelte';
 	import { slide } from 'svelte/transition';
 	export let checkpoint;
 </script>

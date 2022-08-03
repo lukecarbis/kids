@@ -3,21 +3,21 @@ import { get, writable } from 'svelte/store';
 
 export const queue = writable({
 	name: '',
-	jobs: [],
+	tasks: [],
 	checkpoints: [],
 	active: 0,
 	remaining: 0,
 	totalRemaining: 0
 });
 
-export const getNextJob = (jobs, checkpoints) => {
+export const getNextTask = (tasks, checkpoints) => {
 	for (const checkpoint of checkpoints) {
 		if (!isCheckpointOpen(checkpoint)) {
 			continue;
 		}
-		for (const [index, job] of jobs.entries()) {
+		for (const [index, task] of tasks.entries()) {
 			if (index >= checkpoint.fromIndex && index <= checkpoint.toIndex) {
-				if (!job.skipped && !job.done) {
+				if (!task.skipped && !task.done) {
 					return index;
 				}
 			}
@@ -26,16 +26,16 @@ export const getNextJob = (jobs, checkpoints) => {
 	return -1;
 };
 
-export const getJobsRemaining = (jobs, checkpoints) => {
+export const getTasksRemaining = (tasks, checkpoints) => {
 	let remaining = 0;
 
 	for (const checkpoint of checkpoints) {
 		if (!isCheckpointOpen(checkpoint)) {
 			continue;
 		}
-		for (const [index, job] of jobs.entries()) {
+		for (const [index, task] of tasks.entries()) {
 			if (index >= checkpoint.fromIndex && index <= checkpoint.toIndex) {
-				if (!job.done) {
+				if (!task.done) {
 					remaining++;
 				}
 			}
@@ -45,13 +45,13 @@ export const getJobsRemaining = (jobs, checkpoints) => {
 	return remaining;
 };
 
-export const getTotalJobsRemaining = (jobs, checkpoints) => {
+export const getTotalTasksRemaining = (tasks, checkpoints) => {
 	let remaining = 0;
 
 	for (const checkpoint of checkpoints) {
-		for (const [index, job] of jobs.entries()) {
+		for (const [index, task] of tasks.entries()) {
 			if (index >= checkpoint.fromIndex && index <= checkpoint.toIndex) {
-				if (!job.done) {
+				if (!task.done) {
 					remaining++;
 				}
 			}
@@ -61,14 +61,14 @@ export const getTotalJobsRemaining = (jobs, checkpoints) => {
 	return remaining;
 };
 
-export const resetSkippedJobs = (jobs) => {
-	for (let index = 0; index < jobs.length; index++) {
-		jobs[index].skipped = false;
+export const resetSkippedTasks = (tasks) => {
+	for (let index = 0; index < tasks.length; index++) {
+		tasks[index].skipped = false;
 	}
-	return jobs;
+	return tasks;
 };
 
-export const setQueue = (jobs, checkpoints = false, name = false) => {
+export const setQueue = (tasks, checkpoints = false, name = false) => {
 	if (!checkpoints) {
 		checkpoints = get(queue).checkpoints;
 	}
@@ -77,20 +77,20 @@ export const setQueue = (jobs, checkpoints = false, name = false) => {
 	}
 	queue.set({
 		name: name,
-		jobs: jobs,
+		tasks: tasks,
 		checkpoints: checkpoints,
-		active: getNextJob(jobs, checkpoints),
-		remaining: getJobsRemaining(jobs, checkpoints),
-		totalRemaining: getTotalJobsRemaining(jobs, checkpoints)
+		active: getNextTask(tasks, checkpoints),
+		remaining: getTasksRemaining(tasks, checkpoints),
+		totalRemaining: getTotalTasksRemaining(tasks, checkpoints)
 	});
 };
 
 export const isCheckpointOpen = (checkpoint) => {
-	const jobs = get(queue).jobs.slice(0, checkpoint.toIndex - 1);
+	const tasks = get(queue).tasks.slice(0, checkpoint.toIndex - 1);
 
-	const doneJobs = jobs.filter((job) => {
-		return job.done;
+	const doneTasks = tasks.filter((task) => {
+		return task.done;
 	});
 
-	return get(hour) >= checkpoint.hour && doneJobs.length >= checkpoint.fromIndex;
+	return get(hour) >= checkpoint.hour && doneTasks.length >= checkpoint.fromIndex;
 };
