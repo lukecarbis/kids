@@ -1,9 +1,6 @@
 <script>
-	import Streak from './streak.svelte';
 	import { slide } from 'svelte/transition';
-
 	export let name;
-	export let streak;
 </script>
 
 <header
@@ -22,6 +19,5 @@
 			<path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
 		</svg>
 	</a>
-	<h2 class="flex-auto text-center">Hi, {name}!</h2>
-	<Streak {streak} />
+	<h2 class="flex-auto text-center mr-10">Hi, {name}!</h2>
 </header>

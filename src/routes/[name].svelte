@@ -13,14 +13,13 @@
 	import { slide } from 'svelte/transition';
 
 	export let name;
-	export let streak;
 	export let checkpoints;
 	export let tasks;
 
 	setQueue(tasks, checkpoints, name);
 </script>
 
-<Nav {name} {streak} />
+<Nav {name} />
 
 <div
 	id="wrap"
