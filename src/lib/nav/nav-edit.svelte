@@ -3,9 +3,9 @@
 
 	export let title;
 	export let back;
-	export let unsaved;
-	export let saving;
-	export let saved;
+	export let unsaved = false;
+	export let saving = false;
+	export let saved = false;
 
 	const dispatch = createEventDispatcher();
 </script>

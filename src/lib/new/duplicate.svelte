@@ -4,11 +4,14 @@
 	import Disclaimer from '$lib/new/disclaimer.svelte';
 	import { auth, apiUrl } from '$lib/firebase';
 	import { goto } from '$app/navigation';
+	import slugify from 'slugify';
 
 	let name = '';
+	let slug = '';
 	let loading = false;
+	$: slug = slugify(name, { lower: true, strict: true });
+
 	export let checkpoints;
-	export let tasks;
 
 	const setDefaults = async () => {
 		loading = true;
@@ -17,14 +20,12 @@
 		const uid = auth.currentUser.uid;
 
 		await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
-			method: 'PATCH',
-			body: JSON.stringify({
-				[name]: { checkpoints, tasks }
-			})
+			method: 'POST',
+			body: JSON.stringify({ name, slug, checkpoints })
 		});
 
 		loading = false;
-		await goto(`/edit/${name}`);
+		await goto(`/edit/${slug}`);
 	};
 </script>
 

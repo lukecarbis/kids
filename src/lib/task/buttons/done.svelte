@@ -1,41 +1,14 @@
 <script>
-	import {
-		queue,
-		getNextTask,
-		getTasksRemaining,
-		resetSkippedTasks,
-		setQueue
-	} from '$lib/stores/queue';
+	import { queue, setQueue } from '$lib/stores/queue';
 	import { updateTask } from '$lib/tasks';
 
 	const done = () => {
-		let tasks = [...$queue.tasks];
+		let checkpoints = [...$queue.checkpoints];
 
-		tasks[$queue.active].done = true;
-		updateTask($queue.active, { done: true });
+		checkpoints[$queue.activeCheckpoint].tasks[$queue.activeTask].done = true;
+		updateTask($queue.activeCheckpoint, $queue.activeTask, { done: true });
 
-		if (-1 === getNextTask(tasks, $queue.checkpoints)) {
-			tasks = resetSkippedTasks(tasks);
-		}
-
-		if (!getTasksRemaining(tasks, $queue.checkpoints)) {
-			const container = document.querySelector('#wrap');
-			const checkpoint = document.querySelector('.checkpoint.locked');
-
-			let top = container.scrollHeight;
-
-			if (checkpoint) {
-				top = checkpoint.offsetTop;
-			}
-
-			container.scrollTo({
-				left: 0,
-				top: top,
-				behavior: 'smooth'
-			});
-		}
-
-		setQueue(tasks);
+		setQueue(checkpoints);
 	};
 </script>
 

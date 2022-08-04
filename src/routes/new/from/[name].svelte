@@ -3,7 +3,6 @@
 	import Duplicate from '$lib/new/duplicate.svelte';
 	export let name;
 	export let checkpoints;
-	export let tasks;
 </script>
 
 <Nav title="" back="/edit" />
@@ -16,6 +15,6 @@
 		<p class="mb-6">
 			This will copy the <strong>{name}</strong> list into a new one. What should it be called?
 		</p>
-		<Duplicate {checkpoints} {tasks} />
+		<Duplicate {checkpoints} />
 	</main>
 </div>

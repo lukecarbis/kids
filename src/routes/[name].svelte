@@ -13,10 +13,10 @@
 	import { slide } from 'svelte/transition';
 
 	export let name;
+	export let id;
 	export let checkpoints;
-	export let tasks;
 
-	setQueue(tasks, checkpoints, name);
+	setQueue(checkpoints, name, id);
 </script>
 
 <Nav {name} />
@@ -26,8 +26,8 @@
 	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 >
 	<main class="max-w-screen-sm mx-auto px-6 relative" out:slide>
-		{#each $queue.checkpoints as checkpoint}
-			{#if isCheckpointOpen(checkpoint)}
+		{#each $queue.checkpoints as checkpoint, checkpointIndex}
+			{#if isCheckpointOpen($queue.checkpoints, checkpointIndex)}
 				<CheckpointActive {checkpoint} />
 				<Connector />
 			{:else}
@@ -35,25 +35,23 @@
 				<Connector />
 			{/if}
 
-			{#each $queue.tasks as task, index}
-				{#if index >= checkpoint.fromIndex && index <= checkpoint.toIndex}
-					{#if index === $queue.active && index !== checkpoint.fromIndex}
-						<UpNext />
-					{/if}
+			{#each checkpoint.tasks as task, taskIndex}
+				{#if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
+					<UpNext />
+				{/if}
 
-					{#if !isCheckpointOpen(checkpoint)}
-						<TaskInactive {task} />
-					{:else if index === $queue.active}
-						<TaskActive {task} />
-					{:else if task.done}
-						<TaskDone {task} {index} />
-					{:else}
-						<TaskPending {task} {index} />
-					{/if}
+				{#if !isCheckpointOpen($queue.checkpoints, checkpointIndex)}
+					<TaskInactive {task} />
+				{:else if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
+					<TaskActive {task} />
+				{:else if task.done}
+					<TaskDone {task} {taskIndex} {checkpointIndex} />
+				{:else}
+					<TaskPending {task} {taskIndex} {checkpointIndex} />
+				{/if}
 
-					{#if index !== checkpoint.toIndex}
-						<Connector done={task.done && index !== checkpoint.toIndex} />
-					{/if}
+				{#if taskIndex !== checkpoint.tasks.length - 1}
+					<Connector done={task.done} />
 				{/if}
 			{/each}
 		{/each}

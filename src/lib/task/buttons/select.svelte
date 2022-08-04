@@ -1,18 +1,32 @@
 <script>
 	import { queue, setQueue } from '$lib/stores/queue';
 	import { updateTasks } from '$lib/tasks';
+	import { isCheckpointOpen } from '../../stores/queue.js';
 
-	export let index;
+	export let taskIndex;
+	export let checkpointIndex;
 
 	const select = () => {
-		const tasks = [...$queue.tasks];
+		const checkpoints = [...$queue.checkpoints];
 		const patch = {};
-		for (let i = index; i < $queue.active; i++) {
-			tasks[i].skipped = false;
-			patch[`${i}/skipped`] = false;
-		}
-		updateTasks(patch);
-		setQueue(tasks);
+
+		checkpoints.forEach((checkpoint, ci) => {
+			if (ci < checkpointIndex) {
+				return;
+			}
+			checkpoint.tasks.forEach((task, ti) => {
+				if (ti < taskIndex && ci === checkpointIndex) {
+					return;
+				}
+				if (!task.done) {
+					checkpoints[ci].tasks[ti].skipped = false;
+					patch[`${ci}/tasks/${ti}/skipped`] = false;
+				}
+			});
+		});
+
+		updateTasks(checkpointIndex, patch);
+		setQueue(checkpoints);
 	};
 </script>
 

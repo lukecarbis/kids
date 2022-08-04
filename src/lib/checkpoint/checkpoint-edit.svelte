@@ -1,8 +1,8 @@
 <script>
-	export let updated;
 	export let title;
 	export let description;
-	export let fromIndex;
+	export let updated = false;
+	export let index = 0;
 	export let AM = true;
 </script>
 
@@ -22,7 +22,7 @@
 		bind:value={description}
 		on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 	/>
-	{#if fromIndex > 0}
+	{#if index > 0}
 		<div class="text-center w-full my-2">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"

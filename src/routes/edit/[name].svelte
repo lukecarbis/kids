@@ -8,154 +8,147 @@
 	import Task from '$lib/task/task-edit.svelte';
 	import Nav from '$lib/nav/nav-edit.svelte';
 
+	export let id;
 	export let name;
 	export let checkpoints;
-	export let tasks;
 
-	let checkpointsCompare = JSON.stringify(checkpoints);
-	let tasksCompare = JSON.stringify(tasks);
+	let savedCheckpoints = JSON.stringify(checkpoints);
 
 	let unsaved = false;
 	let saving = false;
 	let saved = false;
 
-	$: if (tasks || checkpoints) {
-		let unsavedTasks = JSON.stringify(tasks) !== tasksCompare;
-		let unsavedCheckpoints = JSON.stringify(checkpoints) !== checkpointsCompare;
-		unsaved = unsavedTasks || unsavedCheckpoints;
+	$: if (checkpoints) {
+		unsaved = JSON.stringify(checkpoints) !== savedCheckpoints;
 	}
 
-	const addTask = (index) => {
+	const addTask = (index, checkpointIndex) => {
 		const emptyTask = {
 			days: [true, true, true, true, true, false, false],
 			description: '',
 			emoji: '😁',
 			title: ''
 		};
-		tasks.splice(index, 0, emptyTask);
-		tasks = tasks;
-	};
-
-	const moveTask = (index, direction) => {
-		const swap = index + direction;
-		let movedIntoCheckpoint = false;
-
-		checkpoints.every((checkpoint, ci) => {
-			// If moving a task down.
-			if (direction > 0 && swap === checkpoint.fromIndex) {
-				checkpoints[ci].fromIndex--;
-				checkpoints[ci - 1].toIndex--;
-				movedIntoCheckpoint = true;
-				markTaskMoved(index);
-				return false;
-			}
-
-			// If moving a task up.
-			if (direction < 0 && swap === checkpoint.toIndex) {
-				checkpoints[ci].toIndex++;
-				checkpoints[ci + 1].fromIndex++;
-				movedIntoCheckpoint = true;
-				markTaskMoved(index);
-				return false;
-			}
-
-			return true;
-		});
-
-		if (movedIntoCheckpoint) {
-			return;
-		}
-
-		[tasks[index], tasks[swap]] = [tasks[swap], tasks[index]];
-		markTaskMoved(swap);
-	};
-
-	const removeTask = (index) => {
-		tasks[index].removed = true;
-
-		setTimeout(() => {
-			checkpoints.every((checkpoint, ci) => {
-				// If moving a task down.
-				if (checkpoint.fromIndex >= index) {
-					checkpoints[ci].toIndex--;
-					if (ci > 0) {
-						checkpoints[ci].fromIndex = checkpoints[ci - 1].toIndex + 1;
-					}
-				}
-
-				return true;
-			});
-
-			tasks.splice(index, 1);
-			tasks = tasks;
-		}, 1200);
-	};
-
-	const markTaskMoved = (index) => {
-		tasks[index].updated = true;
-		setTimeout(() => (tasks[index].updated = false), 1200);
-	};
-
-	const canMoveCheckpointUp = (checkpoint, index) => {
-		if (checkpoint.fromIndex === 0) {
-			return false;
-		}
-
-		const previousCheckpoint = checkpoints[index - 1];
-		return previousCheckpoint.toIndex >= previousCheckpoint.fromIndex;
-	};
-
-	const canMoveCheckpointDown = (checkpoint, index) => {
-		if (index === 0) {
-			return false;
-		}
-
-		if (checkpoint.toIndex < checkpoint.fromIndex) {
-			return false;
-		}
-
-		return checkpoint.fromIndex < tasks.length;
-	};
-
-	const addCheckpoint = (ci, ti) => {
-		let toIndex = tasks.length - 1;
-		if (ci + 1 in checkpoints) {
-			toIndex = checkpoints[ci + 1].fromIndex - 1;
-		}
-		checkpoints[ci].toIndex = ti - 1;
-		const emptyCheckpoint = {
-			description: '',
-			fromIndex: ti,
-			hour: 0,
-			title: '',
-			toIndex: toIndex
-		};
-		checkpoints.splice(ci + 1, 0, emptyCheckpoint);
+		checkpoints[checkpointIndex].tasks.splice(index, 0, emptyTask);
 		checkpoints = checkpoints;
 	};
 
-	const moveCheckpoint = (index, direction) => {
-		const clone = [...checkpoints];
+	const moveTask = (index, checkpointIndex, direction) => {
+		if (0 === index && direction < 0) {
+			const tasks = checkpoints[checkpointIndex].tasks;
+			const task = tasks.splice(0, 1)[0];
+			checkpoints[checkpointIndex - 1].tasks.push(task);
 
-		clone[index].fromIndex = clone[index].fromIndex + direction;
-		clone[index - 1].toIndex = clone[index - 1].toIndex + direction;
+			markTaskMoved(checkpoints[checkpointIndex - 1].tasks.length - 1, checkpointIndex - 1);
+			return;
+		}
 
-		markCheckpointMoved(index);
-		checkpoints = clone;
+		if (index === checkpoints[checkpointIndex].tasks.length - 1 && direction > 0) {
+			const tasks = checkpoints[checkpointIndex].tasks;
+			const task = tasks.splice(tasks.length - 1, 1)[0];
+			checkpoints[checkpointIndex + 1].tasks.splice(0, 0, task);
+
+			markTaskMoved(0, checkpointIndex + 1);
+			return;
+		}
+
+		const swapIndex = index + direction;
+		const tasks = checkpoints[checkpointIndex].tasks;
+		[tasks[index], tasks[swapIndex]] = [tasks[swapIndex], tasks[index]];
+
+		markTaskMoved(swapIndex, checkpointIndex);
 	};
 
-	const removeCheckpoint = (index) => {
-		checkpoints[index].removed = true;
+	const removeTask = (index, checkpointIndex) => {
+		checkpoints[checkpointIndex].tasks[index].removed = true;
+
 		setTimeout(() => {
-			checkpoints[index - 1].toIndex = checkpoints[index].toIndex;
-			checkpoints.splice(index, 1);
+			checkpoints[checkpointIndex].tasks.splice(index, 1);
 			checkpoints = checkpoints;
 		}, 1200);
 	};
 
-	const markCheckpointMoved = (index) => {
-		checkpoints[index].updated = true;
-		setTimeout(() => (checkpoints[index].updated = false), 1200);
+	const markTaskMoved = (index, checkpointIndex) => {
+		checkpoints[checkpointIndex].tasks[index].updated = true;
+		setTimeout(() => {
+			if (
+				'undefined' !== typeof checkpoints[checkpointIndex] &&
+				'undefined' !== typeof checkpoints[checkpointIndex].tasks[index]
+			) {
+				checkpoints[checkpointIndex].tasks[index].updated = false;
+			}
+		}, 1200);
+	};
+
+	const addCheckpoint = (index, checkpointIndex) => {
+		const emptyCheckpoint = {
+			description: '',
+			hour: 0,
+			title: ''
+		};
+		const firstHalfTasks = checkpoints[checkpointIndex].tasks.slice(0, index);
+		const secondHalfTasks = checkpoints[checkpointIndex].tasks.slice(index);
+
+		checkpoints.splice(checkpointIndex + 1, 0, emptyCheckpoint);
+		checkpoints[checkpointIndex].tasks = firstHalfTasks;
+		checkpoints[checkpointIndex + 1].tasks = secondHalfTasks;
+	};
+
+	const moveCheckpoint = (checkpointIndex, direction) => {
+		if (direction < 0) {
+			const tasks = checkpoints[checkpointIndex - 1].tasks;
+			if (tasks.length) {
+				const task = tasks.splice(tasks.length - 1, 1)[0];
+				checkpoints[checkpointIndex].tasks.splice(0, 0, task);
+				markCheckpointMoved(checkpointIndex);
+				return;
+			}
+		}
+
+		if (direction > 0) {
+			const tasks = checkpoints[checkpointIndex].tasks;
+			if (tasks.length) {
+				const task = tasks.splice(0, 1)[0];
+				checkpoints[checkpointIndex - 1].tasks.push(task);
+				markCheckpointMoved(checkpointIndex);
+				return;
+			}
+		}
+
+		const swapIndex = checkpointIndex + direction;
+		[checkpoints[checkpointIndex], checkpoints[swapIndex]] = [
+			checkpoints[swapIndex],
+			checkpoints[checkpointIndex]
+		];
+		if (direction < 0) {
+			checkpoints[checkpointIndex].tasks = [...checkpoints[swapIndex].tasks];
+			checkpoints[swapIndex].tasks = [];
+		} else {
+			checkpoints[swapIndex].tasks = [...checkpoints[checkpointIndex].tasks];
+			checkpoints[checkpointIndex].tasks = [];
+		}
+
+		markCheckpointMoved(swapIndex);
+	};
+
+	const removeCheckpoint = (checkpointIndex) => {
+		checkpoints[checkpointIndex].removed = true;
+		setTimeout(() => {
+			const tasks = [...checkpoints[checkpointIndex].tasks];
+			checkpoints[checkpointIndex - 1].tasks.push.apply(
+				checkpoints[checkpointIndex - 1].tasks,
+				tasks
+			);
+			checkpoints.splice(checkpointIndex, 1);
+			checkpoints = checkpoints;
+		}, 1200);
+	};
+
+	const markCheckpointMoved = (checkpointIndex) => {
+		checkpoints[checkpointIndex].updated = true;
+		setTimeout(() => {
+			checkpoints[checkpointIndex].updated = false;
+		}, 1200);
 	};
 
 	const save = async () => {
@@ -164,13 +157,12 @@
 		const idToken = await auth.currentUser.getIdToken();
 		const uid = auth.currentUser.uid;
 
-		await fetch(`${apiUrl}/${uid}/${name}.json?auth=${idToken}`, {
-			method: 'PUT',
-			body: JSON.stringify({ checkpoints, tasks })
+		await fetch(`${apiUrl}/${uid}/${id}.json?auth=${idToken}`, {
+			method: 'PATCH',
+			body: JSON.stringify({ checkpoints })
 		});
 
-		checkpointsCompare = JSON.stringify(checkpoints);
-		tasksCompare = JSON.stringify(tasks);
+		savedCheckpoints = JSON.stringify(checkpoints);
 		saving = false;
 		saved = true;
 
@@ -186,11 +178,11 @@
 	}
 </script>
 
-<Nav title={name} back="/edit" bind:unsaved bind:saving bind:saved on:save={save} />
+<Nav title="Editing List: {name}" back="/edit" bind:unsaved bind:saving bind:saved on:save={save} />
 
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
-		{#each checkpoints as checkpoint, ci}
+		{#each checkpoints as checkpoint, checkpointIndex}
 			<div class="transition-all duration-1000" class:opacity-0={checkpoint.removed}>
 				<Flag />
 				<div
@@ -198,58 +190,59 @@
 					class:pointer-events-none={checkpoint.removed}
 				>
 					<Checkpoint
-						bind:updated={checkpoints[ci].updated}
-						bind:title={checkpoints[ci].title}
-						bind:description={checkpoints[ci].description}
-						bind:fromIndex={checkpoints[ci].fromIndex}
+						bind:updated={checkpoints[checkpointIndex].updated}
+						bind:title={checkpoints[checkpointIndex].title}
+						bind:description={checkpoints[checkpointIndex].description}
+						index={checkpointIndex}
 					/>
 					<Actions
-						up={canMoveCheckpointUp(checkpoint, ci)}
-						down={canMoveCheckpointDown(checkpoint, ci)}
-						remove={0 !== ci}
-						on:up={() => moveCheckpoint(ci, -1)}
-						on:down={() => moveCheckpoint(ci, 1)}
-						on:remove={() => removeCheckpoint(ci)}
+						up={checkpointIndex > 0}
+						down={checkpointIndex !== 0 &&
+							(checkpointIndex !== checkpoints.length - 1 ||
+								checkpoints[checkpoints.length - 1].tasks.length > 0)}
+						remove={checkpointIndex > 0}
+						on:up={() => moveCheckpoint(checkpointIndex, -1)}
+						on:down={() => moveCheckpoint(checkpointIndex, 1)}
+						on:remove={() => removeCheckpoint(checkpointIndex)}
 					/>
 				</div>
 			</div>
 
 			<Connector
-				last={checkpoint.fromIndex === tasks.length || checkpoint.toIndex < checkpoint.fromIndex}
-				on:addCheckpoint={() => addCheckpoint(ci, checkpoint.fromIndex)}
-				on:addTask={() => addTask(checkpoint.fromIndex)}
+				last={!checkpoint.tasks.length}
+				on:addCheckpoint={() => addCheckpoint(0, checkpointIndex)}
+				on:addTask={() => addTask(0, checkpointIndex)}
 			/>
 
-			{#each tasks as task, ti}
-				{#if ti >= checkpoint.fromIndex && ti <= checkpoint.toIndex}
-					<div
-						class="task flex gap-4 items-start transition-none duration-1000"
-						id={`task-${ti}`}
-						class:transition-opacity={task.removed}
-						class:opacity-0={task.removed}
-						class:pointer-events-none={task.removed}
-					>
-						<Task
-							index={ti}
-							bind:updated={tasks[ti].updated}
-							bind:title={tasks[ti].title}
-							bind:emoji={tasks[ti].emoji}
-							bind:days={tasks[ti].days}
-						/>
-						<Actions
-							up={ti > 0}
-							down={ti < task.length - 1 || ci < checkpoints.length - 1}
-							on:up={() => moveTask(ti, -1)}
-							on:down={() => moveTask(ti, 1)}
-							on:remove={() => removeTask(ti)}
-						/>
-					</div>
-					<Connector
-						last={ti === checkpoint.toIndex}
-						on:addCheckpoint={() => addCheckpoint(ci, ti + 1)}
-						on:addTask={() => addTask(ti + 1)}
+			{#each checkpoint.tasks as task, taskIndex}
+				<div
+					class="task flex gap-4 items-start transition-none duration-1000"
+					id={`task-${taskIndex}`}
+					class:transition-opacity={task.removed}
+					class:opacity-0={task.removed}
+					class:pointer-events-none={task.removed}
+				>
+					<Task
+						id="{checkpointIndex}-{taskIndex}"
+						bind:updated={checkpoint.tasks[taskIndex].updated}
+						bind:title={checkpoint.tasks[taskIndex].title}
+						bind:emoji={checkpoint.tasks[taskIndex].emoji}
+						bind:days={checkpoint.tasks[taskIndex].days}
 					/>
-				{/if}
+					<Actions
+						up={taskIndex > 0 || checkpointIndex > 0}
+						down={taskIndex < checkpoint.tasks.length - 1 ||
+							checkpointIndex < checkpoints.length - 1}
+						on:up={() => moveTask(taskIndex, checkpointIndex, -1)}
+						on:down={() => moveTask(taskIndex, checkpointIndex, 1)}
+						on:remove={() => removeTask(taskIndex, checkpointIndex)}
+					/>
+				</div>
+				<Connector
+					last={taskIndex === checkpoint.tasks.length - 1}
+					on:addCheckpoint={() => addCheckpoint(taskIndex + 1, checkpointIndex)}
+					on:addTask={() => addTask(taskIndex + 1, checkpointIndex)}
+				/>
 			{/each}
 		{/each}
 	</main>

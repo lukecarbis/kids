@@ -7,10 +7,12 @@
 	import Disclaimer from '$lib/new/disclaimer.svelte';
 	import { auth, apiUrl } from '$lib/firebase';
 	import { goto } from '$app/navigation';
+	import slugify from 'slugify';
 
 	let name = '';
 	let loading = false;
 	let useSampleData = true;
+	$: slug = slugify(name, { lower: true, strict: true });
 
 	const setDefaults = async () => {
 		loading = true;
@@ -19,15 +21,16 @@
 		const uid = auth.currentUser.uid;
 		const data = useSampleData ? sample : empty;
 
+		data.name = name;
+		data.slug = slug;
+
 		await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
-			method: 'PATCH',
-			body: JSON.stringify({
-				[name]: data
-			})
+			method: 'POST',
+			body: JSON.stringify(data)
 		});
 
 		loading = false;
-		await goto(`/edit/${name}`);
+		await goto(`/edit/${slug}`);
 	};
 </script>
 

@@ -6,17 +6,18 @@
 
 	init({ data });
 
-	export let index;
-	export let updated;
+	export let id;
 	export let title;
 	export let emoji;
+	export let updated = false;
 	export let days = [1, 1, 1, 1, 1, 0, 0];
 
 	let showEmojiPicker = false;
 
 	onMount(async () => {
+		console.log(id);
 		new Picker({
-			parent: document.querySelector(`#emoji-button-${index}`),
+			parent: document.querySelector(`#emoji-button-${id}`),
 			data: data,
 			set: 'twitter',
 			theme: 'light',
@@ -49,7 +50,7 @@
 				<em-emoji class="h-full max-h-6" set="twitter" native={emoji} />
 			</button>
 			<div
-				id={`emoji-button-${index}`}
+				id={`emoji-button-${id}`}
 				class="emoji-picker absolute mt-12"
 				class:invisible={!showEmojiPicker}
 			/>

@@ -3,16 +3,16 @@
 	import { updateTask } from '$lib/tasks';
 
 	const skip = () => {
-		let tasks = [...$queue.tasks];
+		let checkpoints = [...$queue.checkpoints];
 
-		tasks[$queue.active].skipped = true;
-		updateTask($queue.active, { skipped: true });
+		checkpoints[$queue.activeCheckpoint].tasks[$queue.activeTask].skipped = true;
+		updateTask($queue.activeCheckpoint, $queue.activeTask, { skipped: true });
 
-		if (-1 === getNextTask(tasks, $queue.checkpoints)) {
-			tasks = resetSkippedTasks(tasks);
+		if (-1 === getNextTask($queue.checkpoints).task) {
+			checkpoints = resetSkippedTasks(checkpoints);
 		}
 
-		setQueue(tasks);
+		setQueue(checkpoints);
 	};
 </script>
 

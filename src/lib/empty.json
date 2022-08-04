@@ -2,18 +2,16 @@
 	"checkpoints": [
 		{
 			"description": "",
-			"fromIndex": 0,
 			"hour": 0,
 			"title": "",
-			"toIndex": 0
-		}
-	],
-	"tasks": [
-		{
-			"days": [true, true, true, true, true, false, false],
-			"description": "",
-			"emoji": "😀",
-			"title": ""
+			"tasks": [
+				{
+					"days": [true, true, true, true, true, false, false],
+					"description": "",
+					"emoji": "😀",
+					"title": ""
+				}
+			]
 		}
 	],
 	"today": []

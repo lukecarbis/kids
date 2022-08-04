@@ -1,96 +1,115 @@
+import empty from '$lib/empty.json';
 import { hour } from '$lib/stores/time';
 import { get, writable } from 'svelte/store';
 
 export const queue = writable({
 	name: '',
-	tasks: [],
-	checkpoints: [],
-	active: 0,
+	id: '',
+	checkpoints: empty.checkpoints,
+	activeCheckpoint: 0,
+	activeTask: 0,
 	remaining: 0,
-	totalRemaining: 0
+	totalRemaining: 0,
+	totalTasks: 0
 });
 
-export const getNextTask = (tasks, checkpoints) => {
-	for (const checkpoint of checkpoints) {
-		if (!isCheckpointOpen(checkpoint)) {
+export const getNextTask = (checkpoints) => {
+	for (const [checkpointIndex, checkpoint] of checkpoints.entries()) {
+		if (!isCheckpointOpen(checkpoints, checkpoint)) {
 			continue;
 		}
-		for (const [index, task] of tasks.entries()) {
-			if (index >= checkpoint.fromIndex && index <= checkpoint.toIndex) {
-				if (!task.skipped && !task.done) {
-					return index;
-				}
+		for (const [taskIndex, task] of checkpoint.tasks.entries()) {
+			if (!task.done && !task.skipped) {
+				return { checkpoint: checkpointIndex, task: taskIndex };
 			}
 		}
 	}
-	return -1;
+	return { checkpoint: -1, task: -1 };
 };
 
-export const getTasksRemaining = (tasks, checkpoints) => {
+export const getTasksRemaining = (checkpoints) => {
 	let remaining = 0;
 
-	for (const checkpoint of checkpoints) {
-		if (!isCheckpointOpen(checkpoint)) {
-			continue;
+	checkpoints.forEach((checkpoint, index) => {
+		if (!isCheckpointOpen(checkpoints, index)) {
+			return false;
 		}
-		for (const [index, task] of tasks.entries()) {
-			if (index >= checkpoint.fromIndex && index <= checkpoint.toIndex) {
-				if (!task.done) {
-					remaining++;
-				}
+
+		checkpoint.tasks.forEach((task) => {
+			if (!task.done) {
+				remaining++;
 			}
-		}
-	}
+		});
+	});
 
 	return remaining;
 };
 
-export const getTotalTasksRemaining = (tasks, checkpoints) => {
-	let remaining = 0;
+export const getTotalTasks = (checkpoints) => {
+	let tasks = 0;
 
 	for (const checkpoint of checkpoints) {
-		for (const [index, task] of tasks.entries()) {
-			if (index >= checkpoint.fromIndex && index <= checkpoint.toIndex) {
-				if (!task.done) {
-					remaining++;
-				}
-			}
-		}
+		tasks += checkpoint.tasks.length;
 	}
 
-	return remaining;
-};
-
-export const resetSkippedTasks = (tasks) => {
-	for (let index = 0; index < tasks.length; index++) {
-		tasks[index].skipped = false;
-	}
 	return tasks;
 };
 
-export const setQueue = (tasks, checkpoints = false, name = false) => {
-	if (!checkpoints) {
-		checkpoints = get(queue).checkpoints;
+export const getTotalTasksRemaining = (checkpoints) => {
+	let remaining = 0;
+
+	for (const checkpoint of checkpoints) {
+		for (const task of checkpoint.tasks.entries()) {
+			if (!task.done) {
+				remaining++;
+			}
+		}
 	}
+
+	return remaining;
+};
+
+export const resetSkippedTasks = (checkpoints) => {
+	for (const checkpoint of checkpoints) {
+		for (let index = 0; index < checkpoint.tasks.length; index++) {
+			checkpoint.tasks[index].skipped = false;
+		}
+	}
+	return checkpoints;
+};
+
+export const setQueue = (checkpoints, name = false, id = false) => {
 	if (!name) {
 		name = get(queue).name;
 	}
+
+	if (!id) {
+		id = get(queue).id;
+	}
+
 	queue.set({
 		name: name,
-		tasks: tasks,
+		id: id,
 		checkpoints: checkpoints,
-		active: getNextTask(tasks, checkpoints),
-		remaining: getTasksRemaining(tasks, checkpoints),
-		totalRemaining: getTotalTasksRemaining(tasks, checkpoints)
+		activeCheckpoint: getNextTask(checkpoints).checkpoint,
+		activeTask: getNextTask(checkpoints).task,
+		remaining: getTasksRemaining(checkpoints),
+		totalRemaining: getTotalTasksRemaining(checkpoints),
+		totalTasks: getTotalTasks(checkpoints)
 	});
 };
 
-export const isCheckpointOpen = (checkpoint) => {
-	const tasks = get(queue).tasks.slice(0, checkpoint.toIndex - 1);
+export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
+	if (!parseInt(checkpointIndex)) {
+		return true;
+	}
 
-	const doneTasks = tasks.filter((task) => {
+	const checkpoint = checkpoints[checkpointIndex];
+	const previousCheckpoint = checkpoints[checkpointIndex - 1];
+
+	const doneTasks = previousCheckpoint.tasks.filter((task) => {
 		return task.done;
 	});
 
-	return get(hour) >= checkpoint.hour && doneTasks.length >= checkpoint.fromIndex;
+	return get(hour) >= checkpoint.hour && doneTasks.length === previousCheckpoint.tasks.length;
 };

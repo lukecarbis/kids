@@ -6,15 +6,16 @@
 	import { updateTask } from '$lib/tasks';
 
 	export let task;
-	export let index;
+	export let taskIndex;
+	export let checkpointIndex;
 
 	init({ data });
 
 	const revert = () => {
-		const tasks = [...$queue.tasks];
-		tasks[index].done = false;
-		updateTask(index, { done: false });
-		setQueue(tasks);
+		const checkpoints = [...$queue.checkpoints];
+		checkpoints[checkpointIndex].tasks[taskIndex].done = false;
+		updateTask(checkpointIndex, taskIndex, { done: false, skipped: true });
+		setQueue(checkpoints);
 	};
 </script>
 

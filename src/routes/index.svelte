@@ -31,8 +31,8 @@
 			<p class="mb-4 flex-grow leading-8 py-1">Hi, {$session.name}!</p>
 			{#if lists.length}
 				<Edit />
-				{#each lists as name}
-					<Name {name} />
+				{#each lists as list}
+					<Name name={list.name} slug={list.slug} />
 				{/each}
 			{:else}
 				<Welcome />

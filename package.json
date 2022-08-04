@@ -39,6 +39,7 @@
 		"@emoji-mart/data": "^1.0.3",
 		"cookie-esm": "^1.0.1",
 		"emoji-mart": "^5.2.0",
-		"firebase": "^9.9.0"
+		"firebase": "^9.9.0",
+		"slugify": "^1.6.5"
 	}
 }
