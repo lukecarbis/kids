@@ -16,8 +16,8 @@
 	};
 
 	const getFirstDisabledCheckpoint = () => {
-		for (const checkpoint of $queue.checkpoints) {
-			if (isCheckpointOpen(checkpoint)) {
+		for (const [checkpointIndex, checkpoint] of $queue.checkpoints.entries()) {
+			if (isCheckpointOpen($queue.checkpoints, checkpointIndex)) {
 				continue;
 			}
 			return checkpoint;

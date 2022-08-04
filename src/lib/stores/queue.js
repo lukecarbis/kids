@@ -15,7 +15,7 @@ export const queue = writable({
 
 export const getNextTask = (checkpoints) => {
 	for (const [checkpointIndex, checkpoint] of checkpoints.entries()) {
-		if (!isCheckpointOpen(checkpoints, checkpoint)) {
+		if (!isCheckpointOpen(checkpoints, checkpointIndex)) {
 			continue;
 		}
 		for (const [taskIndex, task] of checkpoint.tasks.entries()) {
@@ -32,7 +32,7 @@ export const getTasksRemaining = (checkpoints) => {
 
 	checkpoints.forEach((checkpoint, index) => {
 		if (!isCheckpointOpen(checkpoints, index)) {
-			return false;
+			return;
 		}
 
 		checkpoint.tasks.forEach((task) => {
@@ -58,13 +58,13 @@ export const getTotalTasks = (checkpoints) => {
 export const getTotalTasksRemaining = (checkpoints) => {
 	let remaining = 0;
 
-	for (const checkpoint of checkpoints) {
-		for (const task of checkpoint.tasks.entries()) {
+	checkpoints.forEach((checkpoint) => {
+		checkpoint.tasks.forEach((task) => {
 			if (!task.done) {
 				remaining++;
 			}
-		}
-	}
+		});
+	});
 
 	return remaining;
 };
@@ -107,9 +107,20 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 	const checkpoint = checkpoints[checkpointIndex];
 	const previousCheckpoint = checkpoints[checkpointIndex - 1];
 
-	const doneTasks = previousCheckpoint.tasks.filter((task) => {
+	const doneTasks = checkpoint.tasks.filter((task) => {
 		return task.done;
 	});
 
-	return get(hour) >= checkpoint.hour && doneTasks.length === previousCheckpoint.tasks.length;
+	// Unlock the checkpoint if it already contains done tasks.
+	if (doneTasks.length) {
+		return true;
+	}
+
+	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
+		return task.done;
+	});
+
+	return (
+		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
+	);
 };
