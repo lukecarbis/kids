@@ -9,11 +9,8 @@
 </script>
 
 <script>
-	import data from '@emoji-mart/data/sets/14/twitter.json';
-	import { init } from 'emoji-mart';
 	import Nav from '$lib/nav/nav-main.svelte';
 	export let status; // The error code. For example "500" or "404".
-	init({ data });
 </script>
 
 <Nav />

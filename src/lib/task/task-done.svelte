@@ -1,6 +1,4 @@
 <script>
-	import data from '@emoji-mart/data/sets/14/twitter.json';
-	import { init } from 'emoji-mart';
 	import { queue, setQueue } from '$lib/stores/queue';
 	import LongPress from '$lib/task/long-press.svelte';
 	import { updateTask } from '$lib/tasks';
@@ -8,8 +6,6 @@
 	export let task;
 	export let taskIndex;
 	export let checkpointIndex;
-
-	init({ data });
 
 	const revert = () => {
 		const checkpoints = [...$queue.checkpoints];

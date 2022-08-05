@@ -1,11 +1,8 @@
 <script>
-	import data from '@emoji-mart/data/sets/14/twitter.json';
-	import { init } from 'emoji-mart';
 	import Select from '$lib/task/buttons/select.svelte';
 	export let task;
 	export let taskIndex;
 	export let checkpointIndex;
-	init({ data });
 </script>
 
 <div

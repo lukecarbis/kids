@@ -1,7 +1,4 @@
 <script>
-	import data from '@emoji-mart/data/sets/14/twitter.json';
-	import { init } from 'emoji-mart';
-	init({ data });
 </script>
 
 <div class="checkpoint mt-6 mb-2 text-center z-0 snap-always snap-start scroll-mt-6">
