@@ -193,6 +193,7 @@
 						bind:updated={checkpoints[checkpointIndex].updated}
 						bind:title={checkpoints[checkpointIndex].title}
 						bind:description={checkpoints[checkpointIndex].description}
+						bind:fullHour={checkpoints[checkpointIndex].hour}
 						index={checkpointIndex}
 					/>
 					<Actions

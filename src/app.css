@@ -16,11 +16,16 @@ em-emoji-picker {
 	--background-rgb: 255, 255, 255;
 	--border-radius: 8px;
 	--color-border: rgba(229, 231, 235);
-	--font-size: 20px;
 	--rgb-accent: 56, 189, 248;
 	--rgb-color: 30, 41, 59;
 	--rgb-input: 241, 245, 249;
+	--font-family: monospace;
+	--font-size: 14px;
 	border: 1px solid rgb(226, 232, 240);
 	border-radius: 8px;
+	position: relative;
 	z-index: 10 !important;
+}
+
+em-emoji-picker #preview {
 }

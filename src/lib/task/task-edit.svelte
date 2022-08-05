@@ -15,7 +15,6 @@
 	let showEmojiPicker = false;
 
 	onMount(async () => {
-		console.log(id);
 		new Picker({
 			parent: document.querySelector(`#emoji-button-${id}`),
 			data: data,
@@ -42,7 +41,7 @@
 			bind:value={title}
 			on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 		/>
-		<div class="flex flex-grow flex-wrap h-10">
+		<div class="flex flex-grow min-h-10">
 			<button
 				class="flex-grow bg-white w-6 h-10 border border-b-2 active:mt-px active:border-b rounded-lg py-1 px-1 mr-3 text-center transition-all"
 				on:click={() => (showEmojiPicker = !showEmojiPicker)}

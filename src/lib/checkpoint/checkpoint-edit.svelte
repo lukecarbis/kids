@@ -3,7 +3,41 @@
 	export let description;
 	export let updated = false;
 	export let index = 0;
-	export let AM = true;
+	export let fullHour;
+
+	let hour = fullHour;
+	let AM = true;
+
+	if (hour > 12) {
+		hour = hour - 12;
+		AM = false;
+	}
+
+	const setHour = () => {
+		if (null === hour) {
+			fullHour = hour;
+			return;
+		}
+		if (hour === 0 && AM) {
+			fullHour = hour;
+			return;
+		}
+		if (hour === 12 && AM) {
+			hour = 0;
+			fullHour = hour;
+			return;
+		}
+		if (hour === 0 && !AM) {
+			hour = 12;
+			fullHour = hour;
+			return;
+		}
+		if (AM) {
+			fullHour = hour;
+			return;
+		}
+		fullHour = hour + 12;
+	};
 </script>
 
 <div
@@ -43,11 +77,16 @@
 				placeholder="8"
 				min="0"
 				max="12"
+				bind:value={hour}
+				on:change={setHour}
 				class="text-center border-2 rounded-lg bg-slate-50 w-16 pl-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
 			/>
 			<button
-				class="inline-block border border-b-2 bg-white relative active:top-px active:border-b rounded-lg px-2 py-1 w-16"
-				on:click={() => (AM = !AM)}
+				class="inline-block border border-b-2 bg-white active:top-px active:border-b rounded-lg px-2 py-1 w-16"
+				on:click={() => {
+					AM = !AM;
+					setHour();
+				}}
 			>
 				{#if AM}AM{/if}
 				{#if !AM}PM{/if}
