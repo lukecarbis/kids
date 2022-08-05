@@ -3,7 +3,7 @@
 	import { slide } from 'svelte/transition';
 
 	$: percentDone = 100 - ($queue.totalRemaining / $queue.totalTasks) * 100;
-	$: progressLocked = -1 === getNextTask($queue.checkpoints).checkpoint;
+	$: progressLocked = -1 === getNextTask($queue.checkpoints).checkpoint && percentDone < 100;
 
 	const checkpointPositions = [];
 	let lastPosition = 0;

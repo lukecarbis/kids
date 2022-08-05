@@ -18,9 +18,14 @@ export const fetchList = async ({ locals, params }) => {
 	const body = await result.json();
 
 	if (!body) {
-		return { status: 500 };
+		return { status: 404 };
 	}
 	const listId = Object.keys(body)[0];
+
+	if (!listId) {
+		return { status: 404 };
+	}
+
 	const list = body[listId];
 	list.id = listId;
 

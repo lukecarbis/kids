@@ -1,7 +1,6 @@
 <script>
 	import { queue, setQueue } from '$lib/stores/queue';
 	import { updateTasks } from '$lib/tasks';
-	import { isCheckpointOpen } from '../../stores/queue.js';
 
 	export let taskIndex;
 	export let checkpointIndex;

@@ -6,7 +6,7 @@
 			"title": "",
 			"tasks": [
 				{
-					"days": [true, true, true, true, true, false, false],
+					"days": [false, true, true, true, true, true, false],
 					"description": "",
 					"emoji": "😀",
 					"title": ""

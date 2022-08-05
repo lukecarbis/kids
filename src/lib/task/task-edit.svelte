@@ -53,13 +53,13 @@
 				class="emoji-picker absolute mt-12"
 				class:invisible={!showEmojiPicker}
 			/>
-			<Day letter="M" bind:enabled={days[0]} first={true} />
-			<Day letter="T" bind:enabled={days[1]} />
-			<Day letter="W" bind:enabled={days[2]} />
-			<Day letter="T" bind:enabled={days[3]} />
-			<Day letter="F" bind:enabled={days[4]} />
-			<Day letter="S" bind:enabled={days[5]} />
-			<Day letter="S" bind:enabled={days[6]} last={true} />
+			<Day letter="M" bind:enabled={days[1]} first={true} />
+			<Day letter="T" bind:enabled={days[2]} />
+			<Day letter="W" bind:enabled={days[3]} />
+			<Day letter="T" bind:enabled={days[4]} />
+			<Day letter="F" bind:enabled={days[5]} />
+			<Day letter="S" bind:enabled={days[6]} />
+			<Day letter="S" bind:enabled={days[0]} last={true} />
 		</div>
 	</div>
 </div>
