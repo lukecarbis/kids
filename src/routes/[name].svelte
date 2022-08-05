@@ -1,5 +1,7 @@
 <script>
+	import { auth } from '$lib/firebase';
 	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
+	import { updateDate } from '$lib/tasks';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
@@ -16,8 +18,20 @@
 	export let name;
 	export let id;
 	export let checkpoints;
+	export let lastUpdated;
 
 	const day = new Date().getDay();
+	const date = new Date().toISOString().substring(0, 10);
+
+	// Reset if the data is from a previous day.
+	if (lastUpdated !== date) {
+		checkpoints.forEach((checkpoint) => {
+			checkpoint.tasks.forEach((task) => {
+				task.skipped = false;
+				task.done = false;
+			});
+		});
+	}
 
 	// Filter out tasks that aren't set for today.
 	checkpoints.forEach((checkpoint) => {
@@ -32,6 +46,15 @@
 	});
 
 	setQueue(checkpoints, name, id);
+
+	auth.onAuthStateChanged((userCredentials) => {
+		// Reset if the data is from a previous day.
+		if (userCredentials && lastUpdated !== date) {
+			updateDate(date, id).then(() => {
+				lastUpdated = date;
+			});
+		}
+	});
 </script>
 
 <Nav {name} />

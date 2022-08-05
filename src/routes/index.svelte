@@ -6,7 +6,7 @@
 	import Edit from '$lib/lists/edit.svelte';
 	import Name from '$lib/lists/name.svelte';
 
-	export let lists;
+	export let lists = [];
 
 	auth.onAuthStateChanged((userCredentials) => {
 		if (userCredentials) {

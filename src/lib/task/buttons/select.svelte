@@ -24,7 +24,7 @@
 			});
 		});
 
-		updateTasks(checkpointIndex, patch);
+		updateTasks(patch);
 		setQueue(checkpoints);
 	};
 </script>
