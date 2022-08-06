@@ -30,8 +30,6 @@
 		} catch (error) {
 			errorCode = error.code;
 		}
-
-		loading = false;
 	};
 </script>
 
