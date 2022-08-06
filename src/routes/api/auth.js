@@ -9,7 +9,7 @@ export async function post({ request }) {
 			'Set-Cookie': serialize('currentUser', JSON.stringify(user), {
 				httpOnly: true,
 				maxAge: 60 * 60 * 24 * 30,
-				sameSite: 'lax',
+				sameSite: 'strict',
 				path: '/'
 			})
 		},

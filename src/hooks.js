@@ -16,6 +16,7 @@ export const getSession = ({ locals }) => {
 		uid: locals.uid,
 		name: locals.name,
 		email: locals.email,
+		time: locals.time,
 		idToken: locals.idToken
 	};
 };

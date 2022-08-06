@@ -1,3 +1,4 @@
+import { browser } from '$app/env';
 import { auth } from '$lib/firebase';
 import {
 	createUserWithEmailAndPassword,
@@ -5,6 +6,8 @@ import {
 	sendEmailVerification,
 	signInWithEmailAndPassword
 } from 'firebase/auth';
+
+let refreshTokenTimeout;
 
 export const signUp = async (name, email, password) => {
 	await createUserWithEmailAndPassword(auth, email, password);
@@ -18,7 +21,22 @@ export const signIn = async (email, password) => {
 	await setCookie();
 };
 
-const setCookie = async () => {
+export const refreshToken = async (time) => {
+	// Refresh session.
+	const currentTime = new Date().getTime();
+	const fiveMinutesInMilliseconds = 1000 * 60 * 5;
+
+	// If it's been 5 minutes.
+	if (currentTime - time >= fiveMinutesInMilliseconds) {
+		await setCookie();
+		if (browser) {
+			clearTimeout(refreshTokenTimeout);
+			refreshTokenTimeout = setTimeout(refreshToken, fiveMinutesInMilliseconds, currentTime);
+		}
+	}
+};
+
+export const setCookie = async () => {
 	const idToken = await auth.currentUser.getIdToken();
 
 	await fetch('/api/auth', {
@@ -28,6 +46,7 @@ const setCookie = async () => {
 			uid: auth.currentUser.uid,
 			name: auth.currentUser.displayName,
 			email: auth.currentUser.email,
+			time: new Date().getTime(),
 			idToken: idToken
 		}),
 		headers: { 'Content-Type': 'application/json' }

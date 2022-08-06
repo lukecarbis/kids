@@ -2,7 +2,7 @@
 	import { auth } from '$lib/firebase';
 	import { signOut } from 'firebase/auth';
 
-	export async function load({ fetch }) {
+	export const load = async ({ fetch }) => {
 		await signOut(auth);
 		await fetch('/api/auth', {
 			method: 'DELETE',
@@ -10,7 +10,7 @@
 		});
 
 		return {};
-	}
+	};
 </script>
 
 <script>
