@@ -4,7 +4,9 @@
 	import { refreshToken } from '$lib/accounts';
 	import { session } from '$app/stores';
 	import data from '@emoji-mart/data/sets/14/twitter.json';
-	import { init } from 'emoji-mart';
+	import * as pkg from 'emoji-mart';
+
+	const { init } = pkg;
 
 	// Init emojis.
 	init({ data });
