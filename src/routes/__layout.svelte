@@ -9,6 +9,7 @@
 	// Init emojis.
 	init({ data });
 
+	// Handle auth.
 	auth.onAuthStateChanged((userCredentials) => {
 		// Refresh session.
 		if (userCredentials && $session.loggedIn && $session.time) {
