@@ -8,7 +8,7 @@
 	export let title;
 	export let emoji;
 	export let updated = false;
-	export let days = [1, 1, 1, 1, 1, 0, 0];
+	export let days = [0, 1, 1, 1, 1, 1, 0];
 
 	let showEmojiPicker = false;
 
