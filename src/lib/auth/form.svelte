@@ -26,7 +26,7 @@
 			if ('sign-up' === action) {
 				await signUp(name, email, password);
 			}
-			goto('/');
+			await goto('/');
 		} catch (error) {
 			errorCode = error.code;
 			loading = false;

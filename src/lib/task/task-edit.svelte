@@ -28,7 +28,7 @@
 </script>
 
 <div
-	class="border-2 rounded-lg p-4 text-center transition-colors duration-1000"
+	class="flex-grow border-2 rounded-lg p-4 text-center transition-colors duration-1000"
 	class:bg-amber-100={updated}
 	class:border-amber-300={updated}
 	class:transition-none={updated}
@@ -39,7 +39,7 @@
 			bind:value={title}
 			on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 		/>
-		<div class="flex flex-grow min-h-10">
+		<div class="flex flex-grow h-10">
 			<button
 				class="flex-grow bg-white w-6 h-10 border border-b-2 active:mt-px active:border-b rounded-lg py-1 px-1 mr-3 text-center transition-all"
 				on:click={() => (showEmojiPicker = !showEmojiPicker)}
