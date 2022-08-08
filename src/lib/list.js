@@ -9,7 +9,7 @@ export const fetchList = async ({ locals, params }) => {
 	const { name } = params;
 
 	if (!uid || !idToken || !name) {
-		return { status: 500 };
+		return { status: 200, body: { lists: [] } };
 	}
 
 	const result = await fetch(
@@ -40,7 +40,7 @@ export const fetchLists = async ({ locals }) => {
 	const { uid, idToken } = locals;
 
 	if (!uid || !idToken) {
-		return { status: 500 };
+		return { status: 200, body: { lists: [] } };
 	}
 
 	const result = await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`);
