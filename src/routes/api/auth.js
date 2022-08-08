@@ -8,7 +8,7 @@ export async function post({ request }) {
 		headers: {
 			'Set-Cookie': serialize('currentUser', JSON.stringify(user), {
 				httpOnly: true,
-				maxAge: 60 * 60,
+				maxAge: 60 * 60 * 24 * 30,
 				sameSite: 'strict',
 				path: '/'
 			})
