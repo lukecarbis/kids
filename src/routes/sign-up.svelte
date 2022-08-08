@@ -4,7 +4,7 @@
 	import { session } from '$app/stores';
 	import { goto } from '$app/navigation';
 
-	if ($session.loggedIn) {
+	if ($session.signedIn) {
 		goto('/');
 	}
 </script>

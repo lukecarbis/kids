@@ -12,7 +12,7 @@ export const handle = async ({ event, resolve }) => {
 
 export const getSession = ({ locals }) => {
 	return {
-		loggedIn: locals.loggedIn,
+		signedIn: locals.signedIn,
 		uid: locals.uid,
 		name: locals.name,
 		email: locals.email,

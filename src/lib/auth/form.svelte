@@ -1,6 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { signUp, signIn } from '$lib/accounts';
+	import { signUp, signIn } from '$lib/auth';
 	import Error from '$lib/auth/error.svelte';
 
 	let name = '';

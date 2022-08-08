@@ -7,7 +7,7 @@
 >
 	<a href="/" rel="external" class="text-sky-500">Logo</a>
 	<div>
-		{#if $session.loggedIn}
+		{#if $session.signedIn}
 			<a href="/sign-out" class="text-sky-500 pl-6">Sign Out</a>
 		{:else}
 			<a href="/sign-up" class="text-amber-500 pl-6">Sign Up</a>

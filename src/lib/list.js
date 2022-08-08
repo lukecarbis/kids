@@ -1,7 +1,7 @@
 import { apiUrl } from '$lib/firebase';
 
 export const fetchList = async ({ locals, params }) => {
-	if (!locals.loggedIn) {
+	if (!locals.signedIn) {
 		return { status: 404 };
 	}
 
@@ -33,7 +33,7 @@ export const fetchList = async ({ locals, params }) => {
 };
 
 export const fetchLists = async ({ locals }) => {
-	if (!locals.loggedIn) {
+	if (!locals.signedIn) {
 		return { status: 404 };
 	}
 

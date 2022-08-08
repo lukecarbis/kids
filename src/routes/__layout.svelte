@@ -1,8 +1,10 @@
 <script>
 	import '../app.css';
 	import { auth } from '$lib/firebase';
-	import { refreshToken } from '$lib/accounts';
+	import { setUserCookie, deleteUserCookie } from '$lib/auth';
 	import { session } from '$app/stores';
+	import { browser } from '$app/env';
+	import { goto } from '$app/navigation';
 	import data from '@emoji-mart/data/sets/14/twitter.json';
 	import * as pkg from 'emoji-mart';
 
@@ -12,10 +14,18 @@
 	init({ data });
 
 	// Handle auth.
-	auth.onAuthStateChanged((userCredentials) => {
-		// Refresh session.
-		if (userCredentials && $session.loggedIn && $session.time) {
-			refreshToken($session.time);
+	auth.onIdTokenChanged((user) => {
+		// Sign in or refresh ID Token.
+		if (user) {
+			setUserCookie();
+		}
+
+		// Sign out.
+		if (!user && $session.signedIn) {
+			if (browser) {
+				deleteUserCookie();
+				goto('/');
+			}
 		}
 	});
 </script>
