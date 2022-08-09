@@ -15,6 +15,7 @@
 
 	// Handle auth.
 	auth.onIdTokenChanged((user) => {
+		console.info(user);
 		// Sign in or refresh ID Token.
 		if (user) {
 			setUserCookie(!$session.signedIn);
