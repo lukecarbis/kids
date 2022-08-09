@@ -41,6 +41,7 @@ export const setUserCookie = async (forceReload = false) => {
 
 	if (forceReload) {
 		goto('/');
+		location.reload();
 	}
 };
 
