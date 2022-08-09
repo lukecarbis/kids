@@ -15,18 +15,14 @@
 	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 >
 	<main class="flex flex-wrap max-w-screen-sm mx-auto px-6 my-8 left">
-		{#if $session.signedIn}
-			<p class="mb-4 flex-grow leading-8 py-1">Hi, {$session.name}!</p>
-			{#if lists.length}
-				<Edit />
-				{#each lists as list}
-					<Name name={list.name} slug={list.slug} />
-				{/each}
-			{:else}
-				<Welcome />
-			{/if}
+		<p class="mb-4 flex-grow leading-8 py-1">Hi, {$session.name}!</p>
+		{#if lists.length}
+			<Edit />
+			{#each lists as list}
+				<Name name={list.name} slug={list.slug} />
+			{/each}
 		{:else}
-			Marketing copy goes here.
+			<Welcome />
 		{/if}
 	</main>
 </div>
