@@ -1,6 +1,6 @@
 import { get, writable } from 'svelte/store';
 
-export const lists = writable([]);
+export const lists = writable({});
 
 export const setListsFromDataStore = (data) => {
 	let keys = Object.keys(data);
