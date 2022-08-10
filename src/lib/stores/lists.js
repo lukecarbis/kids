@@ -1,18 +1,6 @@
 import { get, writable } from 'svelte/store';
-import { browser } from '$app/env';
 
-let listsStore = [];
-if (browser) {
-	listsStore = browser ? JSON.parse(localStorage.getItem('lists')) : [];
-}
-
-export const lists = writable(listsStore);
-
-lists.subscribe((value) => {
-	if (browser) {
-		localStorage.lists = JSON.stringify(value);
-	}
-});
+export const lists = writable([]);
 
 export const setListsFromDataStore = (data) => {
 	let keys = Object.keys(data);
