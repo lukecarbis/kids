@@ -1,5 +1,6 @@
 <script>
 	import { auth } from '$lib/firebase';
+	import { lists } from '$lib/stores/lists';
 	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
 	import { updateDate } from '$lib/tasks';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
@@ -15,10 +16,8 @@
 	import UpNext from '$lib/task/up-next.svelte';
 	import { slide } from 'svelte/transition';
 
-	export let name;
-	export let id;
-	export let checkpoints;
-	export let lastUpdated;
+	export let slug;
+	let { name, id, checkpoints, lastUpdated } = $lists[slug];
 
 	const day = new Date().getDay();
 	const date = new Date().toISOString().substring(0, 10);

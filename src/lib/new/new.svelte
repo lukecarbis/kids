@@ -1,4 +1,5 @@
 <script>
+	import { saveNewList } from '$lib/stores/lists';
 	import sample from '$lib/sample.json';
 	import empty from '$lib/empty.json';
 	import Name from '$lib/new/name.svelte';
@@ -24,10 +25,15 @@
 		data.name = name;
 		data.slug = slug;
 
-		await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
+		const response = await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
 			method: 'POST',
 			body: JSON.stringify(data)
 		});
+
+		const result = await response.json();
+		data.id = result.name;
+
+		saveNewList(slug, data);
 
 		loading = false;
 		await goto(`/edit/${slug}`);

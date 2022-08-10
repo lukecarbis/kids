@@ -1,7 +1,6 @@
 <script>
 	import Nav from '$lib/nav/nav-edit.svelte';
-
-	export let lists = [];
+	import { lists } from '$lib/stores/lists';
 </script>
 
 <Nav title="" back="/" />
@@ -10,27 +9,25 @@
 	id="wrap"
 	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
 >
-	{#if lists.length}
-		{#each lists as list}
-			<div class="border-b even:bg-slate-50">
-				<div class="max-w-screen-sm mx-auto flex items-center py-6 px-6">
-					<p class="flex-grow">{list.name}</p>
-					<a
-						href="/new/from/{list.slug}"
-						class="border border-b-2 bg-white rounded-lg text-sm ml-4 px-4 py-1 h-6 leading-6 box-content active:border-b active:mt-px"
-					>
-						Duplicate
-					</a>
-					<a
-						href="/edit/{list.slug}"
-						class="border border-b-2 bg-white rounded-lg text-sm ml-4 px-4 py-1 h-6 leading-6 box-content active:border-b active:mt-px"
-					>
-						Edit
-					</a>
-				</div>
+	{#each Object.values($lists) as list}
+		<div class="border-b even:bg-slate-50">
+			<div class="max-w-screen-sm mx-auto flex items-center py-6 px-6">
+				<p class="flex-grow">{list.name}</p>
+				<a
+					href="/new/from/{list.slug}"
+					class="border border-b-2 bg-white rounded-lg text-sm ml-4 px-4 py-1 h-6 leading-6 box-content active:border-b active:mt-px"
+				>
+					Duplicate
+				</a>
+				<a
+					href="/edit/{list.slug}"
+					class="border border-b-2 bg-white rounded-lg text-sm ml-4 px-4 py-1 h-6 leading-6 box-content active:border-b active:mt-px"
+				>
+					Edit
+				</a>
 			</div>
-		{/each}
-	{/if}
+		</div>
+	{/each}
 	<div class="p-6 max-w-screen-sm mx-auto">
 		<a
 			href="/new"

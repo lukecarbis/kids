@@ -1,7 +1,13 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { signUp, signIn } from '$lib/auth';
 	import Error from '$lib/auth/error.svelte';
+	import { auth } from '$lib/firebase';
+	import {
+		createUserWithEmailAndPassword,
+		updateProfile,
+		sendEmailVerification,
+		signInWithEmailAndPassword
+	} from 'firebase/auth';
 
 	let name = '';
 	let email = '';
@@ -21,10 +27,12 @@
 
 		try {
 			if ('sign-in' === action) {
-				await signIn(email, password);
+				await signInWithEmailAndPassword(auth, email, password);
 			}
 			if ('sign-up' === action) {
-				await signUp(name, email, password);
+				await createUserWithEmailAndPassword(auth, email, password);
+				await updateProfile(auth.currentUser, { displayName: name });
+				await sendEmailVerification(auth.currentUser);
 			}
 			await goto('/');
 		} catch (error) {

@@ -1,8 +1,10 @@
 <script>
+	import { lists } from '$lib/stores/lists';
 	import Nav from '$lib/nav/nav-edit.svelte';
 	import Duplicate from '$lib/new/duplicate.svelte';
-	export let name;
-	export let checkpoints;
+
+	export let slug;
+	let { name, checkpoints } = $lists[slug];
 </script>
 
 <Nav title="" back="/edit" />

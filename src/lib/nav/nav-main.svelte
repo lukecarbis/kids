@@ -1,5 +1,5 @@
 <script>
-	import { session } from '$app/stores';
+	import { auth } from '$lib/firebase';
 </script>
 
 <header
@@ -7,7 +7,7 @@
 >
 	<a href="/" rel="external" class="text-sky-500">Logo</a>
 	<div>
-		{#if $session.signedIn}
+		{#if auth.currentUser}
 			<a href="/sign-out" class="text-sky-500 pl-6">Sign Out</a>
 		{:else}
 			<a href="/sign-up" class="text-amber-500 pl-6">Sign Up</a>

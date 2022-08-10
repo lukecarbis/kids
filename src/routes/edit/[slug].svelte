@@ -1,4 +1,5 @@
 <script>
+	import { lists } from '$lib/stores/lists';
 	import { browser } from '$app/env';
 	import { auth, apiUrl } from '$lib/firebase';
 	import Actions from '$lib/task/actions.svelte';
@@ -8,9 +9,8 @@
 	import Task from '$lib/task/task-edit.svelte';
 	import Nav from '$lib/nav/nav-edit.svelte';
 
-	export let id;
-	export let name;
-	export let checkpoints;
+	export let slug;
+	let { name, id, checkpoints } = $lists[slug];
 
 	let savedCheckpoints = JSON.stringify(checkpoints);
 
