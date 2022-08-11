@@ -6,7 +6,8 @@
 </script>
 
 <button
-	class="px-2 py-1 h-10 bg-white flex-1 text-sm border border-b-2 active:mt-px active:border-b transition-all"
+	class="px-2 py-1 h-10 flex-1 text-sm border border-b-2 active:mt-px active:border-b transition-all"
+	class:bg-white={!enabled}
 	class:bg-sky-400={enabled}
 	class:border-sky-400={enabled}
 	class:text-white={enabled}

@@ -124,3 +124,32 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
 	);
 };
+
+export const resetCheckpoints = (checkpoints, lastUpdated) => {
+	const day = new Date().getDay();
+	const date = new Date().toISOString().substring(0, 10);
+
+	// Reset if the data is from a previous day.
+	if (lastUpdated !== date) {
+		checkpoints.forEach((checkpoint) => {
+			checkpoint.tasks.forEach((task) => {
+				task.skipped = false;
+				task.done = false;
+			});
+		});
+	}
+
+	// Filter out tasks that aren't set for today.
+	checkpoints.forEach((checkpoint) => {
+		checkpoint.tasks = checkpoint.tasks.filter((task) => {
+			return task.days[day];
+		});
+	});
+
+	// Filter out checkpoints with no tasks.
+	checkpoints = checkpoints.filter((checkpoint) => {
+		return checkpoint.tasks.length;
+	});
+
+	return checkpoints;
+};

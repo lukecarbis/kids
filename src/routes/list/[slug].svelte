@@ -1,5 +1,4 @@
 <script>
-	import { auth } from '$lib/firebase';
 	import { lists } from '$lib/stores/lists';
 	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
 	import { updateDate } from '$lib/tasks';
@@ -15,45 +14,21 @@
 	import Progress from '$lib/progress/progress.svelte';
 	import UpNext from '$lib/task/up-next.svelte';
 	import { slide } from 'svelte/transition';
+	import { resetCheckpoints } from '../../lib/stores/queue.js';
 
 	export let slug;
 	let { name, id, checkpoints, lastUpdated } = $lists[slug];
 
-	const day = new Date().getDay();
-	const date = new Date().toISOString().substring(0, 10);
-
-	// Reset if the data is from a previous day.
-	if (lastUpdated !== date) {
-		checkpoints.forEach((checkpoint) => {
-			checkpoint.tasks.forEach((task) => {
-				task.skipped = false;
-				task.done = false;
-			});
-		});
-	}
-
-	// Filter out tasks that aren't set for today.
-	checkpoints.forEach((checkpoint) => {
-		checkpoint.tasks = checkpoint.tasks.filter((task) => {
-			return task.days[day];
-		});
-	});
-
-	// Filter out checkpoints with no tasks.
-	checkpoints = checkpoints.filter((checkpoint) => {
-		return checkpoint.tasks.length;
-	});
-
+	checkpoints = resetCheckpoints(checkpoints, lastUpdated);
 	setQueue(checkpoints, name, id);
 
-	auth.onAuthStateChanged((userCredentials) => {
-		// Reset if the data is from a previous day.
-		if (userCredentials && lastUpdated !== date) {
-			updateDate(date, id).then(() => {
-				lastUpdated = date;
-			});
-		}
-	});
+	const date = new Date().toISOString().substring(0, 10);
+
+	if (lastUpdated !== date) {
+		updateDate(date, id).then(() => {
+			lastUpdated = date;
+		});
+	}
 </script>
 
 <Nav {name} />
@@ -99,7 +74,16 @@
 	</main>
 </div>
 
-<Progress />
+<footer
+	class="px-6 pt-7 pb-5 w-full bottom-0 z-10 flex items-stretch justify-between border-t-2 border-b-slate-200 bg-white fixed"
+	out:slide
+>
+	<Progress
+		checkpoints={$queue.checkpoints}
+		totalTasks={$queue.totalTasks}
+		totalRemaining={$queue.totalRemaining}
+	/>
+</footer>
 
 <style>
 	.h-calc {

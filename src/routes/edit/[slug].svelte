@@ -178,7 +178,7 @@
 	}
 </script>
 
-<Nav title="Editing List: {name}" back="/edit" bind:unsaved bind:saving bind:saved on:save={save} />
+<Nav title="Editing List: {name}" back="/" bind:unsaved bind:saving bind:saved on:save={save} />
 
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">

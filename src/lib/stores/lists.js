@@ -21,8 +21,8 @@ export const setCheckpointsForList = (slug, checkpoints) => {
 	lists.set(updated);
 };
 
-export const saveNewList = (slug, list) => {
+export const saveNewList = (list) => {
 	const updated = get(lists);
-	updated[slug] = list;
+	updated[list.slug] = list;
 	lists.set(updated);
 };

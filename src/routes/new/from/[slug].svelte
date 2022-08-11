@@ -7,7 +7,7 @@
 	let { name, checkpoints } = $lists[slug];
 </script>
 
-<Nav title="" back="/edit" />
+<Nav title="" back="/" />
 
 <div
 	id="wrap"

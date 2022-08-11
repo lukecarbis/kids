@@ -8,12 +8,12 @@
 	import Disclaimer from '$lib/new/disclaimer.svelte';
 	import { auth, apiUrl } from '$lib/firebase';
 	import { goto } from '$app/navigation';
-	import slugify from 'slugify';
 
 	let name = '';
 	let loading = false;
 	let useSampleData = true;
-	$: slug = slugify(name, { lower: true, strict: true });
+
+	const slug = Math.random().toString(36).slice(-8).toLowerCase();
 
 	const setDefaults = async () => {
 		loading = true;
@@ -33,7 +33,7 @@
 		const result = await response.json();
 		data.id = result.name;
 
-		saveNewList(slug, data);
+		saveNewList(data);
 
 		loading = false;
 		await goto(`/edit/${slug}`);

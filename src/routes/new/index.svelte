@@ -3,7 +3,7 @@
 	import New from '$lib/new/new.svelte';
 </script>
 
-<Nav title="" back="/edit" />
+<Nav title="" back="/" />
 
 <div
 	id="wrap"
