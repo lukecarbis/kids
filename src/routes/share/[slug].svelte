@@ -42,6 +42,7 @@
 		});
 
 		$lists[newSlug] = JSON.parse(JSON.stringify($lists[slug]));
+		$lists[newSlug].slug = newSlug;
 		delete $lists[slug];
 
 		url = window.location.protocol + window.location.host + '/list/' + newSlug + '/';
@@ -53,10 +54,7 @@
 
 <Nav title="" back="/" />
 
-<div
-	id="wrap"
-	class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll snap-y snap-mandatory"
->
+<div id="wrap" class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll">
 	<main class="flex flex-wrap max-w-screen-sm mx-auto px-6 my-8 left">
 		<p class="mb-6">
 			Share this list with <strong>{name}</strong> so that he can start using <strong>[TBD]</strong>

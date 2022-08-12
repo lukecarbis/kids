@@ -10,7 +10,7 @@
 	import Nav from '$lib/nav/nav-edit.svelte';
 
 	export let slug;
-	let { name, id, checkpoints } = $lists[slug];
+	let { name, id, checkpoints } = JSON.parse(JSON.stringify($lists[slug]));
 
 	let savedCheckpoints = JSON.stringify(checkpoints);
 
@@ -81,17 +81,28 @@
 	};
 
 	const addCheckpoint = (index, checkpointIndex) => {
+		let updated = JSON.parse(JSON.stringify(checkpoints));
+		let hour = 8;
+
+		if (updated[checkpointIndex].hour) {
+			hour = updated[checkpointIndex].hour + 1;
+			if (hour > 23) {
+				hour = 23;
+			}
+		}
+
 		const emptyCheckpoint = {
 			description: '',
-			hour: 0,
-			title: ''
+			title: '',
+			hour
 		};
-		const firstHalfTasks = checkpoints[checkpointIndex].tasks.slice(0, index);
-		const secondHalfTasks = checkpoints[checkpointIndex].tasks.slice(index);
+		const firstHalfTasks = updated[checkpointIndex].tasks.slice(0, index);
+		const secondHalfTasks = updated[checkpointIndex].tasks.slice(index);
 
-		checkpoints.splice(checkpointIndex + 1, 0, emptyCheckpoint);
-		checkpoints[checkpointIndex].tasks = firstHalfTasks;
-		checkpoints[checkpointIndex + 1].tasks = secondHalfTasks;
+		updated.splice(checkpointIndex + 1, 0, emptyCheckpoint);
+		updated[checkpointIndex].tasks = firstHalfTasks;
+		updated[checkpointIndex + 1].tasks = secondHalfTasks;
+		checkpoints = updated;
 	};
 
 	const moveCheckpoint = (checkpointIndex, direction) => {
@@ -182,18 +193,15 @@
 
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
-		{#each checkpoints as checkpoint, checkpointIndex}
-			<div class="transition-all duration-1000" class:opacity-0={checkpoint.removed}>
+		{#each checkpoints as { removed, updated, title, description, hour, tasks }, checkpointIndex}
+			<div class="transition-all duration-1000" class:opacity-0={removed}>
 				<Flag />
-				<div
-					class="checkpoint flex gap-4 items-start"
-					class:pointer-events-none={checkpoint.removed}
-				>
+				<div class="checkpoint flex gap-4 items-start" class:pointer-events-none={removed}>
 					<Checkpoint
-						bind:updated={checkpoints[checkpointIndex].updated}
-						bind:title={checkpoints[checkpointIndex].title}
-						bind:description={checkpoints[checkpointIndex].description}
-						bind:fullHour={checkpoints[checkpointIndex].hour}
+						bind:updated
+						bind:title
+						bind:description
+						bind:fullHour={hour}
 						index={checkpointIndex}
 					/>
 					<Actions
@@ -210,12 +218,12 @@
 			</div>
 
 			<Connector
-				last={!checkpoint.tasks.length}
+				last={!tasks.length}
 				on:addCheckpoint={() => addCheckpoint(0, checkpointIndex)}
 				on:addTask={() => addTask(0, checkpointIndex)}
 			/>
 
-			{#each checkpoint.tasks as task, taskIndex}
+			{#each tasks as task, taskIndex}
 				<div
 					class="task flex gap-4 items-start transition-none duration-1000"
 					id={`task-${taskIndex}`}
@@ -225,22 +233,21 @@
 				>
 					<Task
 						id="{checkpointIndex}-{taskIndex}"
-						bind:updated={checkpoint.tasks[taskIndex].updated}
-						bind:title={checkpoint.tasks[taskIndex].title}
-						bind:emoji={checkpoint.tasks[taskIndex].emoji}
-						bind:days={checkpoint.tasks[taskIndex].days}
+						bind:updated={tasks[taskIndex].updated}
+						bind:title={tasks[taskIndex].title}
+						bind:emoji={tasks[taskIndex].emoji}
+						bind:days={tasks[taskIndex].days}
 					/>
 					<Actions
 						up={taskIndex > 0 || checkpointIndex > 0}
-						down={taskIndex < checkpoint.tasks.length - 1 ||
-							checkpointIndex < checkpoints.length - 1}
+						down={taskIndex < tasks.length - 1 || checkpointIndex < checkpoints.length - 1}
 						on:up={() => moveTask(taskIndex, checkpointIndex, -1)}
 						on:down={() => moveTask(taskIndex, checkpointIndex, 1)}
 						on:remove={() => removeTask(taskIndex, checkpointIndex)}
 					/>
 				</div>
 				<Connector
-					last={taskIndex === checkpoint.tasks.length - 1}
+					last={taskIndex === tasks.length - 1}
 					on:addCheckpoint={() => addCheckpoint(taskIndex + 1, checkpointIndex)}
 					on:addTask={() => addTask(taskIndex + 1, checkpointIndex)}
 				/>

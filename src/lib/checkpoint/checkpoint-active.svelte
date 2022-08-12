@@ -5,7 +5,7 @@
 </script>
 
 <div
-	class="checkpoint mt-6 mb-2 text-center z-0 snap-always snap-start scroll-mt-6"
+	class="checkpoint mt-6 mb-2 text-center z-0"
 	class:up-next={$queue.active === checkpoint.fromIndex}
 	transition:slide
 >

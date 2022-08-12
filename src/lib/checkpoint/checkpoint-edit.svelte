@@ -5,10 +5,10 @@
 	export let index = 0;
 	export let fullHour;
 
-	let hour = fullHour;
-	let AM = true;
+	$: hour = fullHour;
+	$: AM = true;
 
-	if (hour > 12) {
+	$: if (hour > 12) {
 		hour = hour - 12;
 		AM = false;
 	}

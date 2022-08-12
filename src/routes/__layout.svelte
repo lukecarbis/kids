@@ -46,10 +46,11 @@
 			}
 		}
 	});
+	console.log($page.routeId);
 </script>
 
 <div class="absolute h-full w-full">
-	{#if !loading || $page.routeId === 'sign-in' || $page.routeId === 'sign-up'}
+	{#if !loading || $page.routeId === 'sign-in' || $page.routeId === 'sign-up' || $page.routeId === 'list/[slug]'}
 		<slot />
 	{:else}
 		<Loading />

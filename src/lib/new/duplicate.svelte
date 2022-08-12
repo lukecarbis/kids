@@ -4,12 +4,11 @@
 	import Disclaimer from '$lib/new/disclaimer.svelte';
 	import { auth, apiUrl } from '$lib/firebase';
 	import { goto } from '$app/navigation';
-	import slugify from 'slugify';
 
 	let name = '';
 	let slug = '';
 	let loading = false;
-	$: slug = slugify(name, { lower: true, strict: true });
+	$: slug = Math.random().toString(36).slice(-8).toLowerCase();
 
 	export let checkpoints;
 

@@ -10,7 +10,8 @@
 
 	Object.values($lists).forEach((list) => {
 		const { name, id, checkpoints, lastUpdated } = list;
-		setQueue(resetCheckpoints(checkpoints, lastUpdated), name, id);
+		const checkpointsClone = JSON.parse(JSON.stringify(checkpoints));
+		setQueue(resetCheckpoints(checkpointsClone, lastUpdated), name, id);
 		queues.push($queue);
 	});
 	const date = new Date();
@@ -30,7 +31,7 @@
 		</p>
 		{#if Object.values($lists).length}
 			{#each Object.entries($lists) as [slug, list], index}
-				<List name={list.name} {slug} seen={list.lastUpdated} queue={queues[index]} />
+				<List name={list.name} slug={list.slug} seen={list.lastUpdated} queue={queues[index]} />
 			{/each}
 			<a
 				href="/new"
