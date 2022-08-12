@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import Error from '$lib/auth/error.svelte';
-	import { auth } from '$lib/firebase';
+	import { auth, apiUrl } from '$lib/firebase';
 	import {
 		createUserWithEmailAndPassword,
 		updateProfile,
@@ -33,6 +33,15 @@
 				await createUserWithEmailAndPassword(auth, email, password);
 				await updateProfile(auth.currentUser, { displayName: name });
 				await sendEmailVerification(auth.currentUser);
+
+				const idToken = await auth.currentUser.getIdToken();
+				const uid = auth.currentUser.uid;
+				const slug = Math.random().toString(36).slice(-6).toLowerCase();
+
+				await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
+					method: 'PUT',
+					body: JSON.stringify({ slug })
+				});
 			}
 			await goto('/');
 		} catch (error) {

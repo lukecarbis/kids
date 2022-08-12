@@ -6,9 +6,9 @@
 	import { goto } from '$app/navigation';
 
 	let name = '';
-	let slug = '';
 	let loading = false;
-	$: slug = Math.random().toString(36).slice(-8).toLowerCase();
+
+	const slug = Math.random().toString(36).slice(-6).toLowerCase();
 
 	export let checkpoints;
 

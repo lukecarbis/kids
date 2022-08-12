@@ -13,7 +13,7 @@
 	let loading = false;
 	let useSampleData = true;
 
-	const slug = Math.random().toString(36).slice(-8).toLowerCase();
+	const slug = Math.random().toString(36).slice(-6).toLowerCase();
 
 	const setDefaults = async () => {
 		loading = true;

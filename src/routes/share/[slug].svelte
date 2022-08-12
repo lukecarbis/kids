@@ -30,7 +30,7 @@
 	const regenerate = async () => {
 		loading = true;
 
-		const newSlug = Math.random().toString(36).slice(-8).toLowerCase();
+		const newSlug = Math.random().toString(36).slice(-6).toLowerCase();
 
 		const idToken = await auth.currentUser.getIdToken();
 		const uid = auth.currentUser.uid;
