@@ -7,12 +7,12 @@
 	import List from '$lib/lists/list.svelte';
 
 	const queues = [];
+
 	Object.values($lists).forEach((list) => {
 		const { name, id, checkpoints, lastUpdated } = list;
 		setQueue(resetCheckpoints(checkpoints, lastUpdated), name, id);
 		queues.push($queue);
 	});
-
 	const date = new Date();
 	const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
 	const dayOfYear = date.toLocaleString('default', { dateStyle: 'long' });
@@ -29,8 +29,8 @@
 			{dayOfYear}
 		</p>
 		{#if Object.values($lists).length}
-			{#each Object.values($lists) as list, index}
-				<List name={list.name} slug={list.slug} seen={list.lastUpdated} queue={queues[index]} />
+			{#each Object.entries($lists) as [slug, list], index}
+				<List name={list.name} {slug} seen={list.lastUpdated} queue={queues[index]} />
 			{/each}
 			<a
 				href="/new"
