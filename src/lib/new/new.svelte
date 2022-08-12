@@ -25,7 +25,7 @@
 		data.name = name;
 		data.slug = slug;
 
-		const response = await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
+		const response = await fetch(`${apiUrl}/${uid}/lists.json?auth=${idToken}`, {
 			method: 'POST',
 			body: JSON.stringify(data)
 		});

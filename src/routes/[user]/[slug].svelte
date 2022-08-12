@@ -1,6 +1,6 @@
 <script>
-	import { lists } from '$lib/stores/lists';
 	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
+	import { meta } from '$lib/stores/meta';
 	import { updateDate } from '$lib/tasks';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
@@ -15,9 +15,11 @@
 	import { slide } from 'svelte/transition';
 	import { resetCheckpoints } from '../../lib/stores/queue.js';
 
-	export let slug;
-	let { name, id, checkpoints, lastUpdated } = $lists[slug];
+	export let list;
+	export let uid;
+	let { name, id, checkpoints, lastUpdated } = list;
 
+	meta.set({ uid });
 	checkpoints = resetCheckpoints(checkpoints, lastUpdated);
 	setQueue(checkpoints, name, id);
 

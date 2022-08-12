@@ -18,7 +18,7 @@
 		const idToken = await auth.currentUser.getIdToken();
 		const uid = auth.currentUser.uid;
 
-		await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
+		await fetch(`${apiUrl}/${uid}/lists.json?auth=${idToken}`, {
 			method: 'POST',
 			body: JSON.stringify({ name, slug, checkpoints })
 		});

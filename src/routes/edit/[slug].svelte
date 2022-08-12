@@ -168,7 +168,7 @@
 		const idToken = await auth.currentUser.getIdToken();
 		const uid = auth.currentUser.uid;
 
-		await fetch(`${apiUrl}/${uid}/${id}.json?auth=${idToken}`, {
+		await fetch(`${apiUrl}/${uid}/lists/${id}.json?auth=${idToken}`, {
 			method: 'PATCH',
 			body: JSON.stringify({ checkpoints })
 		});

@@ -1,6 +1,7 @@
 <script>
 	import { auth, apiUrl } from '$lib/firebase';
 	import { lists } from '$lib/stores/lists';
+	import { meta } from '$lib/stores/meta';
 	import Nav from '$lib/nav/nav-edit.svelte';
 	import { goto } from '$app/navigation';
 
@@ -8,7 +9,14 @@
 	let { name } = $lists[slug];
 	let copied = false;
 	let loading = false;
-	let url = window.location.protocol + window.location.host + '/list/' + slug + '/';
+
+	const getUrl = (listSlug) => {
+		return (
+			window.location.protocol + window.location.host + '/' + $meta.slug + '/' + listSlug + '/'
+		);
+	};
+
+	let url = getUrl(slug);
 
 	const copy = () => {
 		navigator.clipboard.writeText(url);
@@ -36,7 +44,7 @@
 		const uid = auth.currentUser.uid;
 		const listId = $lists[slug].id;
 
-		await fetch(`${apiUrl}/${uid}/${listId}.json?auth=${idToken}`, {
+		await fetch(`${apiUrl}/${uid}/lists/${listId}.json?auth=${idToken}`, {
 			method: 'PATCH',
 			body: JSON.stringify({ slug: newSlug })
 		});
@@ -45,7 +53,7 @@
 		$lists[newSlug].slug = newSlug;
 		delete $lists[slug];
 
-		url = window.location.protocol + window.location.host + '/list/' + newSlug + '/';
+		url = getUrl(newSlug);
 		await goto(`/share/${newSlug}`);
 
 		loading = false;

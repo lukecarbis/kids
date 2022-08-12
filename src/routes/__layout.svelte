@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { auth, apiUrl } from '$lib/firebase';
 	import { lists, setListsFromDataStore } from '$lib/stores/lists';
+	import { meta } from '$lib/stores/meta';
 	import Loading from '$lib/welcome/loading.svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/env';
@@ -17,6 +18,9 @@
 	let loading = true;
 
 	auth.onIdTokenChanged(async (user) => {
+		if ($page.routeId === '[user]/[slug]') {
+			return;
+		}
 		// Sign in or refresh ID Token.
 		if (user) {
 			loading = true;
@@ -30,11 +34,13 @@
 				return;
 			}
 
-			if (!data) {
-				data = {};
+			if (!data || !data.lists || !data.slug) {
+				console.error('Not allowed.');
+				return;
 			}
 
-			setListsFromDataStore(data);
+			meta.set({ slug: data.slug });
+			setListsFromDataStore(data.lists);
 			loading = false;
 		}
 
@@ -46,11 +52,10 @@
 			}
 		}
 	});
-	console.log($page.routeId);
 </script>
 
 <div class="absolute h-full w-full">
-	{#if !loading || $page.routeId === 'sign-in' || $page.routeId === 'sign-up' || $page.routeId === 'list/[slug]'}
+	{#if !loading || $page.routeId === 'sign-in' || $page.routeId === 'sign-up' || $page.routeId === '[user]/[slug]'}
 		<slot />
 	{:else}
 		<Loading />
