@@ -30,7 +30,7 @@
 		</p>
 		{#if Object.values($lists).length}
 			{#each Object.values($lists) as list, index}
-				<List name={list.name} slug={list.slug} queue={queues[index]} />
+				<List name={list.name} slug={list.slug} seen={list.lastUpdated} queue={queues[index]} />
 			{/each}
 			<a
 				href="/new"

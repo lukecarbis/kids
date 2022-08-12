@@ -1,7 +1,10 @@
 <script>
 	import Progress from '$lib/progress/progress.svelte';
+	import Actions from '$lib/lists/actions.svelte';
+	import Share from '$lib/lists/share.svelte';
 	export let name = '';
 	export let slug = '';
+	export let seen = false;
 	export let queue = {
 		checkpoints: [],
 		totalTasks: 0,
@@ -9,7 +12,7 @@
 	};
 </script>
 
-<div class="flex-grow w-full border-2 rounded-t-lg p-4">
+<div class="flex-grow w-full border-2 border-b-0 rounded-t-lg p-4">
 	<div class="flex mb-6">
 		<h2 class="block flex-grow font-bold">
 			{name}
@@ -26,22 +29,7 @@
 		totalRemaining={queue.totalRemaining}
 	/>
 </div>
-<div
-	class="flex-grow flex w-full border-2 border-b border-t-0 rounded-b-lg text-center mb-8 overflow-hidden"
->
-	<a href="#" class="flex-grow border-r border-b py-3 px-4 text-sm relative cursor-default">
-		<span class="block text-slate-300">Show Progress</span>
-	</a>
-	<a
-		href="/edit/{slug}"
-		class="flex-grow border-x border-b py-3 px-4 text-sm relative active:top-px active:border-b-transparent"
-	>
-		Edit
-	</a>
-	<a
-		href="/share/{slug}"
-		class="flex-grow border-l border-b py-3 px-4 text-sm relative active:top-px active:border-b-transparent"
-	>
-		Share
-	</a>
-</div>
+{#if !seen}
+	<Share {name} />
+{/if}
+<Actions {slug} />
