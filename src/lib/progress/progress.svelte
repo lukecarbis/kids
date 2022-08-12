@@ -1,5 +1,5 @@
 <script>
-	import { getNextTask, isCheckpointOpen } from '$lib/stores/queue';
+	import { getNextTask, isCheckpointOpen, getTotalTasks } from '$lib/stores/queue';
 
 	export let checkpoints = [];
 	export let totalTasks = 0;
@@ -13,7 +13,10 @@
 	let lastPosition = 0;
 
 	for (const checkpoint of checkpoints) {
-		let position = (checkpoint.tasks.length / totalTasks) * 100;
+		if (!checkpoint.visible) {
+			continue;
+		}
+		let position = (getTotalTasks([checkpoint]) / totalTasks) * 100;
 		position = position + lastPosition;
 		lastPosition = position;
 		checkpointPositions.push(position);

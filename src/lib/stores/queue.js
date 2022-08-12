@@ -19,7 +19,7 @@ export const getNextTask = (checkpoints) => {
 			continue;
 		}
 		for (const [taskIndex, task] of checkpoint.tasks.entries()) {
-			if (!task.done && !task.skipped) {
+			if (!task.done && !task.skipped && task.visible) {
 				return { checkpoint: checkpointIndex, task: taskIndex };
 			}
 		}
@@ -36,7 +36,7 @@ export const getTasksRemaining = (checkpoints) => {
 		}
 
 		checkpoint.tasks.forEach((task) => {
-			if (!task.done) {
+			if (!task.done && task.visible) {
 				remaining++;
 			}
 		});
@@ -48,9 +48,13 @@ export const getTasksRemaining = (checkpoints) => {
 export const getTotalTasks = (checkpoints) => {
 	let tasks = 0;
 
-	for (const checkpoint of checkpoints) {
-		tasks += checkpoint.tasks.length;
-	}
+	checkpoints.forEach((checkpoint) => {
+		checkpoint.tasks.forEach((task) => {
+			if (task.visible) {
+				tasks++;
+			}
+		});
+	});
 
 	return tasks;
 };
@@ -60,13 +64,21 @@ export const getTotalTasksRemaining = (checkpoints) => {
 
 	checkpoints.forEach((checkpoint) => {
 		checkpoint.tasks.forEach((task) => {
-			if (!task.done) {
+			if (!task.done && task.visible) {
 				remaining++;
 			}
 		});
 	});
 
 	return remaining;
+};
+
+export const getLastTaskIndex = (checkpoint) => {
+	for (let i = checkpoint.tasks.length - 1; i >= 0; i--) {
+		if (checkpoint.tasks[i].visible) {
+			return i;
+		}
+	}
 };
 
 export const resetSkippedTasks = (checkpoints) => {
@@ -108,7 +120,7 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 	const previousCheckpoint = checkpoints[checkpointIndex - 1];
 
 	const doneTasks = checkpoint.tasks.filter((task) => {
-		return task.done;
+		return !task.visible || task.done;
 	});
 
 	// Unlock the checkpoint if it already contains done tasks.
@@ -117,7 +129,7 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 	}
 
 	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
-		return task.done;
+		return !task.visible || task.done;
 	});
 
 	return (
@@ -132,23 +144,27 @@ export const resetCheckpoints = (checkpoints, lastUpdated) => {
 	// Reset if the data is from a previous day.
 	if (lastUpdated !== date) {
 		checkpoints.forEach((checkpoint) => {
+			checkpoint.visible = true;
 			checkpoint.tasks.forEach((task) => {
 				task.skipped = false;
 				task.done = false;
+				task.visible = true;
 			});
 		});
 	}
 
 	// Filter out tasks that aren't set for today.
 	checkpoints.forEach((checkpoint) => {
-		checkpoint.tasks = checkpoint.tasks.filter((task) => {
-			return task.days[day];
+		checkpoint.tasks = checkpoint.tasks.map((task) => {
+			task.visible = task.days[day];
+			return task;
 		});
 	});
 
 	// Filter out checkpoints with no tasks.
-	checkpoints = checkpoints.filter((checkpoint) => {
-		return checkpoint.tasks.length;
+	checkpoints = checkpoints.map((checkpoint) => {
+		checkpoint.visible = getTotalTasks([checkpoint]);
+		return checkpoint;
 	});
 
 	return checkpoints;

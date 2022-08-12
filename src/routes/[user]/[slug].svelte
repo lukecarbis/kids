@@ -1,5 +1,5 @@
 <script>
-	import { queue, setQueue, isCheckpointOpen } from '$lib/stores/queue';
+	import { queue, setQueue, isCheckpointOpen, getLastTaskIndex } from '$lib/stores/queue';
 	import { meta } from '$lib/stores/meta';
 	import { updateDate } from '$lib/tasks';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
@@ -33,38 +33,42 @@
 </script>
 
 <main class="max-w-screen-sm mx-auto mt-8 mb-20 px-6 relative font-mono select-none" out:slide>
-	{#if $queue.checkpoints.length > 0}
+	{#if $queue.totalTasks > 0}
 		<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
 			Hello {name}!
 		</p>
 		{#each $queue.checkpoints as checkpoint, checkpointIndex}
-			{#if isCheckpointOpen($queue.checkpoints, checkpointIndex)}
-				<CheckpointActive {checkpoint} />
-				<Connector />
-			{:else}
-				<CheckpointLocked {checkpoint} />
-				<Connector />
-			{/if}
-
-			{#each checkpoint.tasks as task, taskIndex}
-				{#if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
-					<UpNext />
-				{/if}
-
-				{#if !isCheckpointOpen($queue.checkpoints, checkpointIndex)}
-					<TaskInactive {task} />
-				{:else if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
-					<TaskActive {task} />
-				{:else if task.done}
-					<TaskDone {task} {taskIndex} {checkpointIndex} />
+			{#if checkpoint.visible}
+				{#if isCheckpointOpen($queue.checkpoints, checkpointIndex)}
+					<CheckpointActive {checkpoint} />
+					<Connector />
 				{:else}
-					<TaskPending {task} {taskIndex} {checkpointIndex} />
+					<CheckpointLocked {checkpoint} />
+					<Connector />
 				{/if}
 
-				{#if taskIndex !== checkpoint.tasks.length - 1}
-					<Connector done={task.done} />
-				{/if}
-			{/each}
+				{#each checkpoint.tasks as task, taskIndex}
+					{#if task.visible}
+						{#if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
+							<UpNext />
+						{/if}
+
+						{#if !isCheckpointOpen($queue.checkpoints, checkpointIndex)}
+							<TaskInactive {task} />
+						{:else if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
+							<TaskActive {task} />
+						{:else if task.done}
+							<TaskDone {task} {taskIndex} {checkpointIndex} />
+						{:else}
+							<TaskPending {task} {taskIndex} {checkpointIndex} />
+						{/if}
+
+						{#if getLastTaskIndex(checkpoint) !== taskIndex}
+							<Connector done={task.done} />
+						{/if}
+					{/if}
+				{/each}
+			{/if}
 		{/each}
 	{:else}
 		<CheckpointNone />
