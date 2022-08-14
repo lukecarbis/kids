@@ -85,4 +85,3 @@
 		totalRemaining={$queue.totalRemaining}
 	/>
 </footer>
-Z
