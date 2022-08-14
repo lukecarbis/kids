@@ -3,6 +3,7 @@
 	import { browser } from '$app/env';
 	import { auth, apiUrl } from '$lib/firebase';
 	import Actions from '$lib/task/actions.svelte';
+	import Remove from '$lib/task/buttons/remove.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-edit.svelte';
 	import Connector from '$lib/connector/connector-edit.svelte';
 	import Flag from '$lib/connector/connector-flag.svelte';
@@ -189,10 +190,21 @@
 	}
 </script>
 
-<Nav title="Editing List: {name}" back="/" bind:unsaved bind:saving bind:saved on:save={save} />
+<Nav title="Editing List" back="/" bind:unsaved bind:saving bind:saved on:save={save} />
 
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
+		<div class="my-8 flex gap-4 pb-4 border-b-2">
+			<input
+				type="text"
+				class="border-2 border-transparent text-sky-500 font-bold rounded-lg w-full px-2 h-8 box-content text-center cursor-pointer focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+				bind:value={name}
+				on:focus={(event) => setTimeout(() => event.target.select(), 10)}
+			/>
+			<div class="flex flex-wrap flex-1 gap-2 items-center content-start">
+				<Remove />
+			</div>
+		</div>
 		{#each checkpoints as { removed, updated, title, description, hour, tasks }, checkpointIndex}
 			<div class="transition-all duration-1000" class:opacity-0={removed}>
 				<Flag />
