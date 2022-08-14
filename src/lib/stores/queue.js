@@ -120,7 +120,7 @@ export const setQueue = (checkpoints, name = false, id = false) => {
 
 export const resetCheckpoints = (checkpoints, lastUpdated) => {
 	const day = new Date().getDay();
-	const date = new Date().toISOString().substring(0, 10);
+	const date = new Date().toLocaleDateString('sv');
 
 	// Reset if the data is from a previous day.
 	if (lastUpdated !== date) {

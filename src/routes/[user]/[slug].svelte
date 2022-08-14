@@ -23,7 +23,7 @@
 	checkpoints = resetCheckpoints(checkpoints, lastUpdated);
 	setQueue(checkpoints, name, id);
 
-	const date = new Date().toISOString().substring(0, 10);
+	const date = new Date().toLocaleDateString('sv');
 
 	if (lastUpdated !== date) {
 		updateDate(date, id).then(() => {
