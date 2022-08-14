@@ -32,7 +32,7 @@
 	}
 </script>
 
-<main class="max-w-screen-sm mx-auto mt-8 mb-20 px-6 relative font-mono select-none" out:slide>
+<main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none" out:slide>
 	{#if $queue.totalTasks > 0}
 		<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
 			Hello {name}!

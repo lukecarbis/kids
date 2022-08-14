@@ -9,6 +9,7 @@
 	import Flag from '$lib/connector/connector-flag.svelte';
 	import Task from '$lib/task/task-edit.svelte';
 	import Nav from '$lib/nav/nav-edit.svelte';
+	import { goto } from '$app/navigation';
 
 	export let slug;
 	let { name, id, checkpoints } = JSON.parse(JSON.stringify($lists[slug]));
@@ -18,6 +19,7 @@
 	let unsaved = false;
 	let saving = false;
 	let saved = false;
+	let confirmRemoveList = false;
 
 	$: if (checkpoints) {
 		unsaved = JSON.stringify(checkpoints) !== savedCheckpoints;
@@ -25,7 +27,7 @@
 
 	const addTask = (index, checkpointIndex) => {
 		const emptyTask = {
-			days: [true, true, true, true, true, false, false],
+			days: [false, true, true, true, true, true, false],
 			description: '',
 			emoji: '😁',
 			title: ''
@@ -163,6 +165,21 @@
 		}, 1200);
 	};
 
+	const removeList = async () => {
+		saving = true;
+
+		const idToken = await auth.currentUser.getIdToken();
+		const uid = auth.currentUser.uid;
+
+		await fetch(`${apiUrl}/${uid}/lists/${id}.json?auth=${idToken}`, {
+			method: 'DELETE'
+		});
+
+		delete $lists[slug];
+
+		await goto('/');
+	};
+
 	const save = async () => {
 		saving = true;
 
@@ -195,14 +212,20 @@
 <div id="wrap" tabindex="0" class="mt-10 pb-8 font-mono select-none">
 	<main class="max-w-screen-sm pt-6 mx-auto px-6 relative">
 		<div class="my-8 flex gap-4 pb-4 border-b-2">
-			<input
-				type="text"
-				class="border-2 border-transparent text-sky-500 font-bold rounded-lg w-full px-2 h-8 box-content text-center cursor-pointer focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
-				bind:value={name}
-				on:focus={(event) => setTimeout(() => event.target.select(), 10)}
-			/>
+			{#if !confirmRemoveList}
+				<input
+					type="text"
+					class="border-2 border-transparent text-sky-500 font-bold rounded-lg w-full px-2 h-8 box-content text-center cursor-pointer focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+					bind:value={name}
+					on:focus={(event) => setTimeout(() => event.target.select(), 10)}
+				/>
+			{:else}
+				<p class="text-rose-500 w-full text-center leading-8 border-2 border-transparent">
+					Do you want to permanently remove this list?
+				</p>
+			{/if}
 			<div class="flex flex-wrap flex-1 gap-2 items-center content-start">
-				<Remove />
+				<Remove on:confirm={() => (confirmRemoveList = true)} on:remove={removeList} />
 			</div>
 		</div>
 		{#each checkpoints as { removed, updated, title, description, hour, tasks }, checkpointIndex}

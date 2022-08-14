@@ -6,6 +6,7 @@
 
 	const handleClick = () => {
 		if (!confirm) {
+			dispatch('confirm');
 			confirm = true;
 			return;
 		}

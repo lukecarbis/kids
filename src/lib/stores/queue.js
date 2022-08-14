@@ -120,7 +120,7 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 	const previousCheckpoint = checkpoints[checkpointIndex - 1];
 
 	const doneTasks = checkpoint.tasks.filter((task) => {
-		return !task.visible || task.done;
+		return task.done;
 	});
 
 	// Unlock the checkpoint if it already contains done tasks.
