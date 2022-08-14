@@ -28,7 +28,7 @@
 		let shareData = {
 			title: '[TBD]',
 			text: `Hey ${name} – bookmark this link to get your daily list on [TBD].`,
-			url
+			url: new URL(url).pathname
 		};
 		navigator.share(shareData).catch(() => {
 			// Do nothing, but prevent a console "Unhandled Promise" error.
