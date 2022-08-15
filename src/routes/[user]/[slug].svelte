@@ -37,7 +37,7 @@
 			Hello {name}!
 		</p>
 		<p class="mt-2 text-center text-sm text-slate-500">
-			Debug date: {date}
+			Debug date: {new Date().getTimezoneOffset()}
 		</p>
 		{#each $queue.checkpoints as checkpoint, checkpointIndex}
 			{#if checkpoint.visible}
