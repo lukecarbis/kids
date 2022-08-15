@@ -10,14 +10,9 @@
 
 <script>
 	import Nav from '$lib/nav/nav-main.svelte';
+	import Error from '$lib/welcome/error.svelte';
 	export let status; // The error code. For example "500" or "404".
 </script>
 
 <Nav />
-
-<section class="font-mono max-w-screen-sm text-center h-screen mx-auto px-6 pt-12">
-	<h2 class="text-2xl mt-20">{status}</h2>
-	<p class="mt-6 mb-12">
-		<em-emoji set="twitter" size="32px" native="😢" />
-	</p>
-</section>
+<Error code={status} />
