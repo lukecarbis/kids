@@ -82,6 +82,32 @@ export const getLastTaskIndex = (checkpoint) => {
 	}
 };
 
+export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
+	if (!parseInt(checkpointIndex)) {
+		return true;
+	}
+
+	const checkpoint = checkpoints[checkpointIndex];
+	const previousCheckpoint = checkpoints[checkpointIndex - 1];
+
+	const doneTasks = checkpoint.tasks.filter((task) => {
+		return task.done;
+	});
+
+	// Unlock the checkpoint if it already contains done tasks.
+	if (doneTasks.length) {
+		return true;
+	}
+
+	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
+		return !task.visible || task.done;
+	});
+
+	return (
+		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
+	);
+};
+
 export const resetSkippedTasks = (checkpoints) => {
 	for (const checkpoint of checkpoints) {
 		for (let index = 0; index < checkpoint.tasks.length; index++) {
@@ -89,33 +115,6 @@ export const resetSkippedTasks = (checkpoints) => {
 		}
 	}
 	return checkpoints;
-};
-
-export const setQueue = (checkpoints, name = false, id = false) => {
-	if (!name) {
-		name = get(queue).name;
-	}
-
-	if (!id) {
-		id = get(queue).id;
-	}
-
-	let nextTask = getNextTask(checkpoints);
-	if (-1 === nextTask.task) {
-		checkpoints = resetSkippedTasks(checkpoints);
-		nextTask = getNextTask(checkpoints);
-	}
-
-	queue.set({
-		name: name,
-		id: id,
-		checkpoints: checkpoints,
-		activeCheckpoint: nextTask.checkpoint,
-		activeTask: nextTask.task,
-		remaining: getTasksRemaining(checkpoints),
-		totalRemaining: getTotalTasksRemaining(checkpoints),
-		totalTasks: getTotalTasks(checkpoints)
-	});
 };
 
 export const resetCheckpoints = (checkpoints, lastUpdated) => {
@@ -151,28 +150,29 @@ export const resetCheckpoints = (checkpoints, lastUpdated) => {
 	return checkpoints;
 };
 
-export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
-	if (!parseInt(checkpointIndex)) {
-		return true;
+export const setQueue = (checkpoints, name = false, id = false) => {
+	if (!name) {
+		name = get(queue).name;
 	}
 
-	const checkpoint = checkpoints[checkpointIndex];
-	const previousCheckpoint = checkpoints[checkpointIndex - 1];
-
-	const doneTasks = checkpoint.tasks.filter((task) => {
-		return task.done;
-	});
-
-	// Unlock the checkpoint if it already contains done tasks.
-	if (doneTasks.length) {
-		return true;
+	if (!id) {
+		id = get(queue).id;
 	}
 
-	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
-		return !task.visible || task.done;
-	});
+	let nextTask = getNextTask(checkpoints);
+	if (-1 === nextTask.task) {
+		checkpoints = resetSkippedTasks(checkpoints);
+		nextTask = getNextTask(checkpoints);
+	}
 
-	return (
-		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
-	);
+	queue.set({
+		name: name,
+		id: id,
+		checkpoints: checkpoints,
+		activeCheckpoint: nextTask.checkpoint,
+		activeTask: nextTask.task,
+		remaining: getTasksRemaining(checkpoints),
+		totalRemaining: getTotalTasksRemaining(checkpoints),
+		totalTasks: getTotalTasks(checkpoints)
+	});
 };

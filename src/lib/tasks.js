@@ -34,10 +34,30 @@ export const updateTasks = async (patch) => {
 };
 
 export const updateDate = async (date, listId) => {
-	const { uid } = get(meta);
+	let { uid } = get(meta);
+
+	// If no User ID is defined, see if there's a signed-in user we can use.
+	if (!uid) {
+		uid = auth.currentUser.uid;
+	}
 
 	await fetch(`${apiUrl}/${uid}/lists/${listId}.json`, {
 		method: 'PATCH',
 		body: JSON.stringify({ lastUpdated: date })
 	});
+};
+
+export const resetList = async (date, checkpoints, listId) => {
+	await updateDate(date, listId);
+
+	const patch = {};
+
+	checkpoints.forEach((checkpoint, ci) => {
+		checkpoint.tasks.forEach((task, ti) => {
+			patch[`${ci}/tasks/${ti}/skipped`] = false;
+			patch[`${ci}/tasks/${ti}/done`] = false;
+		});
+	});
+
+	await updateTasks(patch);
 };

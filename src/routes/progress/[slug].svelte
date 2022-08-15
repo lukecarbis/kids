@@ -1,6 +1,7 @@
 <script>
 	import { queue, setQueue, isCheckpointOpen, getLastTaskIndex } from '$lib/stores/queue';
 	import { lists } from '$lib/stores/lists';
+	import { resetList } from '$lib/tasks';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-progress.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
@@ -14,15 +15,25 @@
 
 	checkpoints = resetCheckpoints(checkpoints, lastUpdated);
 	setQueue(checkpoints, name, id);
+
+	const date = new Date().toLocaleDateString('sv');
+
+	if (lastUpdated !== date) {
+		resetList(date, checkpoints, id);
+		lastUpdated = date;
+	}
 </script>
 
-<Nav title="{name}: {$queue.totalRemaining} Tasks Remaining" back="/" />
+<Nav
+	title="{name}: Completed {$queue.totalTasks - $queue.totalRemaining} / {$queue.totalTasks} Tasks"
+	back="/"
+/>
 
 <main class="max-w-screen-sm mx-auto mt-24 pb-20 px-6 relative font-mono select-none">
 	{#if $queue.totalTasks > 0}
 		{#each checkpoints as checkpoint, checkpointIndex}
 			{#if checkpoint.visible}
-				<Checkpoint {checkpoint} locked={!isCheckpointOpen(checkpoints, checkpointIndex)} />
+				<Checkpoint bind:checkpoint locked={!isCheckpointOpen(checkpoints, checkpointIndex)} />
 				<Connector />
 
 				{#each checkpoint.tasks as task, taskIndex}

@@ -14,6 +14,7 @@
 		setQueue(resetCheckpoints(checkpointsClone, lastUpdated), name, id);
 		queues.push($queue);
 	});
+
 	const date = new Date();
 	const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
 	const dayOfYear = date.toLocaleString('default', { dateStyle: 'long' });

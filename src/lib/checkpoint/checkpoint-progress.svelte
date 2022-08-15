@@ -1,4 +1,6 @@
 <script>
+	import { getTotalTasks, getTotalTasksRemaining } from '$lib/stores/queue';
+
 	export let checkpoint;
 	export let locked;
 
@@ -14,25 +16,8 @@
 		return hourString;
 	};
 
-	$: getTasksDone = () => {
-		let done = 0;
-		checkpoint.tasks.forEach((task) => {
-			if (task.done) {
-				done++;
-			}
-		});
-		return done;
-	};
-
-	$: getTasksTotal = () => {
-		let total = 0;
-		checkpoint.tasks.forEach((task) => {
-			if (task.visible) {
-				total++;
-			}
-		});
-		return total;
-	};
+	$: tasksTotal = getTotalTasks([checkpoint]);
+	$: tasksDone = tasksTotal - getTotalTasksRemaining([checkpoint]);
 
 	const hour = getHourString();
 </script>
@@ -67,7 +52,7 @@
 	</p>
 	{#if !locked}
 		<p class="text-sm text-slate-400 border-2 inline-block py-1 px-3 rounded-lg">
-			{getTasksDone()} / {getTasksTotal()}
+			{tasksDone} / {tasksTotal}
 		</p>
 	{/if}
 </div>
