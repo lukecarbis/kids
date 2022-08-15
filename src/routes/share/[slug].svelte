@@ -65,13 +65,13 @@
 <div id="wrap" class="h-calc mt-16 pb-8 font-mono select-none overflow-y-scroll">
 	<main class="flex flex-wrap max-w-screen-sm mx-auto px-6 my-8 left">
 		<p class="mb-6">
-			Share this list with <strong>{name}</strong> so that he can start using <strong>[TBD]</strong>
-			to complete his daily tasks.
+			Share this link so that <strong>{name}</strong> can start using <strong>[TBD]</strong> on a separate
+			device.
 		</p>
 		<div class="p-6 border-2 border-sky-300 bg-sky-100 rounded-lg mb-6">
 			<p class="text-sm">
-				To make things simple, there's no password login. Instead, we generate a unique link just
-				for {name} to use.
+				To make things simple, there's no password login. Instead, this unique link has been
+				generated especially for {name}.
 			</p>
 		</div>
 		<div class="flex w-full mb-6">
