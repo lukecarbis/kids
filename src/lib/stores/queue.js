@@ -24,6 +24,7 @@ export const getNextTask = (checkpoints) => {
 			}
 		}
 	}
+
 	return { checkpoint: -1, task: -1 };
 };
 
@@ -99,42 +100,22 @@ export const setQueue = (checkpoints, name = false, id = false) => {
 		id = get(queue).id;
 	}
 
+	let nextTask = getNextTask(checkpoints);
+	if (-1 === nextTask.task) {
+		checkpoints = resetSkippedTasks(checkpoints);
+		nextTask = getNextTask(checkpoints);
+	}
+
 	queue.set({
 		name: name,
 		id: id,
 		checkpoints: checkpoints,
-		activeCheckpoint: getNextTask(checkpoints).checkpoint,
-		activeTask: getNextTask(checkpoints).task,
+		activeCheckpoint: nextTask.checkpoint,
+		activeTask: nextTask.task,
 		remaining: getTasksRemaining(checkpoints),
 		totalRemaining: getTotalTasksRemaining(checkpoints),
 		totalTasks: getTotalTasks(checkpoints)
 	});
-};
-
-export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
-	if (!parseInt(checkpointIndex)) {
-		return true;
-	}
-
-	const checkpoint = checkpoints[checkpointIndex];
-	const previousCheckpoint = checkpoints[checkpointIndex - 1];
-
-	const doneTasks = checkpoint.tasks.filter((task) => {
-		return task.done;
-	});
-
-	// Unlock the checkpoint if it already contains done tasks.
-	if (doneTasks.length) {
-		return true;
-	}
-
-	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
-		return !task.visible || task.done;
-	});
-
-	return (
-		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
-	);
 };
 
 export const resetCheckpoints = (checkpoints, lastUpdated) => {
@@ -168,4 +149,30 @@ export const resetCheckpoints = (checkpoints, lastUpdated) => {
 	});
 
 	return checkpoints;
+};
+
+export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
+	if (!parseInt(checkpointIndex)) {
+		return true;
+	}
+
+	const checkpoint = checkpoints[checkpointIndex];
+	const previousCheckpoint = checkpoints[checkpointIndex - 1];
+
+	const doneTasks = checkpoint.tasks.filter((task) => {
+		return task.done;
+	});
+
+	// Unlock the checkpoint if it already contains done tasks.
+	if (doneTasks.length) {
+		return true;
+	}
+
+	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
+		return !task.visible || task.done;
+	});
+
+	return (
+		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
+	);
 };

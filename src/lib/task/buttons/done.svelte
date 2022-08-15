@@ -1,5 +1,5 @@
 <script>
-	import { queue, getNextTask, resetSkippedTasks, setQueue } from '$lib/stores/queue';
+	import { queue, setQueue } from '$lib/stores/queue';
 	import { updateTask } from '$lib/tasks';
 
 	const done = () => {
@@ -7,10 +7,6 @@
 
 		checkpoints[$queue.activeCheckpoint].tasks[$queue.activeTask].done = true;
 		updateTask($queue.activeCheckpoint, $queue.activeTask, { done: true });
-
-		if (-1 === getNextTask($queue.checkpoints).task) {
-			checkpoints = resetSkippedTasks(checkpoints);
-		}
 
 		setQueue(checkpoints);
 	};
