@@ -14,21 +14,25 @@
 	import Progress from '$lib/progress/progress.svelte';
 	import { slide } from 'svelte/transition';
 	import { resetCheckpoints } from '../../lib/stores/queue.js';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		checkpoints = resetCheckpoints(checkpoints, lastUpdated);
+		setQueue(checkpoints, name, id);
+
+		const date = new Date().toLocaleDateString('sv');
+
+		if (lastUpdated !== date) {
+			resetList(date, checkpoints, id);
+			lastUpdated = date;
+		}
+	});
 
 	export let list;
 	export let uid;
 	let { name, id, checkpoints, lastUpdated } = list;
 
 	meta.set({ uid });
-	checkpoints = resetCheckpoints(checkpoints, lastUpdated);
-	setQueue(checkpoints, name, id);
-
-	const date = new Date().toLocaleDateString('sv');
-
-	if (lastUpdated !== date) {
-		resetList(date, checkpoints, id);
-		lastUpdated = date;
-	}
 </script>
 
 <main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none">
