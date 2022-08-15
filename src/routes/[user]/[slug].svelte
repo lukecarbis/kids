@@ -45,9 +45,6 @@
 			<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
 				Hello {name}!
 			</p>
-			<p class="mt-2 text-center text-sm text-slate-500">
-				Debug date: {new Date().getTimezoneOffset()}
-			</p>
 			{#each $queue.checkpoints as checkpoint, checkpointIndex}
 				{#if checkpoint.visible}
 					{#if isCheckpointOpen($queue.checkpoints, checkpointIndex)}
