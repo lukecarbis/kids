@@ -6,12 +6,12 @@
 </script>
 
 <div
-	class="px-4 py-2 border-2 rounded-lg flex flex-wrap border-slate-200 items-stretch justify-between rounded-lg"
+	class="p-4 border-2 rounded-lg flex flex-wrap border-slate-200 items-stretch justify-between rounded-lg"
 >
-	<span class="mr-4 text-center w-6 h-10 py-2">
+	<span class="mr-4 text-center w-6">
 		<em-emoji set="twitter" size="24px" native={task.emoji} />
 	</span>
-	<h3 class="flex-auto text-center mr-10 leading-10">
+	<h3 class="flex-1 text-center mr-10">
 		{task.title}
 	</h3>
 	{#if task.skipped}

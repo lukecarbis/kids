@@ -22,7 +22,7 @@
 		<span class="mr-4 text-center w-6">
 			<em-emoji set="twitter" size="24px" native={task.emoji} />
 		</span>
-		<h3 class="flex-auto text-center">
+		<h3 class="flex-1 text-center">
 			{task.title}
 		</h3>
 		<svg
