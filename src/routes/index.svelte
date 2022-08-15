@@ -21,26 +21,24 @@
 
 <Nav />
 
-<div id="wrap" class="mt-24 pb-8 font-mono select-none">
-	<main class="flex flex-wrap max-w-screen-sm mx-auto px-6 my-8">
-		<p class="mb-2 pr-6 flex-grow leading-8">
-			Happy {dayOfWeek}, {auth.currentUser.displayName}!
-		</p>
-		<p class="mb-6 flex-0 leading-8 text-right text-slate-400 text-sm whitespace-nowrap">
-			{dayOfYear}
-		</p>
-		{#if Object.values($lists).length}
-			{#each Object.entries($lists) as [slug, list], index}
-				<List name={list.name} slug={list.slug} seen={list.lastUpdated} queue={queues[index]} />
-			{/each}
-			<a
-				href="/new"
-				class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg active:border-b-2 active:mt-px active:mb-px"
-			>
-				Add New List
-			</a>
-		{:else}
-			<Welcome />
-		{/if}
-	</main>
-</div>
+<main id="X" class="flex flex-wrap font-mono max-w-screen-sm mx-auto mt-24 pb-8  px-6">
+	<p class="mb-2 pr-6 flex-grow leading-8">
+		Happy {dayOfWeek}, {auth.currentUser.displayName}!
+	</p>
+	<p class="mb-6 flex-0 leading-8 text-right text-slate-400 text-sm whitespace-nowrap">
+		{dayOfYear}
+	</p>
+	{#if Object.values($lists).length}
+		{#each Object.entries($lists) as [slug, list], index}
+			<List name={list.name} slug={list.slug} seen={list.lastUpdated} queue={queues[index]} />
+		{/each}
+		<a
+			href="/new"
+			class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg active:border-b-2 active:mt-px active:mb-px"
+		>
+			Add New List
+		</a>
+	{:else}
+		<Welcome />
+	{/if}
+</main>

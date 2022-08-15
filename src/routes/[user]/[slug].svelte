@@ -6,12 +6,12 @@
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
 	import Connector from '$lib/connector/connector.svelte';
+	import UpNext from '$lib/connector/connector-up-next.svelte';
 	import TaskActive from '$lib/task/task-active.svelte';
 	import TaskDone from '$lib/task/task-done.svelte';
 	import TaskInactive from '$lib/task/task-inactive.svelte';
 	import TaskPending from '$lib/task/task-pending.svelte';
 	import Progress from '$lib/progress/progress.svelte';
-	import UpNext from '$lib/task/up-next.svelte';
 	import { slide } from 'svelte/transition';
 	import { resetCheckpoints } from '../../lib/stores/queue.js';
 
@@ -43,7 +43,7 @@
 	}
 </script>
 
-<main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none" out:slide>
+<main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none">
 	{#if $queue.totalTasks > 0}
 		<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
 			Hello {name}!

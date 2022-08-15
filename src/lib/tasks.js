@@ -1,11 +1,16 @@
-import { apiUrl } from '$lib/firebase';
+import { apiUrl, auth } from '$lib/firebase';
 import { get } from 'svelte/store';
 import { queue } from '$lib/stores/queue';
 import { meta } from '$lib/stores/meta';
 
 export const updateTask = async (ci, ti, patch) => {
-	const { uid } = get(meta);
+	let { uid } = get(meta);
 	const { id } = get(queue);
+
+	// If no User ID is defined, see if there's a signed-in user we can use.
+	if (!uid) {
+		uid = auth.currentUser.uid;
+	}
 
 	await fetch(`${apiUrl}/${uid}/lists/${id}/checkpoints/${ci}/tasks/${ti}.json`, {
 		method: 'PATCH',
@@ -14,8 +19,13 @@ export const updateTask = async (ci, ti, patch) => {
 };
 
 export const updateTasks = async (patch) => {
-	const { uid } = get(meta);
+	let { uid } = get(meta);
 	const { id } = get(queue);
+
+	// If no User ID is defined, see if there's a signed-in user we can use.
+	if (!uid) {
+		uid = auth.currentUser.uid;
+	}
 
 	await fetch(`${apiUrl}/${uid}/lists/${id}/checkpoints.json`, {
 		method: 'PATCH',

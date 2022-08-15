@@ -17,7 +17,7 @@
 
 <LongPress cb={revert} timeout="1200">
 	<div
-		class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-100 border-emerald-300 items-stretch justify-between rounded-lg transition-transform"
+		class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-50 border-emerald-400 items-stretch justify-between rounded-lg transition-transform"
 	>
 		<span class="mr-4 text-center w-6">
 			<em-emoji set="twitter" size="24px" native={task.emoji} />
