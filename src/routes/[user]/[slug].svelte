@@ -1,7 +1,7 @@
 <script>
 	import { queue, setQueue, isCheckpointOpen, getLastTaskIndex } from '$lib/stores/queue';
 	import { meta } from '$lib/stores/meta';
-	import { updateDate } from '$lib/tasks';
+	import { updateDate, updateTasks } from '$lib/tasks';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
@@ -29,6 +29,17 @@
 		updateDate(date, id).then(() => {
 			lastUpdated = date;
 		});
+
+		const patch = {};
+
+		checkpoints.forEach((checkpoint, ci) => {
+			checkpoint.tasks.forEach((task, ti) => {
+				patch[`${ci}/tasks/${ti}/skipped`] = false;
+				patch[`${ci}/tasks/${ti}/done`] = false;
+			});
+		});
+
+		updateTasks(patch);
 	}
 </script>
 
