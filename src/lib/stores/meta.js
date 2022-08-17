@@ -1,3 +1,3 @@
 import { writable } from 'svelte/store';
 
-export const meta = writable({ slug: '' });
+export const meta = writable({});

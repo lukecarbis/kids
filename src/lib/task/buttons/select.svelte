@@ -1,5 +1,5 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queue';
+	import { queue, setQueue } from '$lib/stores/queues';
 	import { updateTasks } from '$lib/tasks';
 
 	export let taskIndex;

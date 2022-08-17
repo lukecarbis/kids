@@ -2,27 +2,17 @@ import { get, writable } from 'svelte/store';
 
 export const lists = writable({});
 
-export const setListsFromDataStore = (data) => {
-	let keys = Object.keys(data);
-	let values = Object.values(data);
-	let mapped = {};
+export const getListId = (slug) => {
+	const listsEntries = Object.entries(get(lists));
 
-	values.forEach((value, index) => {
-		value.id = keys[index];
-		mapped[value.slug] = value;
-	});
+	if (!listsEntries.length) {
+		return {};
+	}
 
-	lists.set(mapped);
-};
-
-export const setCheckpointsForList = (slug, checkpoints) => {
-	const updated = get(lists);
-	updated[slug][checkpoints] = checkpoints;
-	lists.set(updated);
-};
-
-export const saveNewList = (list) => {
-	const updated = get(lists);
-	updated[list.slug] = list;
-	lists.set(updated);
+	return listsEntries
+		.filter(([, list]) => {
+			return list.slug === slug;
+		})
+		.shift()
+		.shift();
 };

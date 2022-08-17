@@ -1,46 +1,45 @@
 <script>
-	import { saveNewList } from '$lib/stores/lists';
+	import { lists } from '$lib/stores/lists';
 	import sample from '$lib/sample.json';
 	import empty from '$lib/empty.json';
 	import Name from '$lib/new/name.svelte';
 	import Next from '$lib/new/next.svelte';
 	import Sample from '$lib/new/sample.svelte';
 	import Disclaimer from '$lib/new/disclaimer.svelte';
-	import { auth, apiUrl } from '$lib/firebase';
+	import { newList, newListSlug } from '$lib/db';
 	import { goto } from '$app/navigation';
+
+	export let fromListId = false;
 
 	let name = '';
 	let loading = false;
-	let useSampleData = true;
+	let useSampleData = !fromListId;
 
-	const slug = Math.random().toString(36).slice(-6).toLowerCase();
+	const newSlug = newListSlug();
 
-	const setDefaults = async () => {
+	const saveNewList = async () => {
 		loading = true;
 
-		const idToken = await auth.currentUser.getIdToken();
-		const uid = auth.currentUser.uid;
-		const data = useSampleData ? sample : empty;
+		const list = useSampleData ? sample : empty;
 
-		data.name = name;
-		data.slug = slug;
+		list.name = name;
+		list.slug = newSlug;
+		list.lastUpdated = false;
 
-		const response = await fetch(`${apiUrl}/${uid}/lists.json?auth=${idToken}`, {
-			method: 'POST',
-			body: JSON.stringify(data)
-		});
+		if (fromListId) {
+			list.checkpoints = $lists[fromListId].checkpoints;
+		}
 
-		const result = await response.json();
-		data.id = result.name;
-
-		saveNewList(data);
+		await newList(list);
 
 		loading = false;
-		await goto(`/edit/${slug}`);
+		await goto(`/edit/${newSlug}`);
 	};
 </script>
 
 <Name bind:name />
-<Next on:next={setDefaults} {name} {loading} />
-<Sample bind:useSampleData />
+<Next on:next={saveNewList} {name} {loading} />
+{#if !fromListId}
+	<Sample bind:useSampleData />
+{/if}
 <Disclaimer />

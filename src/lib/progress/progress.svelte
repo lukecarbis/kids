@@ -1,5 +1,5 @@
 <script>
-	import { getNextTask, isCheckpointOpen, getTotalTasks } from '$lib/stores/queue';
+	import { getNextTask, isCheckpointOpen, getTotalTasks } from '$lib/stores/queues';
 
 	export let checkpoints = [];
 	export let totalTasks = 0;
@@ -42,7 +42,7 @@
 				{#if isCheckpointOpen(checkpoints, index + 1)}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-4 w-4 fill-slate-200 -top-5 -ml-3 absolute"
+						class="h-4 w-4 fill-slate-200 -top-5 -ml-1.5 absolute"
 						style="left:{checkpointPosition}%"
 						viewBox="0 0 20 20"
 						fill="currentColor"

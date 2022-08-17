@@ -1,8 +1,6 @@
 <script>
 	import Toggle from '$lib/task/buttons/toggle.svelte';
 	export let task;
-	export let taskIndex;
-	export let checkpointIndex;
 </script>
 
 <div
@@ -14,7 +12,7 @@
 	<span class="mr-4 text-center w-6">
 		<em-emoji set="twitter" size="24px" native={task.emoji} />
 	</span>
-	<h3 class="flex-1 text-center mr-10">
+	<h3 class="flex-1 text-center">
 		{#if task.done}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -29,5 +27,5 @@
 		{/if}
 		{task.title}
 	</h3>
-	<Toggle bind:done={task.done} {taskIndex} {checkpointIndex} />
+	<Toggle bind:done={task.done} on:toggle />
 </div>

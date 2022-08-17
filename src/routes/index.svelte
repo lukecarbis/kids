@@ -1,19 +1,10 @@
 <script>
 	import { auth } from '$lib/firebase';
 	import { lists } from '$lib/stores/lists';
-	import { queue, setQueue, resetCheckpoints } from '$lib/stores/queue';
+	import { queues } from '$lib/stores/queues';
 	import Nav from '$lib/nav/nav-main.svelte';
 	import Welcome from '$lib/welcome/welcome.svelte';
 	import List from '$lib/lists/list.svelte';
-
-	const queues = [];
-
-	Object.values($lists).forEach((list) => {
-		const { name, id, checkpoints, lastUpdated } = list;
-		const checkpointsClone = JSON.parse(JSON.stringify(checkpoints));
-		setQueue(resetCheckpoints(checkpointsClone, lastUpdated), name, id);
-		queues.push($queue);
-	});
 
 	const date = new Date();
 	const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
@@ -30,8 +21,8 @@
 		{dayOfYear}
 	</p>
 	{#if Object.values($lists).length}
-		{#each Object.entries($lists) as [slug, list], index}
-			<List name={list.name} slug={list.slug} seen={list.lastUpdated} queue={queues[index]} />
+		{#each Object.values($lists) as list}
+			<List {list} queue={$queues[list.slug]} />
 		{/each}
 		<a
 			href="/new"

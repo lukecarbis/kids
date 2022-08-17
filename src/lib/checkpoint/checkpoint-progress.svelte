@@ -1,5 +1,5 @@
 <script>
-	import { getTotalTasks, getTotalTasksRemaining } from '$lib/stores/queue';
+	import { getTotalTasks, getTotalTasksRemaining } from '$lib/stores/queues';
 
 	export let checkpoint;
 	export let locked;

@@ -1,39 +1,41 @@
 <script>
-	import { queue, setQueue, isCheckpointOpen, getLastTaskIndex } from '$lib/stores/queue';
-	import { lists } from '$lib/stores/lists';
-	import { resetList } from '$lib/tasks';
+	import { queues, isCheckpointOpen, getLastTaskIndex, resetQueue } from '$lib/stores/queues';
+	import { lists, getListId } from '$lib/stores/lists';
+	import { updateTask, updateList } from '$lib/db';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-progress.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
 	import Connector from '$lib/connector/connector-static.svelte';
 	import TaskInactive from '$lib/task/task-inactive.svelte';
 	import TaskToggle from '$lib/task/task-toggle.svelte';
-	import { resetCheckpoints } from '../../lib/stores/queue.js';
 
 	export let slug;
-	let { name, id, checkpoints, lastUpdated } = $lists[slug];
+	const listId = getListId(slug);
+	const list = $lists[listId];
+	const queue = $queues[slug];
 
-	checkpoints = resetCheckpoints(checkpoints, lastUpdated);
-	setQueue(checkpoints, name, id);
+	$: name = $lists[listId].name;
+	$: checkpoints = resetQueue($lists[listId].checkpoints, list.lastUpdated);
 
 	const date = new Date().toLocaleDateString('sv');
 
-	if (lastUpdated !== date) {
-		resetList(date, checkpoints, id);
-		lastUpdated = date;
+	if (list.lastUpdated !== date) {
+		list.lastUpdated = date;
+		updateList(listId, list);
 	}
 </script>
 
 <Nav
-	title="{name}: Completed {$queue.totalTasks - $queue.totalRemaining} / {$queue.totalTasks} Tasks"
+	title="{name}: Completed {queue.totalTasks - queue.totalRemaining} / {queue.totalTasks} Tasks"
 	back="/"
 />
 
 <main class="max-w-screen-sm mx-auto mt-24 pb-20 px-6 relative font-mono select-none">
-	{#if $queue.totalTasks > 0}
+	{#if queue.totalTasks > 0}
 		{#each checkpoints as checkpoint, checkpointIndex}
 			{#if checkpoint.visible}
-				<Checkpoint bind:checkpoint locked={!isCheckpointOpen(checkpoints, checkpointIndex)} />
+				<Checkpoint {checkpoint} locked={!isCheckpointOpen(checkpoints, checkpointIndex)} />
+
 				<Connector />
 
 				{#each checkpoint.tasks as task, taskIndex}
@@ -41,7 +43,12 @@
 						{#if !isCheckpointOpen(checkpoints, checkpointIndex)}
 							<TaskInactive {task} />
 						{:else}
-							<TaskToggle bind:task {taskIndex} {checkpointIndex} />
+							<TaskToggle
+								bind:task
+								on:toggle={({ detail: done }) => {
+									updateTask(listId, checkpointIndex, taskIndex, { done });
+								}}
+							/>
 						{/if}
 
 						{#if getLastTaskIndex(checkpoint) !== taskIndex}

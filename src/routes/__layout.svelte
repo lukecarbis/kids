@@ -1,7 +1,8 @@
 <script>
 	import '../app.css';
-	import { auth, apiUrl } from '$lib/firebase';
-	import { lists, setListsFromDataStore } from '$lib/stores/lists';
+	import { auth, db } from '$lib/firebase';
+	import { ref, onValue } from 'firebase/database';
+	import { lists } from '$lib/stores/lists';
 	import { meta } from '$lib/stores/meta';
 	import Nav from '$lib/nav/nav-main.svelte';
 	import Loading from '$lib/welcome/loading.svelte';
@@ -21,6 +22,8 @@
 	let loaded = false;
 	let error = false;
 
+	let unsubscribe = () => {};
+
 	auth.onIdTokenChanged(async (user) => {
 		if ($page.routeId === '[user]/[slug]') {
 			return;
@@ -31,30 +34,30 @@
 			if (!loaded) {
 				loading = true;
 			}
-			const idToken = await user.getIdToken();
-			const uid = user.uid;
-			const result = await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`);
-			let data = await result.json();
 
-			if (data && data.error) {
-				console.error(data.error);
-				return;
-			}
+			unsubscribe();
+			unsubscribe = onValue(ref(db, user.uid), (snapshot) => {
+				const data = snapshot.val();
+				console.log('onValue', data);
 
-			if (!data || !data.lists || !data.slug) {
-				console.error('Not allowed.');
-				return;
-			}
+				if (!data.lists || !data.slug) {
+					console.error('Not allowed.');
+					return;
+				}
 
-			meta.set({ slug: data.slug });
-			setListsFromDataStore(data.lists);
-			loading = false;
-			loaded = true;
+				meta.set({ slug: data.slug });
+				lists.set(data.lists);
+
+				loading = false;
+				loaded = true;
+			});
 		}
 
 		// Not signed in.
 		if (!user && !loaded) {
 			lists.set({});
+			meta.set({});
+			unsubscribe();
 
 			if (browser && $page.routeId === '') {
 				await goto('/sign-in');

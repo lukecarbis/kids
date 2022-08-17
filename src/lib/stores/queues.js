@@ -1,17 +1,18 @@
-import empty from '$lib/empty.json';
+import { lists } from '$lib/stores/lists';
 import { hour } from '$lib/stores/time';
-import { get, writable } from 'svelte/store';
+import { derived, get } from 'svelte/store';
 
-export const queue = writable({
-	name: '',
-	id: '',
-	checkpoints: empty.checkpoints,
-	activeCheckpoint: 0,
-	activeTask: 0,
-	remaining: 0,
-	totalRemaining: 0,
-	totalTasks: 0
-});
+export const queues = derived(
+	lists,
+	($lists) => {
+		const queues = {};
+		Object.entries($lists).forEach(([listId, list]) => {
+			queues[list.slug] = getQueue(list.checkpoints, list.name, listId);
+		});
+		return queues;
+	},
+	[]
+);
 
 export const getNextTask = (checkpoints) => {
 	for (const [checkpointIndex, checkpoint] of checkpoints.entries()) {
@@ -117,7 +118,7 @@ export const resetSkippedTasks = (checkpoints) => {
 	return checkpoints;
 };
 
-export const resetCheckpoints = (checkpoints, lastUpdated) => {
+export const resetQueue = (checkpoints, lastUpdated) => {
 	const day = new Date().getDay();
 	const date = new Date().toLocaleDateString('sv');
 
@@ -143,36 +144,27 @@ export const resetCheckpoints = (checkpoints, lastUpdated) => {
 
 	// Filter out checkpoints with no tasks.
 	checkpoints = checkpoints.map((checkpoint) => {
-		checkpoint.visible = getTotalTasks([checkpoint]);
+		checkpoint.visible = !!getTotalTasks([checkpoint]);
 		return checkpoint;
 	});
 
 	return checkpoints;
 };
 
-export const setQueue = (checkpoints, name = false, id = false) => {
-	if (!name) {
-		name = get(queue).name;
-	}
-
-	if (!id) {
-		id = get(queue).id;
-	}
-
+export const getQueue = (checkpoints, name, id) => {
 	let nextTask = getNextTask(checkpoints);
 	if (-1 === nextTask.task) {
 		checkpoints = resetSkippedTasks(checkpoints);
 		nextTask = getNextTask(checkpoints);
 	}
 
-	queue.set({
+	return {
 		name: name,
 		id: id,
-		checkpoints: checkpoints,
 		activeCheckpoint: nextTask.checkpoint,
 		activeTask: nextTask.task,
 		remaining: getTasksRemaining(checkpoints),
 		totalRemaining: getTotalTasksRemaining(checkpoints),
 		totalTasks: getTotalTasks(checkpoints)
-	});
+	};
 };

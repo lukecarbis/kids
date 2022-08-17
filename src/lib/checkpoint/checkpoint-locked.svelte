@@ -1,5 +1,5 @@
 <script>
-	import { queue, isCheckpointOpen } from '$lib/stores/queue';
+	import { queue, isCheckpointOpen } from '$lib/stores/queues';
 	import { slide } from 'svelte/transition';
 	export let checkpoint;
 

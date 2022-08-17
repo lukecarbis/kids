@@ -1,12 +1,15 @@
 <script>
-	import { auth, apiUrl } from '$lib/firebase';
-	import { lists } from '$lib/stores/lists';
+	import { lists, getListId } from '$lib/stores/lists';
 	import { meta } from '$lib/stores/meta';
+	import { updateSlug } from '$lib/db';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import { goto } from '$app/navigation';
 
 	export let slug;
-	let { name } = $lists[slug];
+	const listId = getListId(slug);
+
+	$: name = $lists[listId].name;
+
 	let copied = false;
 	let loading = false;
 
@@ -40,18 +43,8 @@
 
 		const newSlug = Math.random().toString(36).slice(-6).toLowerCase();
 
-		const idToken = await auth.currentUser.getIdToken();
-		const uid = auth.currentUser.uid;
-		const listId = $lists[slug].id;
-
-		await fetch(`${apiUrl}/${uid}/lists/${listId}.json?auth=${idToken}`, {
-			method: 'PATCH',
-			body: JSON.stringify({ slug: newSlug })
-		});
-
-		$lists[newSlug] = JSON.parse(JSON.stringify($lists[slug]));
-		$lists[newSlug].slug = newSlug;
-		delete $lists[slug];
+		$lists[listId].slug = newSlug;
+		updateSlug(listId, newSlug);
 
 		url = getUrl(newSlug);
 		await goto(`/share/${newSlug}`);

@@ -1,5 +1,5 @@
 <script>
-	import { queue, getNextTask, resetSkippedTasks, setQueue } from '$lib/stores/queue';
+	import { queue, getNextTask, resetSkippedTasks, setQueue } from '$lib/stores/queues';
 	import { updateTask } from '$lib/tasks';
 
 	const skip = () => {

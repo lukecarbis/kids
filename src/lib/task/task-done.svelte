@@ -1,5 +1,5 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queue';
+	import { queue, setQueue } from '$lib/stores/queues';
 	import LongPress from '$lib/task/long-press.svelte';
 	import { updateTask } from '$lib/tasks';
 

@@ -1,20 +1,12 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queue';
-	import { updateTask } from '$lib/tasks';
-
+	import { createEventDispatcher } from 'svelte';
 	export let done;
-	export let taskIndex;
-	export let checkpointIndex;
+
+	const dispatch = createEventDispatcher();
 
 	const toggle = () => {
 		done = !done;
-
-		let checkpoints = [...$queue.checkpoints];
-
-		checkpoints[checkpointIndex].tasks[taskIndex].done = done;
-		updateTask(checkpointIndex, taskIndex, { done: done });
-
-		setQueue(checkpoints);
+		dispatch('toggle', done);
 	};
 </script>
 

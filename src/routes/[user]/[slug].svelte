@@ -1,5 +1,11 @@
 <script>
-	import { queue, setQueue, isCheckpointOpen, getLastTaskIndex } from '$lib/stores/queue';
+	import {
+		queue,
+		setQueue,
+		resetCheckpoints,
+		isCheckpointOpen,
+		getLastTaskIndex
+	} from '$lib/stores/queues';
 	import { meta } from '$lib/stores/meta';
 	import { resetList } from '$lib/tasks';
 	import Loading from '$lib/welcome/loading.svelte';
@@ -14,7 +20,6 @@
 	import TaskPending from '$lib/task/task-pending.svelte';
 	import Progress from '$lib/progress/progress.svelte';
 	import { slide } from 'svelte/transition';
-	import { resetCheckpoints } from '../../lib/stores/queue.js';
 	import { onMount } from 'svelte';
 
 	export let list;
