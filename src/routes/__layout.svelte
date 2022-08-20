@@ -73,6 +73,7 @@
 		<Nav />
 		<Error code={404} />
 	{:else}
+		{import.meta.env.VITE_FIREBASE_DB_URL}
 		<Loading />
 	{/if}
 </div>
