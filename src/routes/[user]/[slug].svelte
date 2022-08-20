@@ -1,13 +1,7 @@
 <script>
-	import {
-		queue,
-		setQueue,
-		resetCheckpoints,
-		isCheckpointOpen,
-		getLastTaskIndex
-	} from '$lib/stores/queues';
 	import { meta } from '$lib/stores/meta';
-	import { resetList } from '$lib/tasks';
+	import { lists } from '$lib/stores/lists';
+	import { updateTask, updateTasks } from '$lib/db';
 	import Loading from '$lib/welcome/loading.svelte';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
@@ -19,64 +13,123 @@
 	import TaskInactive from '$lib/task/task-inactive.svelte';
 	import TaskPending from '$lib/task/task-pending.svelte';
 	import Progress from '$lib/progress/progress.svelte';
-	import { slide } from 'svelte/transition';
-	import { onMount } from 'svelte';
+	import { onValue, ref } from 'firebase/database';
+	import { db } from '$lib/firebase';
+	import { tick } from 'svelte';
 
-	export let list;
 	export let uid;
-	let loading = true;
-	let { name, id, checkpoints, lastUpdated } = list;
+	export let listId;
 
 	meta.set({ uid });
 
-	onMount(() => {
-		checkpoints = resetCheckpoints(checkpoints, lastUpdated);
-		setQueue(checkpoints, name, id);
+	let loading = true;
 
-		const date = new Date().toLocaleDateString('sv');
+	const defaults = {
+		name: '',
+		slug: '',
+		lastUpdated: '',
+		checkpoints: [],
+		totalTasks: 0,
+		totalTasksRemaining: 0,
+		totalActiveTasksRemaining: 0,
+		firstDisabledCheckpoint: 0
+	};
 
-		if (lastUpdated !== date) {
-			resetList(date, checkpoints, id);
-			lastUpdated = date;
-		}
+	$: list = Object.values($lists).shift() ?? defaults;
+	$: name = list.name;
+	$: slug = list.slug;
+	$: lastUpdated = list.lastUpdated;
+	$: checkpoints = list.checkpoints;
+	$: totalTasks = list.totalTasks;
+	$: totalTasksRemaining = list.totalTasksRemaining;
+	$: totalActiveTasksRemaining = list.totalActiveTasksRemaining;
+	$: firstDisabledCheckpoint = list.firstDisabledCheckpoint;
+	$: activeTask = list.activeTask;
+
+	onValue(ref(db, `${uid}/lists/${listId}`), (snapshot) => {
+		const data = {};
+
+		data[listId] = snapshot.val();
+		lists.reset(data);
 
 		loading = false;
 	});
+
+	const skip = (ci, ti) => {
+		updateTask(listId, ci, ti, { skipped: true });
+	};
+
+	const done = (ci, ti) => {
+		updateTask(listId, ci, ti, { done: true, skipped: false });
+	};
+
+	const revert = (ci, ti) => {
+		updateTask(listId, ci, ti, { done: false, skipped: false });
+	};
+
+	const select = (ci, ti) => {
+		const patch = {};
+
+		checkpoints.forEach((checkpoint, checkpointIndex) => {
+			if (checkpointIndex < ci) {
+				return;
+			}
+			checkpoint.tasks.forEach((task, taskIndex) => {
+				if (taskIndex < ti && checkpointIndex === ci) {
+					return;
+				}
+				if (!task.done && task.visible) {
+					patch[`${checkpointIndex}/tasks/${taskIndex}/skipped`] = false;
+				}
+			});
+		});
+
+		updateTasks(listId, patch);
+	};
+
+	$: if (-1 === activeTask) {
+		tick().then(() => select(0, 0));
+	}
 </script>
 
 {#if !loading}
 	<main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none">
-		{#if $queue.totalTasks > 0}
+		{#if list.totalTasks > 0}
 			<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
 				Hello {name}!
 			</p>
-			{#each $queue.checkpoints as checkpoint, checkpointIndex}
+			{#each checkpoints as checkpoint, checkpointIndex}
 				{#if checkpoint.visible}
-					{#if isCheckpointOpen($queue.checkpoints, checkpointIndex)}
+					{#if checkpoint.open}
 						<CheckpointActive {checkpoint} />
 						<Connector />
 					{:else}
-						<CheckpointLocked {checkpoint} />
+						<CheckpointLocked first={checkpointIndex === firstDisabledCheckpoint} {checkpoint} />
 						<Connector />
 					{/if}
 
 					{#each checkpoint.tasks as task, taskIndex}
 						{#if task.visible}
-							{#if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
+							{#if taskIndex === list.activeTask && checkpointIndex === list.activeCheckpoint}
 								<UpNext />
 							{/if}
 
-							{#if !isCheckpointOpen($queue.checkpoints, checkpointIndex)}
+							{#if !checkpoint.open}
 								<TaskInactive {task} />
-							{:else if taskIndex === $queue.activeTask && checkpointIndex === $queue.activeCheckpoint}
-								<TaskActive {task} />
+							{:else if taskIndex === list.activeTask && checkpointIndex === list.activeCheckpoint}
+								<TaskActive
+									{task}
+									{totalActiveTasksRemaining}
+									on:skip={() => skip(checkpointIndex, taskIndex)}
+									on:done={() => done(checkpointIndex, taskIndex)}
+								/>
 							{:else if task.done}
-								<TaskDone {task} {taskIndex} {checkpointIndex} />
+								<TaskDone {task} on:revert={() => revert(checkpointIndex, taskIndex)} />
 							{:else}
-								<TaskPending {task} {taskIndex} {checkpointIndex} />
+								<TaskPending {task} on:select={() => select(checkpointIndex, taskIndex)} />
 							{/if}
 
-							{#if getLastTaskIndex(checkpoint) !== taskIndex}
+							{#if checkpoint.lastTask !== taskIndex}
 								<Connector done={task.done} />
 							{/if}
 						{/if}
@@ -90,13 +143,8 @@
 
 	<footer
 		class="px-6 pt-7 pb-5 w-full bottom-0 z-10 flex items-stretch justify-between border-t-2 border-b-slate-200 bg-white fixed"
-		out:slide
 	>
-		<Progress
-			checkpoints={$queue.checkpoints}
-			totalTasks={$queue.totalTasks}
-			totalRemaining={$queue.totalRemaining}
-		/>
+		<Progress {list} />
 	</footer>
 {:else}
 	<Loading />

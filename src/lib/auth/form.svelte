@@ -8,6 +8,7 @@
 		sendEmailVerification,
 		signInWithEmailAndPassword
 	} from 'firebase/auth';
+	import { updateUserSlug } from '../db.js';
 
 	let name = '';
 	let email = '';
@@ -34,14 +35,9 @@
 				await updateProfile(auth.currentUser, { displayName: name });
 				await sendEmailVerification(auth.currentUser);
 
-				const idToken = await auth.currentUser.getIdToken();
-				const uid = auth.currentUser.uid;
 				const slug = Math.random().toString(36).slice(-6).toLowerCase();
 
-				await fetch(`${apiUrl}/${uid}.json?auth=${idToken}`, {
-					method: 'PUT',
-					body: JSON.stringify({ slug })
-				});
+				await updateUserSlug(slug);
 			}
 			await goto('/');
 		} catch (error) {

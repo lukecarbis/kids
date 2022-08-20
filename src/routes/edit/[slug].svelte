@@ -1,4 +1,5 @@
 <script>
+	import { updateTasks, deleteList } from '$lib/db';
 	import { lists } from '$lib/stores/lists';
 	import { browser } from '$app/env';
 	import { auth, apiUrl } from '$lib/firebase';
@@ -12,8 +13,10 @@
 	import { goto } from '$app/navigation';
 
 	export let slug;
-	let { name, id, checkpoints } = JSON.parse(JSON.stringify($lists[slug]));
 
+	const listId = lists.getId(slug);
+
+	let { name, id, checkpoints } = JSON.parse(JSON.stringify($lists[listId]));
 	let savedCheckpoints = JSON.stringify(checkpoints);
 
 	let unsaved = false;
@@ -168,34 +171,34 @@
 	const removeList = async () => {
 		saving = true;
 
-		const idToken = await auth.currentUser.getIdToken();
-		const uid = auth.currentUser.uid;
-
-		await fetch(`${apiUrl}/${uid}/lists/${id}.json?auth=${idToken}`, {
-			method: 'DELETE'
-		});
-
-		delete $lists[slug];
+		deleteList(listId);
 
 		await goto('/');
 	};
 
 	const save = async () => {
+		const patch = {};
 		saving = true;
 
-		const idToken = await auth.currentUser.getIdToken();
-		const uid = auth.currentUser.uid;
-
-		await fetch(`${apiUrl}/${uid}/lists/${id}.json?auth=${idToken}`, {
-			method: 'PATCH',
-			body: JSON.stringify({ checkpoints })
+		checkpoints.forEach((checkpoint, checkpointIndex) => {
+			patch[`${checkpointIndex}/description`] = checkpoint.description;
+			patch[`${checkpointIndex}/hour`] = checkpoint.hour;
+			patch[`${checkpointIndex}/title`] = checkpoint.title;
+			checkpoint.tasks.forEach((task, taskIndex) => {
+				patch[`${checkpointIndex}/tasks/${taskIndex}/days`] = task.days;
+				patch[`${checkpointIndex}/tasks/${taskIndex}/description`] = task.description;
+				patch[`${checkpointIndex}/tasks/${taskIndex}/emoji`] = task.emoji;
+				patch[`${checkpointIndex}/tasks/${taskIndex}/title`] = task.title;
+			});
 		});
+
+		await updateTasks(listId, patch);
 
 		savedCheckpoints = JSON.stringify(checkpoints);
 		saving = false;
 		saved = true;
 
-		setTimeout(() => (saved = false), 1800);
+		setTimeout(() => (saved = false), 1500);
 	};
 
 	if (browser) {

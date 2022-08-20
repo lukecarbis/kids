@@ -2,26 +2,19 @@ import { apiUrl } from '$lib/firebase';
 
 export async function get({ params }) {
 	const { user, slug } = params;
-	const result = await fetch(`${apiUrl}/.json?orderBy="slug"&equalTo="${user}"&limitToFirst=1`);
-	const body = await result.json();
-	const uid = Object.keys(body).shift();
+	const uidResult = await fetch(`${apiUrl}/.json?orderBy="slug"&equalTo="${user}"&limitToFirst=1`);
+	const uidBody = await uidResult.json();
+	const uid = Object.keys(uidBody).shift();
 
-	const lists = Object.values(body).shift().lists;
-	const listIds = Object.keys(lists);
-
-	let list = {};
-	Object.values(lists).every((value, index) => {
-		if (value.slug === slug) {
-			list = value;
-			list['id'] = listIds[index];
-			return false;
-		}
-		return true;
-	});
+	const listIdResult = await fetch(
+		`${apiUrl}/${uid}/lists.json?orderBy="slug"&equalTo="${slug}"&limitToFirst=1`
+	);
+	const listIdBody = await listIdResult.json();
+	const listId = Object.keys(listIdBody).shift();
 
 	return {
 		status: 200,
 		headers: {},
-		body: { uid, list }
+		body: { uid, listId }
 	};
 }

@@ -1,20 +1,11 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queue';
-	import { updateTask } from '$lib/tasks';
-
-	const done = () => {
-		let checkpoints = [...$queue.checkpoints];
-
-		checkpoints[$queue.activeCheckpoint].tasks[$queue.activeTask].done = true;
-		updateTask($queue.activeCheckpoint, $queue.activeTask, { done: true });
-
-		setQueue(checkpoints);
-	};
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 </script>
 
 <button
 	class="flex-auto border-l border-b active:pt-5 active:border-b-transparent py-4 px-8 h-16 leading-4 text-emerald-500"
-	on:click={done}
+	on:click={() => dispatch('done')}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

@@ -1,24 +1,11 @@
 <script>
-	import { queue, getNextTask, resetSkippedTasks, setQueue } from '$lib/stores/queues';
-	import { updateTask } from '$lib/tasks';
-
-	const skip = () => {
-		let checkpoints = [...$queue.checkpoints];
-
-		checkpoints[$queue.activeCheckpoint].tasks[$queue.activeTask].skipped = true;
-		updateTask($queue.activeCheckpoint, $queue.activeTask, { skipped: true });
-
-		if (-1 === getNextTask($queue.checkpoints).task) {
-			checkpoints = resetSkippedTasks(checkpoints);
-		}
-
-		setQueue(checkpoints);
-	};
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 </script>
 
 <button
 	class="py-4 px-8 h-16 border-r border-b active:border-b-transparent active:pt-5 leading-4 text-sky-500 align-bottom"
-	on:click={skip}
+	on:click={() => dispatch('skip')}
 >
 	Skip
 	<svg

@@ -1,6 +1,7 @@
 <script>
-	import { queue, isCheckpointOpen } from '$lib/stores/queues';
 	import { slide } from 'svelte/transition';
+
+	export let first;
 	export let checkpoint;
 
 	const getHourString = (hour) => {
@@ -14,25 +15,10 @@
 
 		return hourString;
 	};
-
-	const getFirstDisabledCheckpoint = () => {
-		for (const [checkpointIndex, checkpoint] of $queue.checkpoints.entries()) {
-			if (isCheckpointOpen($queue.checkpoints, checkpointIndex)) {
-				continue;
-			}
-			return checkpoint;
-		}
-	};
-
-	$: isFirstDisabledCheckpoint = getFirstDisabledCheckpoint() === checkpoint;
 </script>
 
-<div
-	class="checkpoint locked mt-6 mb-2 text-center z-0"
-	class:up-next={isFirstDisabledCheckpoint}
-	transition:slide
->
-	{#if !$queue.remaining && isFirstDisabledCheckpoint}
+<div class="checkpoint locked mt-6 mb-2 text-center z-0" transition:slide>
+	{#if first}
 		<p class="bg-white leading-8 text-emerald-500 font-bold">That's all for now!</p>
 		<p class="bg-white pb-4 leading-8 text-slate-500">
 			Check back at <span class="font-bold">{getHourString(checkpoint.hour)}</span> for more!

@@ -1,18 +1,5 @@
-import { lists } from '$lib/stores/lists';
 import { hour } from '$lib/stores/time';
-import { derived, get } from 'svelte/store';
-
-export const queues = derived(
-	lists,
-	($lists) => {
-		const queues = {};
-		Object.entries($lists).forEach(([listId, list]) => {
-			queues[list.slug] = getQueue(list.checkpoints, list.name, listId);
-		});
-		return queues;
-	},
-	[]
-);
+import { get } from 'svelte/store';
 
 export const getNextTask = (checkpoints) => {
 	for (const [checkpointIndex, checkpoint] of checkpoints.entries()) {
@@ -29,50 +16,65 @@ export const getNextTask = (checkpoints) => {
 	return { checkpoint: -1, task: -1 };
 };
 
-export const getTasksRemaining = (checkpoints) => {
-	let remaining = 0;
+export const totalTasksRemainingInCheckpoint = (checkpoint) => {
+	let total = 0;
 
-	checkpoints.forEach((checkpoint, index) => {
-		if (!isCheckpointOpen(checkpoints, index)) {
-			return;
+	checkpoint.tasks.forEach((task) => {
+		if (!task.done && task.visible) {
+			total++;
 		}
-
-		checkpoint.tasks.forEach((task) => {
-			if (!task.done && task.visible) {
-				remaining++;
-			}
-		});
 	});
 
-	return remaining;
+	return total;
 };
 
-export const getTotalTasks = (checkpoints) => {
+export const totalTasksRemaining = (checkpoints) => {
+	let total = 0;
+
+	checkpoints.forEach((checkpoint) => {
+		total += totalTasksRemainingInCheckpoint(checkpoint);
+	});
+
+	return total;
+};
+
+export const totalTasksInCheckpoint = (checkpoint) => {
+	let total = 0;
+
+	checkpoint.tasks.forEach((task) => {
+		if (task.visible) {
+			total++;
+		}
+	});
+
+	return total;
+};
+
+export const totalTasks = (checkpoints) => {
 	let tasks = 0;
 
 	checkpoints.forEach((checkpoint) => {
-		checkpoint.tasks.forEach((task) => {
-			if (task.visible) {
-				tasks++;
-			}
-		});
+		tasks += totalTasksInCheckpoint(checkpoint);
 	});
 
 	return tasks;
 };
 
-export const getTotalTasksRemaining = (checkpoints) => {
-	let remaining = 0;
+export const totalActiveTasksRemaining = (checkpoints) => {
+	let total = 0;
 
-	checkpoints.forEach((checkpoint) => {
+	checkpoints.forEach((checkpoint, checkpointIndex) => {
+		if (!isCheckpointOpen(checkpoints, checkpointIndex)) {
+			return;
+		}
 		checkpoint.tasks.forEach((task) => {
 			if (!task.done && task.visible) {
-				remaining++;
+				total++;
 			}
 		});
 	});
 
-	return remaining;
+	return total;
 };
 
 export const getLastTaskIndex = (checkpoint) => {
@@ -83,13 +85,23 @@ export const getLastTaskIndex = (checkpoint) => {
 	}
 };
 
+const getFirstDisabledCheckpoint = (checkpoints) => {
+	for (const checkpointIndex of checkpoints.keys()) {
+		if (isCheckpointOpen(checkpoints, checkpointIndex)) {
+			continue;
+		}
+		return checkpointIndex;
+	}
+
+	return -1;
+};
+
 export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 	if (!parseInt(checkpointIndex)) {
 		return true;
 	}
 
 	const checkpoint = checkpoints[checkpointIndex];
-	const previousCheckpoint = checkpoints[checkpointIndex - 1];
 
 	const doneTasks = checkpoint.tasks.filter((task) => {
 		return task.done;
@@ -100,39 +112,37 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 		return true;
 	}
 
-	const previousDoneTasks = previousCheckpoint.tasks.filter((task) => {
-		return !task.visible || task.done;
-	});
-
-	return (
-		get(hour) >= checkpoint.hour && previousDoneTasks.length === previousCheckpoint.tasks.length
-	);
+	return get(hour) >= checkpoint.hour;
 };
 
-export const resetSkippedTasks = (checkpoints) => {
-	for (const checkpoint of checkpoints) {
-		for (let index = 0; index < checkpoint.tasks.length; index++) {
-			checkpoint.tasks[index].skipped = false;
-		}
-	}
+export const resetCheckpoints = (checkpoints) => {
+	checkpoints.forEach((checkpoint) => {
+		checkpoint.visible = true;
+		checkpoint.tasks.forEach((task) => {
+			task.skipped = false;
+			task.done = false;
+			task.visible = true;
+		});
+	});
+
 	return checkpoints;
 };
 
-export const resetQueue = (checkpoints, lastUpdated) => {
-	const day = new Date().getDay();
-	const date = new Date().toLocaleDateString('sv');
+export const getQueue = (checkpoints) => {
+	let nextTask = getNextTask(checkpoints);
 
-	// Reset if the data is from a previous day.
-	if (lastUpdated !== date) {
-		checkpoints.forEach((checkpoint) => {
-			checkpoint.visible = true;
-			checkpoint.tasks.forEach((task) => {
-				task.skipped = false;
-				task.done = false;
-				task.visible = true;
-			});
-		});
-	}
+	return {
+		activeCheckpoint: nextTask.checkpoint,
+		activeTask: nextTask.task,
+		totalTasksRemaining: totalTasksRemaining(checkpoints),
+		totalActiveTasksRemaining: totalActiveTasksRemaining(checkpoints),
+		totalTasks: totalTasks(checkpoints),
+		firstDisabledCheckpoint: getFirstDisabledCheckpoint(checkpoints)
+	};
+};
+
+export const getCheckpoints = (checkpoints) => {
+	const day = new Date().getDay();
 
 	// Filter out tasks that aren't set for today.
 	checkpoints.forEach((checkpoint) => {
@@ -142,29 +152,15 @@ export const resetQueue = (checkpoints, lastUpdated) => {
 		});
 	});
 
-	// Filter out checkpoints with no tasks.
-	checkpoints = checkpoints.map((checkpoint) => {
-		checkpoint.visible = !!getTotalTasks([checkpoint]);
+	// Add additional checkpoint info.
+	checkpoints = checkpoints.map((checkpoint, index) => {
+		checkpoint.visible = !!totalTasksInCheckpoint(checkpoint);
+		checkpoint.lastTask = getLastTaskIndex(checkpoint);
+		checkpoint.open = isCheckpointOpen(checkpoints, index);
+		checkpoint.totalTasksRemaining = totalTasksRemainingInCheckpoint(checkpoint);
+		checkpoint.totalTasks = totalTasksInCheckpoint(checkpoint);
 		return checkpoint;
 	});
 
 	return checkpoints;
-};
-
-export const getQueue = (checkpoints, name, id) => {
-	let nextTask = getNextTask(checkpoints);
-	if (-1 === nextTask.task) {
-		checkpoints = resetSkippedTasks(checkpoints);
-		nextTask = getNextTask(checkpoints);
-	}
-
-	return {
-		name: name,
-		id: id,
-		activeCheckpoint: nextTask.checkpoint,
-		activeTask: nextTask.task,
-		remaining: getTasksRemaining(checkpoints),
-		totalRemaining: getTotalTasksRemaining(checkpoints),
-		totalTasks: getTotalTasks(checkpoints)
-	};
 };

@@ -1,7 +1,6 @@
 <script>
-	import { queues, isCheckpointOpen, getLastTaskIndex, resetQueue } from '$lib/stores/queues';
-	import { lists, getListId } from '$lib/stores/lists';
-	import { updateTask, updateList } from '$lib/db';
+	import { lists } from '$lib/stores/lists';
+	import { updateTask } from '$lib/db';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-progress.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
@@ -10,37 +9,29 @@
 	import TaskToggle from '$lib/task/task-toggle.svelte';
 
 	export let slug;
-	const listId = getListId(slug);
-	const list = $lists[listId];
-	const queue = $queues[slug];
+	const listId = lists.getId(slug);
 
+	$: list = $lists[listId];
 	$: name = $lists[listId].name;
-	$: checkpoints = resetQueue($lists[listId].checkpoints, list.lastUpdated);
-
-	const date = new Date().toLocaleDateString('sv');
-
-	if (list.lastUpdated !== date) {
-		list.lastUpdated = date;
-		updateList(listId, list);
-	}
+	$: checkpoints = $lists[listId].checkpoints;
 </script>
 
 <Nav
-	title="{name}: Completed {queue.totalTasks - queue.totalRemaining} / {queue.totalTasks} Tasks"
+	title="{name}: Completed {list.totalTasks - list.totalTasksRemaining} / {list.totalTasks} Tasks"
 	back="/"
 />
 
 <main class="max-w-screen-sm mx-auto mt-24 pb-20 px-6 relative font-mono select-none">
-	{#if queue.totalTasks > 0}
+	{#if list.totalTasks > 0}
 		{#each checkpoints as checkpoint, checkpointIndex}
 			{#if checkpoint.visible}
-				<Checkpoint {checkpoint} locked={!isCheckpointOpen(checkpoints, checkpointIndex)} />
+				<Checkpoint {checkpoint} open={!checkpoint.open} />
 
 				<Connector />
 
 				{#each checkpoint.tasks as task, taskIndex}
 					{#if task.visible}
-						{#if !isCheckpointOpen(checkpoints, checkpointIndex)}
+						{#if !checkpoint.open}
 							<TaskInactive {task} />
 						{:else}
 							<TaskToggle
@@ -51,7 +42,7 @@
 							/>
 						{/if}
 
-						{#if getLastTaskIndex(checkpoint) !== taskIndex}
+						{#if checkpoint.lastTask !== taskIndex}
 							<Connector done={task.done} />
 						{/if}
 					{/if}

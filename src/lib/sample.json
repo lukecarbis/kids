@@ -64,7 +64,7 @@
 		},
 		{
 			"description": "Time to get ready for bed.",
-			"fromIndex": 8,
+			"hour": 16,
 			"title": "Good night!",
 			"tasks": [
 				{

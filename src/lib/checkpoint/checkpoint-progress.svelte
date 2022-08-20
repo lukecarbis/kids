@@ -1,8 +1,6 @@
 <script>
-	import { getTotalTasks, getTotalTasksRemaining } from '$lib/stores/queues';
-
 	export let checkpoint;
-	export let locked;
+	export let open;
 
 	const getHourString = () => {
 		let hourString = checkpoint.hour + ' AM';
@@ -16,8 +14,8 @@
 		return hourString;
 	};
 
-	$: tasksTotal = getTotalTasks([checkpoint]);
-	$: tasksDone = tasksTotal - getTotalTasksRemaining([checkpoint]);
+	$: tasksDone = checkpoint.totalTasks - checkpoint.totalTasksRemaining;
+	$: tasksTotal = checkpoint.totalTasks;
 
 	const hour = getHourString();
 </script>
@@ -47,10 +45,10 @@
 			{new Date().toLocaleString('default', { dateStyle: 'long' })}
 		</p>
 	{/if}
-	<p class="bg-white text-xl pt-2 pb-4" class:text-sky-500={!locked} class:text-slate-400={locked}>
+	<p class="bg-white text-xl pt-2 pb-4" class:text-sky-500={open} class:text-slate-400={!open}>
 		{checkpoint.title}
 	</p>
-	{#if !locked}
+	{#if open}
 		<p class="text-sm text-slate-400 border-2 inline-block py-1 px-3 rounded-lg">
 			{tasksDone} / {tasksTotal}
 		</p>

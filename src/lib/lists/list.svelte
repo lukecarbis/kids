@@ -6,34 +6,34 @@
 	export let list = {
 		name: '',
 		slug: '',
-		lastUpdated: null,
-		checkpoints: {}
-	};
-	export let queue = {
+		lastUpdated: '',
 		checkpoints: [],
 		totalTasks: 0,
-		totalRemaining: 0
+		totalTasksRemaining: 0
 	};
+
+	$: name = list.name;
+	$: slug = list.slug;
+	$: lastUpdated = list.lastUpdated;
+	$: checkpoints = list.checkpoints;
+	$: totalTasks = list.totalTasks;
+	$: totalTasksRemaining = list.totalTasksRemaining;
 </script>
 
 <div class="flex-grow w-full border-2 border-b-0 rounded-t-lg p-4">
 	<div class="flex mb-6">
 		<h2 class="block flex-grow font-bold">
-			{list.name}
+			{name}
 		</h2>
 		<p class="text-slate-600 text-sm">
 			<span class="hidden sm:inline">Completed</span>
-			{queue.totalTasks - queue.totalRemaining} / {queue.totalTasks}
+			{totalTasks - totalTasksRemaining} / {totalTasks}
 			tasks
 		</p>
 	</div>
-	<Progress
-		checkpoints={list.checkpoints}
-		totalTasks={queue.totalTasks}
-		totalRemaining={queue.totalRemaining}
-	/>
+	<Progress {list} />
 </div>
-{#if !list.lastUpdated}
-	<Share name={list.name} />
+{#if !lastUpdated}
+	<Share {name} />
 {/if}
-<Actions slug={list.slug} />
+<Actions {slug} />

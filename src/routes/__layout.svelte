@@ -38,15 +38,13 @@
 			unsubscribe();
 			unsubscribe = onValue(ref(db, user.uid), (snapshot) => {
 				const data = snapshot.val();
-				console.log('onValue', data);
 
-				if (!data.lists || !data.slug) {
-					console.error('Not allowed.');
-					return;
+				if (!data.lists) {
+					data.lists = [];
 				}
 
 				meta.set({ slug: data.slug });
-				lists.set(data.lists);
+				lists.reset(data.lists);
 
 				loading = false;
 				loaded = true;

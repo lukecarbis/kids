@@ -1,10 +1,10 @@
 <script>
-	import { lists, getListId } from '$lib/stores/lists';
+	import { lists } from '$lib/stores/lists';
 	import Nav from '$lib/nav/nav-edit.svelte';
 	import New from '$lib/new/new.svelte';
 
 	export let slug;
-	const listId = getListId(slug);
+	const listId = lists.getId(slug);
 </script>
 
 <Nav title="" back="/" />

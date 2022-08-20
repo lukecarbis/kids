@@ -1,21 +1,12 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queues';
 	import LongPress from '$lib/task/long-press.svelte';
-	import { updateTask } from '$lib/tasks';
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
 	export let task;
-	export let taskIndex;
-	export let checkpointIndex;
-
-	const revert = () => {
-		const checkpoints = [...$queue.checkpoints];
-		checkpoints[checkpointIndex].tasks[taskIndex].done = false;
-		updateTask(checkpointIndex, taskIndex, { done: false, skipped: true });
-		setQueue(checkpoints);
-	};
 </script>
 
-<LongPress cb={revert} timeout="1200">
+<LongPress cb={() => dispatch('revert')} timeout="1200">
 	<div
 		class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-50 border-emerald-400 items-stretch justify-between rounded-lg transition-transform"
 	>

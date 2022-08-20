@@ -1,37 +1,11 @@
 <script>
-	import { queue, setQueue } from '$lib/stores/queues';
-	import { updateTasks } from '$lib/tasks';
-
-	export let taskIndex;
-	export let checkpointIndex;
-
-	const select = () => {
-		const checkpoints = [...$queue.checkpoints];
-		const patch = {};
-
-		checkpoints.forEach((checkpoint, ci) => {
-			if (ci < checkpointIndex) {
-				return;
-			}
-			checkpoint.tasks.forEach((task, ti) => {
-				if (ti < taskIndex && ci === checkpointIndex) {
-					return;
-				}
-				if (!task.done) {
-					checkpoints[ci].tasks[ti].skipped = false;
-					patch[`${ci}/tasks/${ti}/skipped`] = false;
-				}
-			});
-		});
-
-		updateTasks(patch);
-		setQueue(checkpoints);
-	};
+	import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 </script>
 
 <button
 	class="border border-b-2 active:mt-px active:border-b rounded-lg px-4 py-1"
-	on:click={select}
+	on:click={() => dispatch('select')}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"

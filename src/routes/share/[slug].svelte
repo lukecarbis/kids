@@ -1,12 +1,12 @@
 <script>
-	import { lists, getListId } from '$lib/stores/lists';
+	import { lists } from '$lib/stores/lists';
 	import { meta } from '$lib/stores/meta';
 	import { updateSlug } from '$lib/db';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import { goto } from '$app/navigation';
 
 	export let slug;
-	const listId = getListId(slug);
+	const listId = lists.getId(slug);
 
 	$: name = $lists[listId].name;
 

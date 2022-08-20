@@ -4,6 +4,8 @@
 	export let disabled = false;
 	export let confirm = false;
 
+	const dispatch = createEventDispatcher();
+
 	const handleClick = () => {
 		if (!confirm) {
 			dispatch('confirm');
@@ -14,8 +16,6 @@
 		confirm = false;
 		dispatch('remove');
 	};
-
-	const dispatch = createEventDispatcher();
 </script>
 
 <div tabindex="0" on:focusout={() => (confirm = false)}>

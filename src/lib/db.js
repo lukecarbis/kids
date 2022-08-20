@@ -1,7 +1,7 @@
 import { auth, db } from '$lib/firebase';
 import { get } from 'svelte/store';
 import { meta } from '$lib/stores/meta';
-import { child, push, ref, set, update } from 'firebase/database';
+import { push, ref, remove, set, update } from 'firebase/database';
 
 const getUid = () => {
 	let { uid } = get(meta);
@@ -36,6 +36,12 @@ export const updateSlug = async (listId, slug) => {
 	await set(ref(db, `${uid}/lists/${listId}/slug`), slug);
 };
 
+export const updateUserSlug = async (slug) => {
+	const uid = getUid();
+
+	await set(ref(db, `${uid}/slug`), slug);
+};
+
 export const updateList = async (listId, { checkpoints, lastUpdated }) => {
 	await updateDate(listId, lastUpdated);
 
@@ -64,4 +70,9 @@ export const newList = async (list) => {
 
 export const newListSlug = () => {
 	return Math.random().toString(36).slice(-6).toLowerCase();
+};
+
+export const deleteList = async (listId) => {
+	const uid = getUid();
+	await remove(ref(db, `${uid}/lists/${listId}`));
 };

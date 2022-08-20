@@ -1,9 +1,9 @@
 <script>
-	import { queue } from '$lib/stores/queues';
 	import { slide } from 'svelte/transition';
 	import Skip from '$lib/task/buttons/skip.svelte';
 	import Done from '$lib/task/buttons/done.svelte';
 	export let task;
+	export let totalActiveTasksRemaining;
 </script>
 
 <div
@@ -20,8 +20,8 @@
 </div>
 
 <div class="bg-white rounded-b-lg border-2 border-t-0 flex" transition:slide>
-	{#if $queue.remaining > 1}
-		<Skip />
+	{#if totalActiveTasksRemaining > 1}
+		<Skip on:skip />
 	{/if}
-	<Done />
+	<Done on:done />
 </div>

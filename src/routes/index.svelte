@@ -1,7 +1,6 @@
 <script>
 	import { auth } from '$lib/firebase';
 	import { lists } from '$lib/stores/lists';
-	import { queues } from '$lib/stores/queues';
 	import Nav from '$lib/nav/nav-main.svelte';
 	import Welcome from '$lib/welcome/welcome.svelte';
 	import List from '$lib/lists/list.svelte';
@@ -22,7 +21,7 @@
 	</p>
 	{#if Object.values($lists).length}
 		{#each Object.values($lists) as list}
-			<List {list} queue={$queues[list.slug]} />
+			<List {list} />
 		{/each}
 		<a
 			href="/new"
