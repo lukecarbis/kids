@@ -1,6 +1,6 @@
 import { derived, get, writable } from 'svelte/store';
 import { updateList } from '$lib/db';
-import { getQueue, getCheckpoints, resetCheckpoints } from '$lib/stores/queues';
+import { getQueue, getCheckpoints, resetCheckpoints } from '$lib/stores/queue';
 
 function createLists() {
 	const store = writable({});

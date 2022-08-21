@@ -104,7 +104,11 @@
 						<CheckpointActive {checkpoint} />
 						<Connector />
 					{:else}
-						<CheckpointLocked first={checkpointIndex === firstDisabledCheckpoint} {checkpoint} />
+						<CheckpointLocked
+							{checkpoint}
+							showTime={checkpointIndex === firstDisabledCheckpoint &&
+								!checkpoints[checkpointIndex - 1].totalTasksRemaining}
+						/>
 						<Connector />
 					{/if}
 

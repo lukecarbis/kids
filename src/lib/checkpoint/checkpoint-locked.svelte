@@ -1,7 +1,7 @@
 <script>
 	import { slide } from 'svelte/transition';
 
-	export let first;
+	export let showTime;
 	export let checkpoint;
 
 	const getHourString = (hour) => {
@@ -18,7 +18,7 @@
 </script>
 
 <div class="checkpoint locked mt-6 mb-2 text-center z-0" transition:slide>
-	{#if first}
+	{#if showTime}
 		<p class="bg-white leading-8 text-emerald-500 font-bold">That's all for now!</p>
 		<p class="bg-white pb-4 leading-8 text-slate-500">
 			Check back at <span class="font-bold">{getHourString(checkpoint.hour)}</span> for more!
