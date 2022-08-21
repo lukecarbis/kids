@@ -11,20 +11,26 @@
 	$: done = list.activeTask === -1;
 	$: percentDone = 100 - (list.totalTasksRemaining / list.totalTasks) * 100;
 	$: progressLocked = -1 === list.activeCheckpoint && percentDone < 100;
-	$: checkpointPositions = [];
 
-	let previousPosition = 0;
-	$: for (const checkpoint of checkpoints) {
-		if (!checkpoint.visible) {
-			continue;
+	const getCheckpointPositions = (checkpoints) => {
+		const positions = [];
+		let previousPosition = 0;
+
+		for (const checkpoint of checkpoints) {
+			if (!checkpoint.visible) {
+				continue;
+			}
+			let position = (checkpoint.totalTasks / list.totalTasks) * 100;
+			position = position + previousPosition;
+			previousPosition = position;
+			positions.push(position);
 		}
-		let position = (checkpoint.totalTasks / list.totalTasks) * 100;
-		position = position + previousPosition;
-		previousPosition = position;
-		checkpointPositions.push(position);
-	}
 
-	$: checkpointPositions.pop();
+		positions.pop();
+		return positions;
+	};
+
+	$: checkpointPositions = getCheckpointPositions(checkpoints);
 </script>
 
 <div class="bg-slate-200 h-4 w-full rounded-full relative">

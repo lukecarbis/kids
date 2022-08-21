@@ -1,7 +1,7 @@
 <script>
 	import '../app.css';
 	import { auth, db } from '$lib/firebase';
-	import { get, onValue, ref } from 'firebase/database';
+	import { onValue, ref } from 'firebase/database';
 	import { lists } from '$lib/stores/lists';
 	import { meta } from '$lib/stores/meta';
 	import Nav from '$lib/nav/nav-main.svelte';
@@ -34,11 +34,9 @@
 			}
 
 			user.getIdToken().then(() => {
-				get(ref(db, user.uid)).then(setStoresWithDBSnapshot);
+				unsubscribe();
+				unsubscribe = onValue(ref(db, user.uid), setStoresWithDBSnapshot);
 			});
-
-			unsubscribe();
-			unsubscribe = onValue(ref(db, user.uid), setStoresWithDBSnapshot);
 		}
 
 		// Not signed in.
