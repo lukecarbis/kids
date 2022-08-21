@@ -7,16 +7,14 @@
 		activeCheckpoint: 0
 	};
 
-	let checkpoints = list.checkpoints;
-
+	$: checkpoints = list.checkpoints;
 	$: done = list.activeTask === -1;
 	$: percentDone = 100 - (list.totalTasksRemaining / list.totalTasks) * 100;
 	$: progressLocked = -1 === list.activeCheckpoint && percentDone < 100;
+	$: checkpointPositions = [];
 
-	const checkpointPositions = [];
 	let previousPosition = 0;
-
-	for (const checkpoint of checkpoints) {
+	$: for (const checkpoint of checkpoints) {
 		if (!checkpoint.visible) {
 			continue;
 		}
@@ -26,7 +24,7 @@
 		checkpointPositions.push(position);
 	}
 
-	checkpointPositions.pop();
+	$: checkpointPositions.pop();
 </script>
 
 <div class="bg-slate-200 h-4 w-full rounded-full relative">
@@ -44,7 +42,7 @@
 			class:bg-emerald-300={done}
 		>
 			{#each checkpointPositions as checkpointPosition, index}
-				{#if checkpoints[index + 1].open}
+				{#if checkpoints[index + 1] && checkpoints[index + 1].open}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						class="h-4 w-4 fill-slate-200 -top-5 -ml-1.5 absolute"
