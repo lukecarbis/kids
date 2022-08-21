@@ -1,6 +1,7 @@
 import { derived, get, writable } from 'svelte/store';
 import { updateList } from '$lib/db';
 import { getQueue, getCheckpoints, resetCheckpoints } from '$lib/stores/queue';
+import { hour } from '$lib/stores/time';
 
 function createLists() {
 	const store = writable({});
@@ -55,3 +56,6 @@ function createLists() {
 }
 
 export const lists = createLists();
+
+// Refresh lists when the hour changes.
+hour.subscribe(() => lists.set(get(lists)));
