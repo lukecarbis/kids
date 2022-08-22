@@ -6,6 +6,7 @@
 
 	export let id;
 	export let title;
+	export let description;
 	export let emoji;
 	export let updated = false;
 	export let days = [0, 1, 1, 1, 1, 1, 0];
@@ -36,7 +37,14 @@
 	<div class="flex flex-grow flex-wrap gap-3">
 		<input
 			class="w-full h-10 text-center border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+			placeholder="Task Title"
 			bind:value={title}
+			on:focus={(event) => setTimeout(() => event.target.select(), 10)}
+		/>
+		<input
+			class="w-full h-10 text-center text-sm border-2 bg-slate-50 rounded-lg px-2 py-1 focus:border-sky-400 focus:drop-shadow-none focus:outline-none"
+			placeholder="A short description."
+			bind:value={description}
 			on:focus={(event) => setTimeout(() => event.target.select(), 10)}
 		/>
 		<div class="flex flex-grow h-10">

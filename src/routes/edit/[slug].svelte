@@ -2,7 +2,6 @@
 	import { updateTasks, deleteList } from '$lib/db';
 	import { lists } from '$lib/stores/lists';
 	import { browser } from '$app/env';
-	import { auth, apiUrl } from '$lib/firebase';
 	import Actions from '$lib/task/actions.svelte';
 	import Remove from '$lib/task/buttons/remove.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-edit.svelte';
@@ -16,7 +15,7 @@
 
 	const listId = lists.getId(slug);
 
-	let { name, id, checkpoints } = JSON.parse(JSON.stringify($lists[listId]));
+	let { name, checkpoints } = JSON.parse(JSON.stringify($lists[listId]));
 	let savedCheckpoints = JSON.stringify(checkpoints);
 
 	let unsaved = false;
@@ -273,6 +272,7 @@
 						id="{checkpointIndex}-{taskIndex}"
 						bind:updated={tasks[taskIndex].updated}
 						bind:title={tasks[taskIndex].title}
+						bind:description={tasks[taskIndex].description}
 						bind:emoji={tasks[taskIndex].emoji}
 						bind:days={tasks[taskIndex].days}
 					/>
