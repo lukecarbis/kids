@@ -9,37 +9,34 @@
 	import { newList, newListSlug } from '$lib/db';
 	import { goto } from '$app/navigation';
 
-	export let fromListId = false;
-
 	let name = '';
 	let loading = false;
-	let useSampleData = !fromListId;
-
-	const newSlug = newListSlug();
+	let data = 'sample';
 
 	const saveNewList = async () => {
 		loading = true;
 
-		const list = useSampleData ? sample : empty;
+		const list = {};
 
 		list.name = name;
-		list.slug = newSlug;
+		list.slug = newListSlug();
 		list.lastUpdated = false;
 
-		if (fromListId) {
-			list.checkpoints = $lists[fromListId].checkpoints;
+		if ('sample' === data) {
+			list.checkpoints = sample.checkpoints;
+		} else if ('empty' === data) {
+			list.checkpoints = empty.checkpoints;
+		} else {
+			list.checkpoints = $lists[data].checkpoints;
 		}
 
 		await newList(list);
-
-		loading = false;
-		await goto(`/edit/${newSlug}`);
+		await goto(`/edit/${list.slug}`);
 	};
 </script>
 
 <Name bind:name />
 <Next on:next={saveNewList} {name} {loading} />
-{#if !fromListId}
-	<Sample bind:useSampleData />
-{/if}
+<Sample bind:data />
+
 <Disclaimer />
