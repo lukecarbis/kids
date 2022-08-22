@@ -24,6 +24,11 @@ export const updateTasks = async (listId, patch) => {
 	await update(ref(db, `${uid}/lists/${listId}/checkpoints`), patch);
 };
 
+export const setTasks = async (listId, checkpoints) => {
+	const uid = getUid();
+	await set(ref(db, `${uid}/lists/${listId}/checkpoints`), checkpoints);
+};
+
 export const updateDate = async (listId, date) => {
 	const uid = getUid();
 

@@ -1,5 +1,5 @@
 <script>
-	import { updateTasks, deleteList } from '$lib/db';
+	import { setTasks, deleteList } from '$lib/db';
 	import { lists } from '$lib/stores/lists';
 	import { browser } from '$app/env';
 	import Actions from '$lib/task/actions.svelte';
@@ -176,24 +176,11 @@
 	};
 
 	const save = async () => {
-		const patch = {};
 		saving = true;
 
-		checkpoints.forEach((checkpoint, checkpointIndex) => {
-			patch[`${checkpointIndex}/description`] = checkpoint.description;
-			patch[`${checkpointIndex}/hour`] = checkpoint.hour;
-			patch[`${checkpointIndex}/title`] = checkpoint.title;
-			checkpoint.tasks.forEach((task, taskIndex) => {
-				patch[`${checkpointIndex}/tasks/${taskIndex}/days`] = task.days;
-				patch[`${checkpointIndex}/tasks/${taskIndex}/description`] = task.description;
-				patch[`${checkpointIndex}/tasks/${taskIndex}/emoji`] = task.emoji;
-				patch[`${checkpointIndex}/tasks/${taskIndex}/title`] = task.title;
-			});
-		});
-
-		await updateTasks(listId, patch);
-
+		await setTasks(listId, checkpoints);
 		savedCheckpoints = JSON.stringify(checkpoints);
+
 		saving = false;
 		saved = true;
 
