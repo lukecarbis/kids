@@ -14,9 +14,7 @@
 	let loading = false;
 
 	const getUrl = (listSlug) => {
-		return (
-			window.location.protocol + window.location.host + '/' + $meta.slug + '/' + listSlug + '/'
-		);
+		return `${window.location.protocol}//${window.location.host}/${$meta.slug}/${listSlug}/`;
 	};
 
 	let url = getUrl(slug);
