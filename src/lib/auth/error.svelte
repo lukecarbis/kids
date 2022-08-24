@@ -3,17 +3,17 @@
 </script>
 
 {#if errorCode === 'auth/invalid-email'}
-	<p class="text-rose-500 text-sm mb-6 text-center">Invalid email.</p>
+	Invalid email.
 {:else if errorCode === 'auth/user-disabled'}
-	<p class="text-rose-500 text-sm mb-6 text-center">This account is disable.</p>
+	This account is disable.
 {:else if errorCode === 'auth/email-already-in-use'}
-	<p class="text-rose-500 text-sm mb-6 text-center">Email already in use.</p>
+	Email already in use.
 {:else if errorCode === 'auth/weak-password'}
-	<p class="text-rose-500 text-sm mb-6 text-center">Your password sucks.</p>
+	Your password sucks.
 {:else if errorCode === 'auth/too-many-requests'}
-	<p class="text-rose-500 text-sm mb-6 text-center">Too many attempts. Try later.</p>
+	Too many attempts. Try later.
 {:else if errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password'}
-	<p class="text-rose-500 text-sm mb-6 text-center">Wrong password. Try again?</p>
+	Wrong password. Try again?
 {:else}
-	<p class="text-rose-500 text-sm mb-6 text-center">Unable to sign in.</p>
+	An error occurred. Try again?
 {/if}

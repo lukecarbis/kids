@@ -14,7 +14,12 @@
 
 <main id="X" class="flex flex-wrap font-mono max-w-screen-sm mx-auto mt-24 pb-8  px-6">
 	<p class="mb-2 pr-6 flex-grow leading-8">
-		Happy {dayOfWeek}, {auth.currentUser.displayName}!
+		Happy {dayOfWeek},
+		<a
+			href="/account"
+			class="underline underline-offset-2 decoration-2 decoration-sky-500 hover:decoration-4"
+			>{auth.currentUser.displayName}</a
+		>!
 	</p>
 	<p class="mb-6 flex-0 leading-8 text-right text-slate-400 text-sm whitespace-nowrap">
 		{dayOfYear}

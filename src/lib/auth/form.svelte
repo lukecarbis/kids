@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import Error from '$lib/auth/error.svelte';
-	import { auth, apiUrl } from '$lib/firebase';
+	import { auth } from '$lib/firebase';
 	import {
 		createUserWithEmailAndPassword,
 		updateProfile,
@@ -73,7 +73,9 @@
 			placeholder="Password"
 		/>
 		{#if errorCode}
-			<Error {errorCode} />
+			<p class="text-rose-500 text-sm mb-6 text-center">
+				<Error {errorCode} />
+			</p>
 		{/if}
 		<button
 			type="submit"
