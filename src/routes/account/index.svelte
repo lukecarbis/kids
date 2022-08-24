@@ -1,21 +1,26 @@
 <script>
 	import { auth } from '$lib/firebase';
+	import { deleteUid } from '$lib/db';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import Error from '$lib/auth/error.svelte';
 	import {
+		deleteUser,
 		sendEmailVerification,
 		signInWithEmailAndPassword,
 		updateEmail,
 		updatePassword,
 		updateProfile
 	} from 'firebase/auth';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/env';
 
 	let name = auth.currentUser.displayName;
 	let email = auth.currentUser.email;
 	let password = '';
 	let newPassword = '';
 	let repeatPassword = '';
-	let saving = false;
+	let loading = false;
+	let confirmDelete = false;
 
 	$: disabled = newPassword.length && newPassword !== repeatPassword;
 	$: if (newPassword === '') {
@@ -26,7 +31,7 @@
 	let error = '';
 
 	const save = async () => {
-		saving = true;
+		loading = true;
 		status = '';
 		error = '';
 
@@ -55,7 +60,16 @@
 			newPassword = '';
 		}
 
-		saving = false;
+		loading = false;
+	};
+
+	const remove = async () => {
+		loading = true;
+		await deleteUid();
+		await deleteUser(auth.currentUser);
+		if (browser) {
+			await goto('/sign-in');
+		}
 	};
 </script>
 
@@ -130,13 +144,12 @@
 			<p class="block mb-4 text-sm">Your password is required to update your account details.</p>
 		</div>
 	{/if}
-	{#if !saving}
+	{#if !loading}
 		<button
 			class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg"
 			on:click={save}
-			class:active:border-b={!disabled}
-			class:active:mb-px={!disabled}
-			class:active:mt-px={!disabled}
+			class:active:border-b-2={!disabled}
+			class:active:my-px={!disabled}
 			class:bg-slate-300={disabled}
 			class:border-slate-400={disabled}
 			class:text-slate-100={disabled}
@@ -158,5 +171,34 @@
 				d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
 			/>
 		</svg>
+	{/if}
+	{#if !loading}
+		{#if !confirmDelete}
+			<button
+				class="block mt-8 text-amber-500 hover:text-rose-500 hover:underline underline-offset-2 decoration-2"
+				on:click={() => (confirmDelete = true)}
+			>
+				Delete my account
+			</button>
+		{/if}
+		{#if confirmDelete}
+			<div class="border-2 rounded-lg p-4 mt-8 text-center">
+				<p class="text-rose-500 mb-4 text-sm">
+					Are you sure you want to permanently delete your account?
+				</p>
+				<button
+					class="py-2 px-6 mr-2 inline-block text-center font-bold border-2 border-b-4 border-rose-600 bg-rose-400 text-white rounded-lg active:border-b-2"
+					on:click={remove}
+				>
+					Yes!
+				</button>
+				<button
+					class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg active:border-b-2"
+					on:click={() => (confirmDelete = false)}
+				>
+					No!
+				</button>
+			</div>
+		{/if}
 	{/if}
 </main>

@@ -81,3 +81,8 @@ export const deleteList = async (listId) => {
 	const uid = getUid();
 	await remove(ref(db, `${uid}/lists/${listId}`));
 };
+
+export const deleteUid = async () => {
+	const uid = getUid();
+	await remove(ref(db, uid));
+};
