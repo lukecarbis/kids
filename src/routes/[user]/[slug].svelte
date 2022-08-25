@@ -2,6 +2,7 @@
 	import { meta } from '$lib/stores/meta';
 	import { lists } from '$lib/stores/lists';
 	import { updateTask, updateTasks } from '$lib/db';
+	import Connected from '$lib/auth/connected.svelte';
 	import Loading from '$lib/welcome/loading.svelte';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
@@ -23,6 +24,7 @@
 	meta.set({ uid });
 
 	let loading = true;
+	let connected = false;
 
 	const defaults = {
 		name: '',
@@ -53,6 +55,10 @@
 		lists.reset(data);
 
 		loading = false;
+	});
+
+	onValue(ref(db, '.info/connected'), (snapshot) => {
+		connected = snapshot.val();
 	});
 
 	const skip = (ci, ti) => {
@@ -87,17 +93,30 @@
 		updateTasks(listId, patch);
 	};
 
+	const startLoading = (ref) => {
+		loading.push(ref);
+		loading = loading;
+	};
+
+	const endLoading = (ref) => {
+		const index = loading.indexOf(ref);
+		delete loading[index];
+		loading = loading;
+	};
+
 	$: if (-1 === activeTask) {
 		tick().then(() => select(0, 0));
 	}
 </script>
 
 {#if !loading}
-	<main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none">
+	<p
+		class="sticky border-b-2 border-slate-100 top-0 py-4 bg-white z-10 text-center underline underline-offset-2 decoration-2 decoration-sky-500 font-mono select-none"
+	>
+		Hello {name}!
+	</p>
+	<main class="max-w-screen-sm mx-auto pb-24 px-6 relative font-mono select-none">
 		{#if list.totalTasks > 0}
-			<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
-				Hello {name}!
-			</p>
 			{#each checkpoints as checkpoint, checkpointIndex}
 				{#if checkpoint.visible}
 					{#if checkpoint.open}
@@ -153,3 +172,4 @@
 {:else}
 	<Loading />
 {/if}
+<Connected {connected} />

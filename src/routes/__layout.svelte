@@ -4,7 +4,6 @@
 	import { onValue, ref } from 'firebase/database';
 	import { lists } from '$lib/stores/lists';
 	import { meta } from '$lib/stores/meta';
-	import Connected from '$lib/auth/connected.svelte';
 	import Nav from '$lib/nav/nav-main.svelte';
 	import Loading from '$lib/welcome/loading.svelte';
 	import { page } from '$app/stores';
@@ -20,7 +19,6 @@
 	// Handle auth.
 	let loading = true;
 	let loaded = false;
-	let connected = false;
 
 	let unsubscribe = () => {};
 
@@ -50,10 +48,6 @@
 		}
 	});
 
-	onValue(ref(db, '.info/connected'), (snapshot) => {
-		connected = snapshot.val();
-	});
-
 	const setStoresWithDBSnapshot = (snapshot) => {
 		const data = snapshot.val();
 
@@ -75,4 +69,3 @@
 	<Nav />
 	<Loading />
 {/if}
-<Connected {connected} />

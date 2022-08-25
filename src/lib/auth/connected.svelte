@@ -6,7 +6,7 @@
 </script>
 
 <span
-	class="p-2 fixed bottom-2 left-4 rounded-lg"
+	class="p-2 fixed top-2 left-4 rounded-lg z-50"
 	on:mouseenter={() => (hover = true)}
 	on:mouseleave={() => (hover = false)}
 >

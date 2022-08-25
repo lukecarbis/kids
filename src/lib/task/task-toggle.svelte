@@ -1,6 +1,7 @@
 <script>
 	import Toggle from '$lib/task/buttons/toggle.svelte';
 	export let task;
+	export let loading = false;
 </script>
 
 <div
@@ -27,5 +28,5 @@
 		{/if}
 		{task.title}
 	</h3>
-	<Toggle bind:done={task.done} on:toggle />
+	<Toggle bind:done={task.done} {loading} on:toggle />
 </div>

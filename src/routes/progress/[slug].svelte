@@ -11,9 +11,22 @@
 	export let slug;
 	const listId = lists.getId(slug);
 
+	$: loading = [];
+
 	$: list = $lists[listId];
 	$: name = $lists[listId].name;
 	$: checkpoints = $lists[listId].checkpoints;
+
+	const startLoading = (ref) => {
+		loading.push(ref);
+		loading = loading;
+	};
+
+	const endLoading = (ref) => {
+		const index = loading.indexOf(ref);
+		delete loading[index];
+		loading = loading;
+	};
 </script>
 
 <Nav
@@ -34,14 +47,17 @@
 						{#if !checkpoint.open}
 							<TaskInactive {task} />
 						{:else}
+							{@const ref = [checkpointIndex, taskIndex].join('/')}
 							<TaskToggle
 								bind:task
-								on:toggle={({ detail: done }) => {
-									updateTask(listId, checkpointIndex, taskIndex, { done });
+								loading={loading.indexOf(ref) !== -1}
+								on:toggle={async ({ detail: done }) => {
+									startLoading(ref);
+									await updateTask(listId, checkpointIndex, taskIndex, { done });
+									endLoading(ref);
 								}}
 							/>
 						{/if}
-
 						{#if checkpoint.lastTask !== taskIndex}
 							<Connector done={task.done} />
 						{/if}
