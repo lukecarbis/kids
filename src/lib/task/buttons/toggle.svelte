@@ -14,10 +14,9 @@
 </script>
 
 <button
-	class="border border-b-2 bg-white rounded-lg px-4 py-1"
+	class="border border-b-2 bg-white rounded-lg px-4 py-1 active:mt-px active:border-b"
 	disabled={loading}
-	class:active:mt-px={!loading}
-	class:active:border-b={!loading}
+	class:pointer-events-none={loading}
 	class:mt-px={loading}
 	class:border-b={loading}
 	on:click={toggle}

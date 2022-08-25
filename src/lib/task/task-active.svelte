@@ -4,6 +4,7 @@
 	import Done from '$lib/task/buttons/done.svelte';
 	export let task;
 	export let totalActiveTasksRemaining;
+	export let disabled;
 </script>
 
 <div
@@ -21,7 +22,7 @@
 
 <div class="bg-white rounded-b-lg border-2 border-t-0 flex" transition:slide>
 	{#if totalActiveTasksRemaining > 1}
-		<Skip on:skip />
+		<Skip on:skip {disabled} />
 	{/if}
-	<Done on:done />
+	<Done on:done {disabled} />
 </div>

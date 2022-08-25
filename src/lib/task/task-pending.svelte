@@ -1,6 +1,7 @@
 <script>
 	import Select from '$lib/task/buttons/select.svelte';
 	export let task;
+	export let disabled;
 </script>
 
 <div
@@ -13,6 +14,6 @@
 		{task.title}
 	</h3>
 	{#if task.skipped}
-		<Select on:select />
+		<Select on:select {disabled} />
 	{/if}
 </div>

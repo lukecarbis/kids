@@ -93,29 +93,16 @@
 		updateTasks(listId, patch);
 	};
 
-	const startLoading = (ref) => {
-		loading.push(ref);
-		loading = loading;
-	};
-
-	const endLoading = (ref) => {
-		const index = loading.indexOf(ref);
-		delete loading[index];
-		loading = loading;
-	};
-
 	$: if (-1 === activeTask) {
 		tick().then(() => select(0, 0));
 	}
 </script>
 
 {#if !loading}
-	<p
-		class="sticky border-b-2 border-slate-100 top-0 py-4 bg-white z-10 text-center underline underline-offset-2 decoration-2 decoration-sky-500 font-mono select-none"
-	>
-		Hello {name}!
-	</p>
-	<main class="max-w-screen-sm mx-auto pb-24 px-6 relative font-mono select-none">
+	<main class="max-w-screen-sm mx-auto mt-8 pb-24 px-6 relative font-mono select-none">
+		<p class="text-center underline underline-offset-2 decoration-2 decoration-sky-500">
+			Hello, {name}!
+		</p>
 		{#if list.totalTasks > 0}
 			{#each checkpoints as checkpoint, checkpointIndex}
 				{#if checkpoint.visible}
@@ -143,13 +130,22 @@
 								<TaskActive
 									{task}
 									{totalActiveTasksRemaining}
+									disabled={!connected}
 									on:skip={() => skip(checkpointIndex, taskIndex)}
 									on:done={() => done(checkpointIndex, taskIndex)}
 								/>
 							{:else if task.done}
-								<TaskDone {task} on:revert={() => revert(checkpointIndex, taskIndex)} />
+								<TaskDone
+									{task}
+									disabled={!connected}
+									on:revert={() => revert(checkpointIndex, taskIndex)}
+								/>
 							{:else}
-								<TaskPending {task} on:select={() => select(checkpointIndex, taskIndex)} />
+								<TaskPending
+									{task}
+									disabled={!connected}
+									on:select={() => select(checkpointIndex, taskIndex)}
+								/>
 							{/if}
 
 							{#if checkpoint.lastTask !== taskIndex}
@@ -172,4 +168,6 @@
 {:else}
 	<Loading />
 {/if}
-<Connected {connected} />
+<div class="fixed top-6 left-6">
+	<Connected {connected} />
+</div>

@@ -6,7 +6,7 @@
 </script>
 
 <span
-	class="p-2 fixed top-2 left-4 rounded-lg z-50"
+	class="flex items-center h-8 px-3 rounded-lg z-50 bg-white border"
 	on:mouseenter={() => (hover = true)}
 	on:mouseleave={() => (hover = false)}
 >
@@ -16,9 +16,9 @@
 		class:border-2={!connected}
 		class:border-amber-400={!connected}
 	/>
-	{#if hover}
+	{#if hover || !connected}
 		<p
-			class="inline-block text-sm text-slate-600 leading-4 relative top-px px-1"
+			class="text-sm leading-4 text-slate-600 -mt-px relative top-px pl-2"
 			transition:fly={{ x: -10, duration: 100 }}
 		>
 			{#if connected}

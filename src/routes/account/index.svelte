@@ -146,10 +146,9 @@
 	{/if}
 	{#if !loading}
 		<button
-			class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg"
+			class="py-2 px-6 inline-block text-center font-bold border-2 border-b-4 border-sky-600 bg-sky-400 text-white rounded-lg active:border-b-2 active:my-px"
 			on:click={save}
-			class:active:border-b-2={!disabled}
-			class:active:my-px={!disabled}
+			class:pointer-events-none={disabled}
 			class:bg-slate-300={disabled}
 			class:border-slate-400={disabled}
 			class:text-slate-100={disabled}

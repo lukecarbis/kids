@@ -4,9 +4,10 @@
 	const dispatch = createEventDispatcher();
 
 	export let task;
+	export let disabled;
 </script>
 
-<LongPress cb={() => dispatch('revert')} timeout="1200">
+<LongPress cb={() => dispatch('revert')} timeout="1200" {disabled}>
 	<div
 		class="p-4 border-2 rounded-lg flex flex-wrap bg-emerald-50 border-emerald-400 items-stretch justify-between rounded-lg transition-transform"
 	>

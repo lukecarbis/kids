@@ -1,21 +1,29 @@
 <script>
 	import { lists } from '$lib/stores/lists';
 	import { updateTask } from '$lib/db';
+	import Connected from '$lib/auth/connected.svelte';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-progress.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
 	import Connector from '$lib/connector/connector-static.svelte';
 	import TaskInactive from '$lib/task/task-inactive.svelte';
 	import TaskToggle from '$lib/task/task-toggle.svelte';
+	import { onValue, ref } from 'firebase/database';
+	import { db } from '$lib/firebase.js';
 
 	export let slug;
 	const listId = lists.getId(slug);
 
-	$: loading = [];
+	let loading = [];
+	let connected = false;
 
 	$: list = $lists[listId];
 	$: name = $lists[listId].name;
 	$: checkpoints = $lists[listId].checkpoints;
+
+	onValue(ref(db, '.info/connected'), (snapshot) => {
+		connected = snapshot.val();
+	});
 
 	const startLoading = (ref) => {
 		loading.push(ref);
@@ -69,3 +77,6 @@
 		<CheckpointNone {name} possessiveName="{name}'s" />
 	{/if}
 </main>
+<div class="fixed bottom-6 left-6">
+	<Connected {connected} />
+</div>

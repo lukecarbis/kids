@@ -1,6 +1,7 @@
 <script>
 	export let cb;
 	export let timeout;
+	export let disabled;
 
 	let pressTimer = null;
 
@@ -13,6 +14,10 @@
 
 	const start = function (event) {
 		if (event.type === 'click' && event.button !== 0) {
+			return;
+		}
+
+		if (disabled) {
 			return;
 		}
 
