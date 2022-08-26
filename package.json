@@ -38,6 +38,8 @@
 	"dependencies": {
 		"@emoji-mart/data": "^1.0.3",
 		"emoji-mart": "^5.2.0",
-		"firebase": "^9.9.0"
+		"firebase": "^9.9.0",
+		"svelte-inview": "^3.0.1",
+		"svelte-scrollto-element": "^0.7.0"
 	}
 }

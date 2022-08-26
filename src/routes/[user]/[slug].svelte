@@ -16,7 +16,10 @@
 	import Progress from '$lib/progress/progress.svelte';
 	import { onValue, ref } from 'firebase/database';
 	import { db } from '$lib/firebase';
+	import { inview } from 'svelte-inview';
+	import { animateScroll, scrollto } from 'svelte-scrollto-element';
 	import { tick } from 'svelte';
+	import { browser } from '$app/env';
 
 	export let uid;
 	export let listId;
@@ -25,6 +28,7 @@
 
 	let loading = true;
 	let connected = true;
+	let activeTaskDirection = 'visible';
 
 	const defaults = {
 		name: '',
@@ -53,6 +57,12 @@
 
 		data[listId] = snapshot.val();
 		lists.reset(data);
+
+		if (loading && browser) {
+			setTimeout(() => {
+				animateScroll.scrollTo({ element: '.up-next' });
+			}, 500);
+		}
 
 		loading = false;
 	});
@@ -127,13 +137,25 @@
 							{#if !checkpoint.open}
 								<TaskInactive {task} />
 							{:else if taskIndex === list.activeTask && checkpointIndex === list.activeCheckpoint}
-								<TaskActive
-									{task}
-									{totalActiveTasksRemaining}
-									disabled={!connected}
-									on:skip={() => skip(checkpointIndex, taskIndex)}
-									on:done={() => done(checkpointIndex, taskIndex)}
-								/>
+								<div
+									use:inview
+									on:change={(event) => {
+										const { inView, scrollDirection } = event.detail;
+										if (inView) {
+											activeTaskDirection = 'visible';
+										} else {
+											activeTaskDirection = scrollDirection.vertical;
+										}
+									}}
+								>
+									<TaskActive
+										{task}
+										{totalActiveTasksRemaining}
+										disabled={!connected}
+										on:skip={() => skip(checkpointIndex, taskIndex)}
+										on:done={() => done(checkpointIndex, taskIndex)}
+									/>
+								</div>
 							{:else if task.done}
 								<TaskDone
 									{task}
@@ -158,6 +180,28 @@
 		{:else}
 			<CheckpointNone />
 		{/if}
+		{#if 'visible' !== activeTaskDirection}
+			<button
+				class="fixed bottom-20 right-6 border-2 border-b-4 rounded-lg p-2 bg-white active:mt-px active:border-b-2"
+				use:scrollto={'.up-next'}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-6 w-6 stroke-sky-500"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					stroke-width="2"
+				>
+					{#if 'up' === activeTaskDirection}
+						<path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+					{/if}
+					{#if 'down' === activeTaskDirection}
+						<path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+					{/if}
+				</svg>
+			</button>
+		{/if}
 	</main>
 
 	<footer
@@ -165,6 +209,7 @@
 	>
 		<Progress {list} />
 	</footer>
+
 	<div class="fixed top-6 left-6">
 		<Status />
 	</div>
