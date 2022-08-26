@@ -1,7 +1,7 @@
 <script>
 	import { lists } from '$lib/stores/lists';
 	import { updateTask } from '$lib/db';
-	import Connected from '$lib/auth/connected.svelte';
+	import Status from '$lib/auth/status.svelte';
 	import Nav from '$lib/nav/nav-back.svelte';
 	import Checkpoint from '$lib/checkpoint/checkpoint-progress.svelte';
 	import CheckpointNone from '$lib/checkpoint/checkpoint-none.svelte';
@@ -15,15 +15,10 @@
 	const listId = lists.getId(slug);
 
 	let loading = [];
-	let connected = false;
 
 	$: list = $lists[listId];
 	$: name = $lists[listId].name;
 	$: checkpoints = $lists[listId].checkpoints;
-
-	onValue(ref(db, '.info/connected'), (snapshot) => {
-		connected = snapshot.val();
-	});
 
 	const startLoading = (ref) => {
 		loading.push(ref);
@@ -78,5 +73,5 @@
 	{/if}
 </main>
 <div class="fixed bottom-6 left-6">
-	<Connected {connected} />
+	<Status />
 </div>

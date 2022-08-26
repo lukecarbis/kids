@@ -1,6 +1,7 @@
 <script>
 	import { auth } from '$lib/firebase';
 	import { lists } from '$lib/stores/lists';
+	import Status from '$lib/auth/status.svelte';
 	import Nav from '$lib/nav/nav-main.svelte';
 	import Welcome from '$lib/welcome/welcome.svelte';
 	import List from '$lib/lists/list.svelte';
@@ -38,3 +39,6 @@
 		<Welcome />
 	{/if}
 </main>
+<div class="fixed bottom-6 left-6">
+	<Status />
+</div>

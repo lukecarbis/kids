@@ -2,7 +2,7 @@
 	import { meta } from '$lib/stores/meta';
 	import { lists } from '$lib/stores/lists';
 	import { updateTask, updateTasks } from '$lib/db';
-	import Connected from '$lib/auth/connected.svelte';
+	import Status from '$lib/auth/status.svelte';
 	import Loading from '$lib/welcome/loading.svelte';
 	import CheckpointActive from '$lib/checkpoint/checkpoint-active.svelte';
 	import CheckpointLocked from '$lib/checkpoint/checkpoint-locked.svelte';
@@ -24,7 +24,7 @@
 	meta.set({ uid });
 
 	let loading = true;
-	let connected = false;
+	let connected = true;
 
 	const defaults = {
 		name: '',
@@ -165,9 +165,9 @@
 	>
 		<Progress {list} />
 	</footer>
+	<div class="fixed top-6 left-6">
+		<Status />
+	</div>
 {:else}
 	<Loading />
 {/if}
-<div class="fixed top-6 left-6">
-	<Connected {connected} />
-</div>
