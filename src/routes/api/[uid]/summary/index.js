@@ -21,9 +21,9 @@ export async function get({ params }) {
 		getCheckpoints(checkpoints).forEach((checkpoint) => {
 			if (checkpoint.visible && isCheckpointAvailable(hour, checkpoint)) {
 				status.tasksRemaining += checkpoint.totalTasksRemaining;
-				status.checkpointTasksRemaining.push = checkpoint.totalTasksRemaining;
+				status.checkpointTasksRemaining.push(checkpoint.totalTasksRemaining);
 			} else {
-				status.checkpointTasksRemaining.push = -1;
+				status.checkpointTasksRemaining.push(-1);
 			}
 		});
 
