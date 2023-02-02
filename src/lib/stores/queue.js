@@ -106,10 +106,10 @@ export const isCheckpointOpen = (checkpoint) => {
 		return true;
 	}
 
-	return isCheckpointAvailable(checkpoint);
+	return isCheckpointAvailable(get(hour), checkpoint);
 };
 
-export const isCheckpointAvailable = (checkpoint) => {
+export const isCheckpointAvailable = (hour, checkpoint) => {
 	return get(hour) >= checkpoint.hour;
 };
 
@@ -155,7 +155,6 @@ export const getCheckpoints = (checkpoints) => {
 		checkpoint.visible = !!totalTasksInCheckpoint(checkpoint);
 		checkpoint.lastTask = getLastTaskIndex(checkpoint);
 		checkpoint.open = isCheckpointOpen(checkpoint);
-		checkpoint.available = isCheckpointAvailable(checkpoint);
 		checkpoint.totalTasksRemaining = totalTasksRemainingInCheckpoint(checkpoint);
 		checkpoint.totalTasks = totalTasksInCheckpoint(checkpoint);
 		return checkpoint;

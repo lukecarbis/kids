@@ -1,10 +1,10 @@
 import { apiUrl } from '$lib/firebase.js';
-import { getCheckpoints } from '$lib/stores/queue.js';
-import { hour } from '$lib/stores/time.js';
+import { getCheckpoints, isCheckpointAvailable } from '$lib/stores/queue.js';
 
 export async function get({ params }) {
 	const { uid } = params;
 
+	const hour = new Date().getHours();
 	const lists = [];
 	const listsResult = await fetch(`${apiUrl}/${uid}/lists.json`);
 	const listsBody = await listsResult.json();
@@ -18,9 +18,8 @@ export async function get({ params }) {
 			weird: []
 		};
 
-		const today = getCheckpoints(checkpoints);
-		today.forEach((checkpoint) => {
-			if (checkpoint.visible && checkpoint.available) {
+		getCheckpoints(checkpoints).forEach((checkpoint) => {
+			if (checkpoint.visible && isCheckpointAvailable(hour, checkpoint)) {
 				status.tasksRemaining += checkpoint.totalTasksRemaining;
 			} else {
 				status.weird.push(checkpoint);
