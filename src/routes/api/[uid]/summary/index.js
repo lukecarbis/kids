@@ -1,5 +1,7 @@
 import { apiUrl } from '$lib/firebase.js';
 import { getCheckpoints } from '$lib/stores/queue.js';
+import { hour } from '$lib/stores/time.js';
+import { get } from 'svelte/store';
 
 export async function get({ params }) {
 	const { uid } = params;
@@ -27,7 +29,7 @@ export async function get({ params }) {
 			status.done = false;
 		}
 
-		lists.push({ slug, status });
+		lists.push({ day: new Date().getDay(), hour: get(hour), slug, status });
 	});
 
 	return {
