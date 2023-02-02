@@ -11,9 +11,22 @@ export async function get({ params }) {
 	Object.entries(listsBody).forEach((list) => {
 		const [slug, body] = list;
 		const { checkpoints } = body;
-		// const queue = getQueue(getCheckpoints(checkpoints));
+		const status = {
+			done: true,
+			tasksRemaining: 0
+		};
 
-		lists.push({ slug, checkpoints: getCheckpoints(checkpoints) });
+		getCheckpoints(checkpoints).forEach((checkpoint) => {
+			if (checkpoint.visible && checkpoint.open) {
+				status.tasksRemaining += checkpoint.totalTasksRemaining;
+			}
+		});
+
+		if (status.tasksRemaining > 0) {
+			status.done = false;
+		}
+
+		lists.push({ slug, status });
 	});
 
 	return {
