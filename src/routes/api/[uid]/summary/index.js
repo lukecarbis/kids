@@ -16,8 +16,9 @@ export async function get({ params }) {
 			tasksRemaining: 0
 		};
 
-		getCheckpoints(checkpoints).forEach((checkpoint) => {
-			if (checkpoint.visible && checkpoint.unlocked) {
+		const today = getCheckpoints(checkpoints);
+		today.forEach((checkpoint) => {
+			if (checkpoint.visible && checkpoint.available) {
 				status.tasksRemaining += checkpoint.totalTasksRemaining;
 			}
 		});

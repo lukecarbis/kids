@@ -3,7 +3,7 @@ import { get } from 'svelte/store';
 
 export const getNextTask = (checkpoints) => {
 	for (const [checkpointIndex, checkpoint] of checkpoints.entries()) {
-		if (!isCheckpointOpen(checkpoints, checkpointIndex)) {
+		if (!isCheckpointOpen(checkpoint)) {
 			continue;
 		}
 		for (const [taskIndex, task] of checkpoint.tasks.entries()) {
@@ -63,8 +63,8 @@ export const totalTasks = (checkpoints) => {
 export const totalActiveTasksRemaining = (checkpoints) => {
 	let total = 0;
 
-	checkpoints.forEach((checkpoint, checkpointIndex) => {
-		if (!isCheckpointOpen(checkpoints, checkpointIndex)) {
+	checkpoints.forEach((checkpoint) => {
+		if (!isCheckpointOpen(checkpoint)) {
 			return;
 		}
 		checkpoint.tasks.forEach((task) => {
@@ -87,7 +87,7 @@ export const getLastTaskIndex = (checkpoint) => {
 
 const getFirstDisabledCheckpoint = (checkpoints) => {
 	for (const checkpointIndex of checkpoints.keys()) {
-		if (isCheckpointOpen(checkpoints, checkpointIndex)) {
+		if (isCheckpointOpen(checkpoints[checkpointIndex])) {
 			continue;
 		}
 		return checkpointIndex;
@@ -96,13 +96,7 @@ const getFirstDisabledCheckpoint = (checkpoints) => {
 	return -1;
 };
 
-export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
-	if (!parseInt(checkpointIndex)) {
-		return true;
-	}
-
-	const checkpoint = checkpoints[checkpointIndex];
-
+export const isCheckpointOpen = (checkpoint) => {
 	const doneTasks = checkpoint.tasks.filter((task) => {
 		return task.done;
 	});
@@ -112,10 +106,10 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 		return true;
 	}
 
-	return isCheckpointUnlocked(checkpoint);
+	return isCheckpointAvailable(checkpoint);
 };
 
-export const isCheckpointUnlocked = (checkpoint) => {
+export const isCheckpointAvailable = (checkpoint) => {
 	return get(hour) >= checkpoint.hour;
 };
 
@@ -157,11 +151,11 @@ export const getCheckpoints = (checkpoints) => {
 	});
 
 	// Add additional checkpoint info.
-	checkpoints = checkpoints.map((checkpoint, index) => {
+	checkpoints = checkpoints.map((checkpoint) => {
 		checkpoint.visible = !!totalTasksInCheckpoint(checkpoint);
 		checkpoint.lastTask = getLastTaskIndex(checkpoint);
-		checkpoint.open = isCheckpointOpen(checkpoints, index);
-		checkpoint.unlocked = isCheckpointUnlocked(checkpoint);
+		checkpoint.open = isCheckpointOpen(checkpoint);
+		checkpoint.available = isCheckpointAvailable(checkpoint);
 		checkpoint.totalTasksRemaining = totalTasksRemainingInCheckpoint(checkpoint);
 		checkpoint.totalTasks = totalTasksInCheckpoint(checkpoint);
 		return checkpoint;
