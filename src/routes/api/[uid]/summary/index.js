@@ -1,5 +1,5 @@
 import { apiUrl } from '$lib/firebase.js';
-import { getCheckpoints, getQueue } from '$lib/stores/queue.js';
+import { getCheckpoints } from '$lib/stores/queue.js';
 
 export async function get({ params }) {
 	const { uid } = params;

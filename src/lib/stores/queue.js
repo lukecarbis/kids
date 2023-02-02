@@ -161,7 +161,7 @@ export const getCheckpoints = (checkpoints) => {
 		checkpoint.visible = !!totalTasksInCheckpoint(checkpoint);
 		checkpoint.lastTask = getLastTaskIndex(checkpoint);
 		checkpoint.open = isCheckpointOpen(checkpoints, index);
-		checkpoint.unlocked = isCheckpointUnlocked(checkpoints, index);
+		checkpoint.unlocked = isCheckpointUnlocked(checkpoint);
 		checkpoint.totalTasksRemaining = totalTasksRemainingInCheckpoint(checkpoint);
 		checkpoint.totalTasks = totalTasksInCheckpoint(checkpoint);
 		return checkpoint;
