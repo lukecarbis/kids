@@ -1,5 +1,5 @@
 import { apiUrl } from '$lib/firebase.js';
-import { getQueue } from '$lib/stores/queue.js';
+import { getCheckpoints, getQueue } from '$lib/stores/queue.js';
 
 export async function get({ params }) {
 	const { uid } = params;
@@ -11,7 +11,7 @@ export async function get({ params }) {
 	Object.entries(listsBody).forEach((list) => {
 		const [slug, body] = list;
 		const { checkpoints } = body;
-		const queue = getQueue(checkpoints);
+		const queue = getQueue(getCheckpoints(checkpoints));
 
 		lists.push({ slug, queue });
 	});
