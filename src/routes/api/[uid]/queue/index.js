@@ -11,9 +11,9 @@ export async function get({ params }) {
 	Object.entries(listsBody).forEach((list) => {
 		const [slug, body] = list;
 		const { checkpoints } = body;
-		const queue = getQueue(getCheckpoints(checkpoints));
+		// const queue = getQueue(getCheckpoints(checkpoints));
 
-		lists.push({ slug, queue });
+		lists.push({ slug, checkpoints: getCheckpoints(checkpoints) });
 	});
 
 	return {
