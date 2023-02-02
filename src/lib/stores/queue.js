@@ -112,6 +112,10 @@ export const isCheckpointOpen = (checkpoints, checkpointIndex) => {
 		return true;
 	}
 
+	return isCheckpointUnlocked(checkpoint);
+};
+
+export const isCheckpointUnlocked = (checkpoint) => {
 	return get(hour) >= checkpoint.hour;
 };
 
@@ -157,6 +161,7 @@ export const getCheckpoints = (checkpoints) => {
 		checkpoint.visible = !!totalTasksInCheckpoint(checkpoint);
 		checkpoint.lastTask = getLastTaskIndex(checkpoint);
 		checkpoint.open = isCheckpointOpen(checkpoints, index);
+		checkpoint.unlocked = isCheckpointUnlocked(checkpoints, index);
 		checkpoint.totalTasksRemaining = totalTasksRemainingInCheckpoint(checkpoint);
 		checkpoint.totalTasks = totalTasksInCheckpoint(checkpoint);
 		return checkpoint;
