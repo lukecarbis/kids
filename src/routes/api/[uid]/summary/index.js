@@ -1,10 +1,10 @@
 import { apiUrl } from '$lib/firebase.js';
 import { getCheckpoints, isCheckpointAvailable } from '$lib/stores/queue.js';
 
-export async function get({ params }) {
+export async function get({ params, url }) {
 	const { uid } = params;
 
-	const hour = new Date().getHours();
+	const hour = url.searchParams.get('hour') || new Date().getHours();
 	const lists = [];
 	const listsResult = await fetch(`${apiUrl}/${uid}/lists.json`);
 	const listsBody = await listsResult.json();
@@ -15,8 +15,7 @@ export async function get({ params }) {
 		const status = {
 			done: true,
 			tasksRemaining: 0,
-			available: [],
-			hour: new Date().getHours()
+			available: []
 		};
 
 		getCheckpoints(checkpoints).forEach((checkpoint) => {
