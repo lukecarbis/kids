@@ -14,13 +14,16 @@ export async function get({ params }) {
 		const { checkpoints } = body;
 		const status = {
 			done: true,
-			tasksRemaining: 0
+			tasksRemaining: 0,
+			weird: []
 		};
 
 		const today = getCheckpoints(checkpoints);
 		today.forEach((checkpoint) => {
 			if (checkpoint.visible && checkpoint.available) {
 				status.tasksRemaining += checkpoint.totalTasksRemaining;
+			} else {
+				status.weird.push(checkpoint);
 			}
 		});
 
@@ -28,7 +31,7 @@ export async function get({ params }) {
 			status.done = false;
 		}
 
-		lists.push({ day: new Date().getDay(), slug, status });
+		lists.push({ slug, status });
 	});
 
 	return {
