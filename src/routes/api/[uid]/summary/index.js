@@ -14,15 +14,12 @@ export async function get({ params }) {
 		const { checkpoints } = body;
 		const status = {
 			done: true,
-			tasksRemaining: 0,
-			weird: []
+			tasksRemaining: 0
 		};
 
 		getCheckpoints(checkpoints).forEach((checkpoint) => {
 			if (checkpoint.visible && isCheckpointAvailable(hour, checkpoint)) {
 				status.tasksRemaining += checkpoint.totalTasksRemaining;
-			} else {
-				status.weird.push(checkpoint);
 			}
 		});
 

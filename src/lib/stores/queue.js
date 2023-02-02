@@ -110,7 +110,7 @@ export const isCheckpointOpen = (checkpoint) => {
 };
 
 export const isCheckpointAvailable = (hour, checkpoint) => {
-	return get(hour) >= checkpoint.hour;
+	return hour >= checkpoint.hour;
 };
 
 export const resetCheckpoints = (checkpoints) => {
